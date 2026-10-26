@@ -1,0 +1,9 @@
+# CodeRabbit review settings. Generated files and recorded run evidence are skipped:
+# the compendium and site/index.html are rebuilt from their sources, and tests/live and
+# tests/results hold the records of past runs, not code to review.
+reviews:
+  path_filters:
+    - "!docs/orchestrating-claude-compendium.html"
+    - "!site/index.html"
+    - "!tests/live/**"
+    - "!tests/results/**"
