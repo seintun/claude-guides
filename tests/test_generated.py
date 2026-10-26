@@ -49,7 +49,7 @@ class Generated(unittest.TestCase):
             self.assertEqual(r.returncode, 0, r.stderr)
             fresh = {p.relative_to(d).as_posix(): p.read_text(encoding="utf-8") for p in pathlib.Path(d).rglob("*") if p.is_file()}
             committed = {p.relative_to(ROOT).as_posix(): p.read_text(encoding="utf-8")
-                         for p in [ROOT / "guide-index.json", *(ROOT / "sections").glob("*")] if p.is_file()}
+                         for p in [ROOT / "guide-index.json", *(ROOT / "sections").glob("*"), *(ROOT / "routes").glob("*")] if p.is_file()}
             stale = sorted(k for k in fresh.keys() | committed.keys() if fresh.get(k) != committed.get(k))
             self.assertFalse(stale, f"stale or extra agent files: {stale[:8]}. Run python3 -I tools/build_index.py and commit the result")
 
@@ -61,6 +61,8 @@ class Generated(unittest.TestCase):
         paths = {s["id"]: s["path"] for s in index["sections"]}
         missing = [(r["row"], i) for r in index["router"] + index["phases"] for i in r["read"] if i not in paths or not (ROOT / paths[i]).is_file()]
         self.assertFalse(missing, f"route ids with no sections/ file: {missing}")
+        no_bundle = [r.get("bundle") for r in index["router"] + index["phases"] if not r.get("bundle") or not (ROOT / r["bundle"]).is_file()]
+        self.assertFalse(no_bundle, f"routes with no routes/ bundle to fetch: {no_bundle}")
 
     def test_compendium_works_offline(self):
         """The compendium starts loading something from the network."""

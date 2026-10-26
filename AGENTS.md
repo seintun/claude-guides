@@ -9,7 +9,7 @@ A guide for building, orchestrating and guiding AI coding agents. It has four la
 1. `playbook/agent-harness-playbook.md` is the canonical reference. Facts, laws, patterns and Templates A to M live here, each graded P (primary), S (second-hand), R (research) or D (design advice).
 2. `wiki/` holds short runbooks distilled from the playbook. A wiki page links to the playbook section it summarises and adds no facts of its own.
 3. `site/orchestrating-claude.html` is the teaching page, published as a claude.ai artifact. It teaches the same material in 17 lessons.
-4. `site/index.html`, `docs/orchestrating-claude-compendium.html`, `guide-index.json` and `sections/` are generated. Never edit them by hand; rebuild them.
+4. `site/index.html`, `docs/orchestrating-claude-compendium.html`, `guide-index.json`, `routes/` and `sections/` are generated. Never edit them by hand; rebuild them.
 
 When the playbook and another layer disagree, the playbook wins. Fix the other layer and say so in the commit.
 
@@ -66,7 +66,7 @@ When someone asks you to plan, run or review agent work, use this repository's o
 
 **Wiki, playbook and index**
 - Link playbook sections by their GitHub anchor. After editing any heading or link, run `python3 -I tools/check_links.py`; every line should read PASS.
-- After editing the playbook, the cheat sheet, `ENTRY.md`, a runbook title or a skill's frontmatter, run `python3 -I tools/build_index.py`. It regenerates `guide-index.json` and `sections/`, which agents without a clone fetch. Never edit them by hand.
+- After editing the playbook, the cheat sheet, `ENTRY.md`, a runbook title or a skill's frontmatter, run `python3 -I tools/build_index.py`. It regenerates `guide-index.json`, `routes/` and `sections/`, which agents without a clone fetch. Never edit them by hand.
 - When you add or rename a playbook section, run `python3 -I tools/check_entry.py`. `ENTRY.md` routes by section id, so a renamed or removed section breaks its router.
 - When you add a file, add it to its folder's README and, if it matters to agents, to `llms.txt`.
 - Write short, active, plain sentences: no marketing tone, no em-dash asides.
