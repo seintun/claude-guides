@@ -11,7 +11,7 @@ This repository is a guide that other sessions call. A bad edit here misleads ev
 
 | Layer | Command | Cost | When |
 |---|---|---|---|
-| Offline suite | `tests/run.sh` (add `-v` for every test) | under 10 seconds, no network | Before every commit. The pre-commit hook runs it |
+| Offline suite | `tests/run.sh` (add `-v` for every test) | under 10 seconds, no network | Before every commit. The pre-commit hook runs it, and GitHub Actions runs it on every pull request and every push to `main` ([.github/workflows/tests.yml](../.github/workflows/tests.yml)). CI has no `.privacy-terms`, so it checks only the built-in privacy rules |
 | Mutation suites | `python3 -I tests/mutation/mutate.py --record` (23 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
 | Live routing | `python3 -I tests/live/route_scenarios.py --record` | about $0.20 a run (3 runs by default) | After changing ENTRY.md, a skill, the snippet or the prompt |
 | Live grill | `skills/grill/test.sh` | one short session | After changing `/grill` |
