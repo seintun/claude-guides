@@ -7,7 +7,7 @@ allowed-tools: Read, Bash(git -C:*), Bash(python3 -I:*), Bash(curl -fsSL https:/
 
 The guide is a separate folder of advice; call it GUIDE. The work happens in the current project, never in GUIDE.
 
-1. Find GUIDE: run `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`. If that prints a folder holding `ENTRY.md`, GUIDE is that clone. Otherwise (the skill was copied in by `npx skills add`, or another agent fetched this file) GUIDE is `https://raw.githubusercontent.com/<owner>/<repo>/main`, with `<owner>/<repo>` taken from the repository link the user gave, else from the `CLAUDE_GUIDES_REPO` environment variable, else `seintun/claude-guides`. That is remote mode: read files with `curl -fsSL GUIDE/<path>`, or WebFetch asking for the file's full text. <!-- privacy: allow -->
+1. Find GUIDE: run `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`. If that prints a folder holding `ENTRY.md`, GUIDE is that clone. Otherwise (the skill was copied in by `npx skills add`, or another agent fetched this file) GUIDE is `https://raw.githubusercontent.com/<owner>/<repo>/<branch>`, with `<branch>` from the link if it names one (else `main`) and `<owner>/<repo>` taken from the repository link the user gave, else from the `CLAUDE_GUIDES_REPO` environment variable, else `seintun/claude-guides`. That is remote mode: read files with `curl -fsSL GUIDE/<path>`, or WebFetch asking for the file's full text (it may summarise; prefer curl). <!-- privacy: allow -->
 2. Read `GUIDE/ENTRY.md`. It is the only guide file you read in full.
 3. Match the request to one row of its scenario router, or to a phase if no row fits. The request: $ARGUMENTS
    If the request is empty or fits no row, ask the user one question that picks a row.

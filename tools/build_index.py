@@ -24,7 +24,8 @@ HOW_TO = [
     "Fetch the row's 'bundle' (its sections and templates in one file), or only its 'read' ids at sections[id].path. Never fetch the whole playbook.",
     "Open the row's runbook only if you need its steps and checklist.",
     "Paths are relative to the repository root. Without a clone, prefix them with "
-    "https://raw.githubusercontent.com/<owner>/<repo>/main/ taken from the link you were given.",
+    "https://raw.githubusercontent.com/<owner>/<repo>/<branch>/ taken from the link you were given (main unless it names a branch). "
+    "Fetch raw text; a summarising fetch tool can shorten a file.",
     "Rows marked thin have no full recipe; say so instead of filling the gap from memory.",
 ]
 

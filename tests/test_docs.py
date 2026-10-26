@@ -236,6 +236,11 @@ class AgentEntry(unittest.TestCase):
         for needle in ("## For AI agents given this repository's link", "raw.githubusercontent.com/<owner>/<repo>/main", "ENTRY.md", "guide-index.json", "sections/<id>.md", "npx skills add"):
             self.assertIn(needle, head, f"README.md must say, before 'Start here', how an agent without a clone reads the guide: missing {needle!r}")
 
+    def test_no_clone_route_follows_the_branch_in_the_link(self):
+        """A link to a branch is sent to main, where the branch's files 404 (found in the live cold test, 2026-10-26)."""
+        for rel in ("ENTRY.md", "llms.txt", "skills/guide/SKILL.md"):
+            self.assertIn("<branch>", read(rel), f"{rel} must build raw URLs from the branch in the link, not always main")
+
     def test_guide_skill_has_a_remote_mode(self):
         """/guide installed by copy (npx skills add) finds no clone and stops instead of fetching the sections it needs."""
         body = read("skills/guide/SKILL.md")

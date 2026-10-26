@@ -6,7 +6,7 @@ A working guide for building, orchestrating and guiding AI coding agents with Cl
 
 ## For AI agents given this repository's link
 
-You don't need a clone. Every file below is plain text at `https://raw.githubusercontent.com/seintun/claude-guides/main/<path>`. For a fork, use `https://raw.githubusercontent.com/<owner>/<repo>/main/<path>`, with `<owner>/<repo>` taken from the link you were given. <!-- privacy: allow -->
+You don't need a clone. Every file below is plain text at `https://raw.githubusercontent.com/seintun/claude-guides/main/<path>`. For a fork, use `https://raw.githubusercontent.com/<owner>/<repo>/main/<path>`, with `<owner>/<repo>` taken from the link you were given. If the link names a branch or tag (`/tree/<branch>`), use it in place of `main`. Fetch raw text with `curl` or similar: a fetch tool that summarises pages can shorten a file. <!-- privacy: allow -->
 
 1. Fetch [`ENTRY.md`](ENTRY.md) (72 lines). It routes a request to a few section ids, at most one runbook and one template. For the same routing as JSON, fetch [`guide-index.json`](guide-index.json).
 2. Fetch that row's bundle, `routes/row-<n>.md` (or `routes/phase-<n>.md`): its sections and templates in one file, for example [`routes/row-7.md`](routes/row-7.md). For a single section, fetch `sections/<id>.md`, such as [`sections/9.5.md`](sections/9.5.md); `cs:3` is `sections/cs-3.md`. Never fetch the whole playbook (about 1,500 lines).

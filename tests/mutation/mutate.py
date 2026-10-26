@@ -74,6 +74,7 @@ MUTATIONS = [
     ("README loses the no-clone route for linked agents", "README.md", sub_once(r"^## For AI agents given this repository's link\n", "## Notes\n")),
     ("/guide loses its remote mode", "skills/guide/SKILL.md", sub_once(r" In remote mode, fetch .*$", "")),
     ("/guide loses its default repository", "skills/guide/SKILL.md", sub_once(r"environment variable, else `[^`]+`", "environment variable, else by asking the user")),
+    ("ENTRY.md sends every no-clone agent to main", "ENTRY.md", sub_once(r"raw\.githubusercontent\.com/<owner>/<repo>/<branch>", "raw.githubusercontent.com/<owner>/<repo>/main")),
     ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 19 scenarios", "a router from 18 scenarios")),
 ]
 

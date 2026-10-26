@@ -2,7 +2,7 @@
 
 > A guide for building, orchestrating and guiding AI coding agents with Claude. The playbook is the source of truth; the wiki turns it into runbooks; the orchestration index tells an agent which sections to read in each phase; the teaching page and the offline compendium present it to people.
 
-Agents: a session in another project starts at ENTRY.md. Without a clone, fetch files as https://raw.githubusercontent.com/<owner>/<repo>/main/<path>: ENTRY.md or guide-index.json to route, then routes/row-<n>.md, the row's sections and templates in one file (single sections: sections/<id>.md; cs:3 is sections/cs-3.md). An agent editing this repository reads AGENTS.md for the rules, then orchestration-index.md for which playbook sections a phase needs. Read sections with `python3 -I tools/section.py <id>`; never load the whole playbook when one section will do.
+Agents: a session in another project starts at ENTRY.md. Without a clone, fetch raw files as https://raw.githubusercontent.com/<owner>/<repo>/<branch>/<path>, with <branch> from the link (main unless it names one): ENTRY.md or guide-index.json to route, then routes/row-<n>.md, the row's sections and templates in one file (single sections: sections/<id>.md; cs:3 is sections/cs-3.md). An agent editing this repository reads AGENTS.md for the rules, then orchestration-index.md for which playbook sections a phase needs. Read sections with `python3 -I tools/section.py <id>`; never load the whole playbook when one section will do.
 
 ## Start here
 
