@@ -1,7 +1,7 @@
 # Publishes the teaching page, the compendium and the agent files to GitHub Pages on every push to main.
 # Deployed: site/index.html as the home page, the compendium as compendium.html, and llms.txt,
 # guide-index.json and every tracked Markdown file except the run records in tests/live/, at their
-# repository paths, so an agent can read https://<owner>.github.io/<repo>/llms.txt, ENTRY.md and routes/.
+# repository paths, so an agent can read https://seintun.github.io/claude-guides/llms.txt, ENTRY.md and routes/.
 name: pages
 
 on:

@@ -37,6 +37,7 @@ When someone asks you to plan, run or review agent work, use this repository's o
 - This repository is public. Never commit client or employer names, personal paths, email addresses, session ids or personal harness details.
 - Use repo-relative paths or a placeholder such as `/path/to/claude-guides`. Describe a private setup in general terms.
 - To add terms of your own to the check, list them one per line in `.privacy-terms`. That file is git-ignored and stays on your machine.
+- The repository's own public addresses (owner/repo, the Pages host) are listed in the committed `.privacy-public`. A private term inside one of them passes; anywhere else it still fails. Add only full addresses there, never a bare name.
 - Run `python3 -I tools/check_privacy.py` before every commit. It must PASS.
 
 **Facts**

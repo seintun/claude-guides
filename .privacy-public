@@ -1,0 +1,4 @@
+# Public addresses of this repository. A private term inside one of these is not flagged by
+# tools/check_privacy.py; anywhere else it still is. Each line must contain "/" or ".".
+seintun/claude-guides
+seintun.github.io/claude-guides

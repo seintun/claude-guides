@@ -54,7 +54,7 @@ Full tables and the reasons behind each revision are in [tests/live/prompt/resul
 
 Without a clone, with the [skills CLI](https://github.com/vercel-labs/skills); it copies `check_prompt.py` along with the skill:
 
-Run `npx skills add seintun/claude-guides --skill prompt` from your project. <!-- privacy: allow -->
+Run `npx skills add seintun/claude-guides --skill prompt` from your project.
 
 Or link it from your clone. Run this in your own terminal; Claude Code's sandbox blocks writes to `~/.claude/skills`:
 

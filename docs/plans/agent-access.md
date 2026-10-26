@@ -48,7 +48,7 @@ Not doing: an MCP server, a hosted service, embeddings or search. Each adds a pr
 | 4 | Trim scanner noise | `.gitattributes` marks `tests/live/**`, `issues/drafts/**` and generated files `linguist-generated` | `git check-attr` on a sample path |
 | 5 | Portable skills | `/grill`, `/prompt` and `/guide` install with the skills CLI, which finds `skills/<name>/SKILL.md` and copies the folder. `/guide` falls back to remote mode (raw URLs; repo from the user's link, `CLAUDE_GUIDES_REPO`, or one question) when it finds no clone; `/prompt` saves to `~/.claude-guides/prompts/` | `tests/test_docs.py` AgentEntry; `npx skills add . --list` NOT RUN (blocked in the build session) |
 
-The owner's GitHub handle is a private term in `.privacy-terms`, so committed files write `<owner>` and agents take the real value from the link they were given.
+The owner's GitHub handle is a private term in `.privacy-terms`. The repository's own addresses are listed in the committed `.privacy-public`, so docs name `seintun/claude-guides` directly while the handle anywhere else still fails the privacy check. `<owner>/<repo>` remains only for forks and branch links.
 
 Maintenance after this: one more generated output, rebuilt by one command and guarded by the suite. Nothing runs between edits.
 

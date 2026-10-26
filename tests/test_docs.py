@@ -262,6 +262,20 @@ class AgentEntry(unittest.TestCase):
         for needle in ("'*.md'", "llms.txt", "guide-index.json", "tests/live"):
             self.assertIn(needle, line, f".github/workflows/pages.yml must copy the agent files into _site with git ls-files: missing {needle!r}")
 
+    def test_agent_docs_name_this_repository(self):
+        """Agent docs give only <owner>/<repo>, so every reader has to work out the real address (owner's request, 2026-10-26)."""
+        public = [l.strip() for l in read(".privacy-public").splitlines() if l.strip() and not l.startswith("#")]
+        repo = next(p for p in public if p.count("/") == 1 and "." not in p)
+        for rel in ("README.md", "ENTRY.md", "llms.txt", "guide-index.json", "skills/guide/SKILL.md", "skills/grill/README.md"):
+            self.assertIn(repo, read(rel), f"{rel} must name this repository ({repo}), not only a placeholder")
+
+    def test_public_addresses_never_hide_a_bare_term(self):
+        """.privacy-public gains a bare name, which would let the owner's handle pass anywhere."""
+        for line in read(".privacy-public").splitlines():
+            t = line.strip()
+            if t and not t.startswith("#"):
+                self.assertTrue("/" in t or "." in t, f".privacy-public line {t!r} is not an address")
+
     def test_guide_skill_has_a_remote_mode(self):
         """/guide installed by copy (npx skills add) finds no clone and stops instead of fetching the sections it needs."""
         body = read("skills/guide/SKILL.md")

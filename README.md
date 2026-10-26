@@ -6,7 +6,7 @@ A working guide for building, orchestrating and guiding AI coding agents with Cl
 
 ## For AI agents given this repository's link
 
-You don't need a clone. Every file below is plain text at `https://raw.githubusercontent.com/seintun/claude-guides/main/<path>`. For a fork, use `https://raw.githubusercontent.com/<owner>/<repo>/main/<path>`, with `<owner>/<repo>` taken from the link you were given. If the link names a branch or tag (`/tree/<branch>`), use it in place of `main`. Fetch raw text with `curl` or similar: a fetch tool that summarises pages can shorten a file. The same files from `main` are also at `https://seintun.github.io/claude-guides/<path>` (GitHub Pages), starting with [`llms.txt`](https://seintun.github.io/claude-guides/llms.txt). <!-- privacy: allow -->
+You don't need a clone. Every file below is plain text at `https://raw.githubusercontent.com/seintun/claude-guides/main/<path>`. For a fork, use `https://raw.githubusercontent.com/<owner>/<repo>/main/<path>`, with `<owner>/<repo>` taken from the link you were given. If the link names a branch or tag (`/tree/<branch>`), use it in place of `main`. Fetch raw text with `curl` or similar: a fetch tool that summarises pages can shorten a file. The same files from `main` are also at `https://seintun.github.io/claude-guides/<path>` (GitHub Pages), starting with [`llms.txt`](https://seintun.github.io/claude-guides/llms.txt).
 
 1. Fetch [`ENTRY.md`](ENTRY.md) (72 lines). It routes a request to a few section ids, at most one runbook and one template. For the same routing as JSON, fetch [`guide-index.json`](guide-index.json).
 2. Fetch that row's bundle, `routes/row-<n>.md` (or `routes/phase-<n>.md`): its sections and templates in one file, for example [`routes/row-7.md`](routes/row-7.md). For a single section, fetch `sections/<id>.md`, such as [`sections/9.5.md`](sections/9.5.md); `cs:3` is `sections/cs-3.md`. Never fetch the whole playbook (about 1,500 lines).
@@ -17,16 +17,16 @@ You don't need a clone. Every file below is plain text at `https://raw.githubuse
 
 ## Install the skills
 
-The skills follow the open `SKILL.md` format, so the [skills CLI](https://github.com/vercel-labs/skills) installs them into Claude Code, Codex, Cursor and other agents. No clone needed. From your project, run `npx skills add seintun/claude-guides`. <!-- privacy: allow -->
+The skills follow the open `SKILL.md` format, so the [skills CLI](https://github.com/vercel-labs/skills) installs them into Claude Code, Codex, Cursor and other agents. No clone needed. From your project, run `npx skills add seintun/claude-guides`.
 
-Add `--skill grill` (or `prompt`, `guide`) for one skill, and `-g` to install for every project. To try one without installing it, run `npx skills use seintun/claude-guides@grill --agent claude-code`; without `--agent` it prints the skill's prompt instead of starting it. For a fork, use its `<owner>/<repo>` instead. <!-- privacy: allow --> `/guide` reads this repository over the network when it has no clone, and uses your clone when you link it with [`skills/guide/install.sh`](skills/guide/README.md).
+Add `--skill grill` (or `prompt`, `guide`) for one skill, and `-g` to install for every project. To try one without installing it, run `npx skills use seintun/claude-guides@grill --agent claude-code`; without `--agent` it prints the skill's prompt instead of starting it. For a fork, use its `<owner>/<repo>` instead. `/guide` reads this repository over the network when it has no clone, and uses your clone when you link it with [`skills/guide/install.sh`](skills/guide/README.md).
 
 ## Start here
 
 | I want to… | Go to |
 |---|---|
 | Call this guide from another project | [`ENTRY.md`](ENTRY.md), then [`skills/guide/README.md`](skills/guide/README.md): the `/guide` skill, a one-line snippet for the project's `CLAUDE.md`, and a paste-in prompt for one-off sessions |
-| Understand the ideas, with pictures | The teaching page on [GitHub Pages](https://seintun.github.io/claude-guides/) or as a [claude.ai artifact](https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq), or open [`site/index.html`](site/index.html) locally. It is also embedded in the [compendium](https://seintun.github.io/claude-guides/compendium.html) ([source](docs/orchestrating-claude-compendium.html)), which reads offline | <!-- privacy: allow -->
+| Understand the ideas, with pictures | The teaching page on [GitHub Pages](https://seintun.github.io/claude-guides/) or as a [claude.ai artifact](https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq), or open [`site/index.html`](site/index.html) locally. It is also embedded in the [compendium](https://seintun.github.io/claude-guides/compendium.html) ([source](docs/orchestrating-claude-compendium.html)), which reads offline |
 | Turn an idea or pain point into work Claude can finish | [Start a task](wiki/start-a-task.md) |
 | Settle a design before planning, one question at a time | [Grill](wiki/grill.md) and the [`/grill` skill](skills/grill/README.md) |
 | Split work between a lead and helper agents | [Orchestrate](wiki/orchestrate.md) |

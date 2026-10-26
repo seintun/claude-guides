@@ -17,9 +17,9 @@ The guide root is the top of your clone of this repository: whatever `git rev-pa
 
 ## Install without a clone
 
-Run `npx skills add seintun/claude-guides --skill guide` from your project. <!-- privacy: allow -->
+Run `npx skills add seintun/claude-guides --skill guide` from your project.
 
-The [skills CLI](https://github.com/vercel-labs/skills) copies the skill folder, so `git rev-parse` finds no clone. The skill then runs in remote mode: it fetches `ENTRY.md` and one route bundle (`routes/row-<n>.md`) from `https://raw.githubusercontent.com/seintun/claude-guides/main`, and never the whole playbook. To read a fork instead, set `CLAUDE_GUIDES_REPO=<owner>/<repo>`. <!-- privacy: allow --> Install from your clone instead (below) to read local files and pick up your edits at once.
+The [skills CLI](https://github.com/vercel-labs/skills) copies the skill folder, so `git rev-parse` finds no clone. The skill then runs in remote mode: it fetches `ENTRY.md` and one route bundle (`routes/row-<n>.md`) from `https://raw.githubusercontent.com/seintun/claude-guides/main`, and never the whole playbook. To read a fork instead, set `CLAUDE_GUIDES_REPO=<owner>/<repo>`. Install from your clone instead (below) to read local files and pick up your edits at once.
 
 ## Install from a clone
 

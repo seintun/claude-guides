@@ -4,7 +4,7 @@
   "Route first: match the request to one row of 'router' (or 'phases' when it is a stage of work).",
   "Fetch the row's 'bundle' (its sections and templates in one file), or only its 'read' ids at sections[id].path. Never fetch the whole playbook.",
   "Open the row's runbook only if you need its steps and checklist.",
-  "Paths are relative to the repository root. Without a clone, prefix them with https://raw.githubusercontent.com/<owner>/<repo>/<branch>/ taken from the link you were given (main unless it names a branch). Fetch raw text; a summarising fetch tool can shorten a file.",
+  "Paths are relative to the repository root. Without a clone, prefix them with https://raw.githubusercontent.com/seintun/claude-guides/main/ or https://seintun.github.io/claude-guides/ (for a fork or a branch link, https://raw.githubusercontent.com/<owner>/<repo>/<branch>/ from that link). Fetch raw text; a summarising fetch tool can shorten a file.",
   "Rows marked thin have no full recipe; say so instead of filling the gap from memory."
  ],
  "entry": "ENTRY.md",
@@ -1214,19 +1214,19 @@
    "name": "grill",
    "description": "Grill the user about an idea or plan, one question at a time with a recommended answer, until you share an understanding of the design. Use before writing a plan or spec for anything above a one-line fix.",
    "path": "skills/grill/SKILL.md",
-   "install": "npx skills add <owner>/<repo> --skill grill"
+   "install": "npx skills add seintun/claude-guides --skill grill"
   },
   {
    "name": "guide",
    "description": "Route an agent-orchestration request to the claude-guides playbook and load only the sections it needs. Use for starting from a vague idea, a new feature, bug fix, refactor or migration, setting up a harness or hooks, code review by an agent, an overnight loop, a stuck or looping agent, a cost blowup, multi-repo or parallel work, onboarding a repo, writing an agent-ready issue, or a retro.",
    "path": "skills/guide/SKILL.md",
-   "install": "npx skills add <owner>/<repo> --skill guide"
+   "install": "npx skills add seintun/claude-guides --skill guide"
   },
   {
    "name": "prompt",
    "description": "Turn a description or scenario into a ready-to-run prompt for Claude agents, built from the claude-guides playbook's templates. Use when you need a task prompt, a goal with done-when checks, a plan request, helper briefs and a synthesis step for sub-agents, or a loop or schedule prompt.",
    "path": "skills/prompt/SKILL.md",
-   "install": "npx skills add <owner>/<repo> --skill prompt"
+   "install": "npx skills add seintun/claude-guides --skill prompt"
   }
  ]
 }
