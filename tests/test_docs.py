@@ -241,6 +241,8 @@ class AgentEntry(unittest.TestCase):
         body = read("skills/guide/SKILL.md")
         for needle in ("remote mode", "sections/<id>.md", "CLAUDE_GUIDES_REPO"):
             self.assertIn(needle, body, f"skills/guide/SKILL.md must keep its remote mode: missing {needle!r}")
+        self.assertRegex(body, r"else `[\w.-]+/claude-guides`",
+                         "skills/guide/SKILL.md must default to this repository in remote mode, so a copied install never has to ask for the link")
 
 
 if __name__ == "__main__":

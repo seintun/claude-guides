@@ -6,7 +6,7 @@ A working guide for building, orchestrating and guiding AI coding agents with Cl
 
 ## For AI agents given this repository's link
 
-You don't need a clone. Every file below is plain text at `https://raw.githubusercontent.com/<owner>/<repo>/main/<path>`, with `<owner>/<repo>` taken from the link you were given.
+You don't need a clone. Every file below is plain text at `https://raw.githubusercontent.com/seintun/claude-guides/main/<path>`. For a fork, use `https://raw.githubusercontent.com/<owner>/<repo>/main/<path>`, with `<owner>/<repo>` taken from the link you were given. <!-- privacy: allow -->
 
 1. Fetch [`ENTRY.md`](ENTRY.md) (72 lines). It routes a request to a few section ids, at most one runbook and one template. For the same routing as JSON, fetch [`guide-index.json`](guide-index.json).
 2. Fetch that row's bundle, `routes/row-<n>.md` (or `routes/phase-<n>.md`): its sections and templates in one file, for example [`routes/row-7.md`](routes/row-7.md). For a single section, fetch `sections/<id>.md`, such as [`sections/9.5.md`](sections/9.5.md); `cs:3` is `sections/cs-3.md`. Never fetch the whole playbook (about 1,500 lines).
@@ -17,13 +17,9 @@ You don't need a clone. Every file below is plain text at `https://raw.githubuse
 
 ## Install the skills
 
-The skills follow the open `SKILL.md` format, so the [skills CLI](https://github.com/vercel-labs/skills) installs them into Claude Code, Codex, Cursor and other agents. No clone needed. `<owner>` is the GitHub account that hosts the copy you want (this repository, or your fork):
+The skills follow the open `SKILL.md` format, so the [skills CLI](https://github.com/vercel-labs/skills) installs them into Claude Code, Codex, Cursor and other agents. No clone needed. From your project, run `npx skills add seintun/claude-guides`. <!-- privacy: allow -->
 
-```bash
-npx skills add <owner>/claude-guides
-```
-
-Add `--skill grill` (or `prompt`, `guide`) for one skill, and `-g` to install for every project. To try one without installing it, run `npx skills use <owner>/claude-guides@grill`. `/guide` reads this repository over the network when it has no clone, and uses your clone when you link it with [`skills/guide/install.sh`](skills/guide/README.md).
+Add `--skill grill` (or `prompt`, `guide`) for one skill, and `-g` to install for every project. To try one without installing it, run `npx skills use seintun/claude-guides@grill`. For a fork, use its `<owner>/<repo>` instead. <!-- privacy: allow --> `/guide` reads this repository over the network when it has no clone, and uses your clone when you link it with [`skills/guide/install.sh`](skills/guide/README.md).
 
 ## Start here
 

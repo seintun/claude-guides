@@ -12,9 +12,7 @@ A skill that grills you about an idea or plan before any plan or spec exists. It
 
 Without a clone, with the [skills CLI](https://github.com/vercel-labs/skills) (Claude Code, Codex, Cursor and other agents):
 
-```bash
-npx skills add <owner>/claude-guides --skill grill
-```
+Run `npx skills add seintun/claude-guides --skill grill` from your project. <!-- privacy: allow -->
 
 The skill is self-contained: it needs no other file from this repository. Or link it from your clone, the same way as `/guide`:
 
