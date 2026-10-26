@@ -1,5 +1,5 @@
 # Plan: make the guide readable by any agent, local or remote
-Goal: an agent with no clone of this repository can find and load the right playbook guidance in at most 2 fetches over plain HTTP, with the same routing ENTRY.md gives a local session. No server, no new dependency. Skills install with `npx skills add <owner>/claude-guides`.    Risk: normal    Status: built on feat/agent-access; the remote cold test waits for a push
+Goal: an agent with no clone of this repository can find and load the right playbook guidance in at most 2 fetches over plain HTTP, with the same routing ENTRY.md gives a local session. No server, no new dependency. Skills install with `npx skills add <owner>/claude-guides`.    Risk: normal    Status: built on feat/agent-access. Cold test PASS locally (a fetch-only subagent routed 3 requests with ENTRY.md plus one bundle each); the same test over raw GitHub URLs waits for a push
 
 ## Where it stands (review, 2026-10-25)
 
@@ -44,8 +44,8 @@ Not doing: an MCP server, a hosted service, embeddings or search. Each adds a pr
 | 1 | Fix drift; guard it | README and `llms.txt` say 19; a test fails when the router row count and any "N scenarios" claim disagree | `tests/run.sh`; mutation suite catches a changed count |
 | 2 | `tools/build_index.py` writes `guide-index.json` and `sections/<id>.md` | One file per id from `section.py --list`; stale output fails the suite | `tests/run.sh`; `python3 -I tests/mutation/mutate.py` |
 | 3 | Remote read path | ENTRY.md and `skills/guide/prompt.md` add a "no clone" route by raw URL; `llms.txt` lists the index and `sections/` | A cold session with fetch only and no clone routes 3 sample scenarios in at most 2 fetches |
+| 3b | Route bundles | `routes/row-<n>.md` and `routes/phase-<n>.md` hold one route's sections and templates, so a route is ENTRY.md plus one fetch. Added after the cold test: one file per section meant 3 to 5 fetches per route | `tests/test_generated.py`; mutation "A route bundle agents fetch is deleted" |
 | 4 | Trim scanner noise | `.gitattributes` marks `tests/live/**`, `issues/drafts/**` and generated files `linguist-generated` | `git check-attr` on a sample path |
-
 | 5 | Portable skills | `/grill`, `/prompt` and `/guide` install with the skills CLI, which finds `skills/<name>/SKILL.md` and copies the folder. `/guide` falls back to remote mode (raw URLs; repo from the user's link, `CLAUDE_GUIDES_REPO`, or one question) when it finds no clone; `/prompt` saves to `~/.claude-guides/prompts/` | `tests/test_docs.py` AgentEntry; `npx skills add . --list` NOT RUN (blocked in the build session) |
 
 The owner's GitHub handle is a private term in `.privacy-terms`, so committed files write `<owner>` and agents take the real value from the link they were given.
@@ -59,6 +59,6 @@ Maintenance after this: one more generated output, rebuilt by one command and gu
 - Privacy check passes on every generated file.
 - No fact changes: this plan moves and indexes content only.
 
-## Open questions
+## Decisions
 
-- Should `sections/` be committed, or built in CI and published as a release asset? Committing keeps raw URLs working with no infrastructure.
+- Decided 2026-10-25: `sections/` and `guide-index.json` are committed, not built in CI. Raw URLs then work with no infrastructure, and the suite fails while they are stale.

@@ -5,3 +5,7 @@ docs/orchestrating-claude-compendium.html merge=ours
 guide-index.json linguist-generated=true merge=ours
 sections/** linguist-generated=true merge=ours
 routes/** linguist-generated=true merge=ours
+
+# Run records and subagent drafts, not guidance: collapsed in diffs and left out of language stats.
+tests/live/** linguist-generated=true
+issues/drafts/** linguist-generated=true
