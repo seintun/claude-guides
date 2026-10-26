@@ -12,6 +12,13 @@
 | 15 | Fixes from the reviews and the blocking chart items; child 8 diagrams (L1, L3, L5, L6, L9, L11, L12); the rest of child 11; child 12 (running example, recall items, try-now, quiz); glossary tooltips; quiz colours | 20 of 20 in 6 views |
 | 16 | Final review fixes: keyboard-safe quiz, 12px figure text at every width, tables that wrap at mid widths, two more folded tables, glosses, wording, safe hash handling | 21 of 21 in 8 views (320, 375 ×2, 414, 768, 1024, 1280 ×2) |
 
+## Repository releases
+
+| Tag | Date | What changed |
+|---|---|---|
+| v1.0.0 | 2026-10-26 | First public release |
+| v1.1.0 | 2026-10-26 | Agents use the guide from its repository link with no clone: `guide-index.json`, `sections/` and `routes/` (one fetch per route), `npx skills add` for `/grill`, `/prompt` and `/guide`, `/guide`'s remote mode; plus the offline suite in CI, CodeRabbit config and GitHub Pages (PRs #1 to #5) |
+
 ## Playbook (`playbook/agent-harness-playbook.md`)
 
 | Version | What changed |

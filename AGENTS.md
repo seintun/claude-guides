@@ -123,7 +123,7 @@ Get an independent review for any change to facts, figures or interaction. Give 
 
 The live page is https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq. Publish updates to that same URL with the Artifact tool, passing `url`. Publishing is outward-facing, so do it only when the owner asks.
 
-Every push to `main` also publishes `site/index.html` (as the site's home page) and the compendium (as `compendium.html`) to GitHub Pages, through `.github/workflows/pages.yml`. Merging to `main` therefore publishes; rebuild both files before you merge.
+Every push to `main` also publishes `site/index.html` (as the site's home page), the compendium (as `compendium.html`), and `llms.txt`, `guide-index.json` and every tracked Markdown file outside `tests/live/` at its repository path, to GitHub Pages, through `.github/workflows/pages.yml`. Merging to `main` therefore publishes; rebuild both files before you merge.
 
 ## Git
 
