@@ -1,0 +1,27 @@
+# Runs the offline suite (tests/run.sh) on every pull request and on every push to main.
+# The browser checks and the live tests cost a browser or a model session, so they stay local.
+name: tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: Offline suite
+        run: tests/run.sh
