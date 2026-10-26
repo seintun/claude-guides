@@ -4,7 +4,7 @@ This repository had no `main` branch and no remote until 2026-10-25. The work li
 
 ## Public release
 
-The repository was published as one commit, the 1.0.0 release, on 2026-10-25. The private history had commits with a client name and a personal path that later commits removed, so it was squashed rather than pushed. The commit hashes in this record, in `docs/plans/` and in `tests/live/` refer to that private history, which the owner keeps on a local branch. They do not exist in the public repository.
+The repository was published as one commit, the 1.0.0 release, on 2026-10-25. The private history had commits with a client name and a personal path that later commits removed, so it was squashed rather than pushed. The commit hashes in this record, in `docs/plans/` and in `tests/live/` refer to that private history, which the owner keeps on a local branch. They do not exist in the public repository. The release is tagged `v1.0.0`, with a GitHub release made from the tag.
 
 ## What main contains
 
@@ -89,7 +89,7 @@ Run on the commit that became `main`:
 | `feat/prompt-v10-rebuilt`, `feat/prompt-v10-rebuilt2` | two superseded rebuild attempts | delete |
 | `stash@{0}` (on `feat/guide-entry`) | a half-finished v8 draft; the finished v8 is archived | drop |
 
-Deleting branches and worktrees is left to the owner. On 2026-10-25 the owner removed the worktree, deleted every branch above except `feat/prompt-v10` and `feat/prompt-v10-pre-rewrite`, and dropped the stash. `feat/prompt-v10` stays because the primary checkout works on it: a local hook blocks work while `main` is checked out there.
+Deleting branches and worktrees is left to the owner. On 2026-10-25 the owner removed the worktree, deleted every branch above except `feat/prompt-v10` and `feat/prompt-v10-pre-rewrite`, and dropped the stash. After the public release the owner also deleted `feat/prompt-v10` and `feat/prompt-v10-pre-rewrite`. The private history lives only on the local branch `archive/private-history`, whose push remote is set to one that does not exist, so a plain `git push` from it fails.
 
 ## Setup each clone needs
 
@@ -115,4 +115,4 @@ Use the commit from the table above. For R1, revert its guard commit e4b1660 fir
 
 1. Use `/prompt` on real tasks for a few days and note each prompt's risk size, contradictions and failures.
 2. v11, from the backlog in [docs/plans/prompt-v10.md](plans/prompt-v10.md): fix the measurement method before collecting evidence (frozen runner brief, fresh trials, Codex as a standing second judge), move rules from prose into `check_prompt.py`, lower contradictions, and test an on-demand split of the skill as a single change.
-3. Add a remote and push `main` when the owner decides; nothing has been pushed.
+3. Work on a branch cut from `main` and merge it through a pull request; `main` holds only the 1.0.0 release commit and what follows it.
