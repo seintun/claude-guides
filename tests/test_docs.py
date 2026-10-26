@@ -220,5 +220,49 @@ class GuidingStar(unittest.TestCase):
         self.assertFalse(broken, "ENTRY.md routes to missing targets:" + short(broken) + "\nFix the link. Outside sessions follow ENTRY.md blindly.")
 
 
+
+class AgentEntry(unittest.TestCase):
+    def test_scenario_counts_match_the_router(self):
+        """A router row is added or removed and README or llms.txt still claims the old number of scenarios."""
+        rows = len(re.findall(r"^\| \d+ \|", read("ENTRY.md"), re.M))
+        wrong = [(rel, n) for rel in ("README.md", "llms.txt", "AGENTS.md", "tests/README.md")
+                 for n in re.findall(r"(\d+) (?:routing )?scenarios", read(rel)) if int(n) != rows and int(n) > 10]
+        self.assertFalse(wrong, f"ENTRY.md has {rows} router rows, but these files claim another count: {wrong}")
+
+    def test_readme_tells_a_linked_agent_how_to_read_without_a_clone(self):
+        """An agent given only the repository link lands on README and finds no route that works without a clone."""
+        text = read("README.md")
+        head = text[: text.index("## Start here")]
+        for needle in ("## For AI agents given this repository's link", "raw.githubusercontent.com/<owner>/<repo>/main", "ENTRY.md", "guide-index.json", "sections/<id>.md", "npx skills add"):
+            self.assertIn(needle, head, f"README.md must say, before 'Start here', how an agent without a clone reads the guide: missing {needle!r}")
+
+    def test_no_clone_route_follows_the_branch_in_the_link(self):
+        """A link to a branch is sent to main, where the branch's files 404 (found in the live cold test, 2026-10-26)."""
+        for rel in ("ENTRY.md", "llms.txt", "skills/guide/SKILL.md"):
+            self.assertIn("<branch>", read(rel), f"{rel} must build raw URLs from the branch in the link, not always main")
+
+    def test_copied_skills_never_take_the_host_project_as_the_guide(self):
+        """A skill copied into a project by npx skills add finds that project's git root; with its own ENTRY.md it was taken as the guide (CodeRabbit, PR #5)."""
+        for name in ("guide", "prompt"):
+            body = read(f"skills/{name}/SKILL.md")
+            self.assertIn(f"skills/{name}/SKILL.md` and `tools/section.py`", body,
+                          f"skills/{name}/SKILL.md must accept a git root as the guide only if it holds its own SKILL.md and tools/section.py")
+            self.assertRegex(body, r"even (if it has|one with) (an|its own) `ENTRY\.md`",
+                             f"skills/{name}/SKILL.md must say a host project with an ENTRY.md is still not the guide")
+
+    def test_remote_routes_fetch_the_bundle(self):
+        """The no-clone route fetches one file per section and can drop the row's templates (CodeRabbit, PR #5)."""
+        for rel in ("skills/guide/prompt.md", "skills/guide/SKILL.md"):
+            self.assertIn("routes/row-<n>.md", read(rel), f"{rel} must send a no-clone session to the row's bundle in routes/")
+
+    def test_guide_skill_has_a_remote_mode(self):
+        """/guide installed by copy (npx skills add) finds no clone and stops instead of fetching the sections it needs."""
+        body = read("skills/guide/SKILL.md")
+        for needle in ("remote mode", "sections/<id>.md", "CLAUDE_GUIDES_REPO"):
+            self.assertIn(needle, body, f"skills/guide/SKILL.md must keep its remote mode: missing {needle!r}")
+        self.assertRegex(body, r"else `[\w.-]+/claude-guides`",
+                         "skills/guide/SKILL.md must default to this repository in remote mode, so a copied install never has to ask for the link")
+
+
 if __name__ == "__main__":
     unittest.main()
