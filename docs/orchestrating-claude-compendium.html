@@ -145,7 +145,7 @@ ul.guide-list a:hover{border-color:var(--accent)}
       <h1>Orchestrating Claude: what we built, checked and decided</h1>
       <p>A 17-lesson teaching page and an agent harness playbook, with the research behind them, three expert reviews,
       a 13-part rework, four more independent reviews, and the checks that gate every change. One file, offline, searchable.</p>
-      <div class="stats"><span><b>17</b> sections</span><span><b>94,697</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>45</b> sources</span><span>Page <b>v16</b></span><span>Playbook <b>v0.4</b></span></div>
+      <div class="stats"><span><b>17</b> sections</span><span><b>94,732</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>45</b> sources</span><span>Page <b>v16</b></span><span>Playbook <b>v0.4</b></span></div>
     </header>
     <section class="sec" id="about" data-title="About this compendium"><header class="sec-head"><p class="eyebrow">01</p><h2>About this compendium</h2><p class="lead">What is here and how to use it offline.</p></header>
 <p>This file collects everything from one working session on 24 October 2026. The session built and reviewed
@@ -6736,6 +6736,7 @@ print(f"wrote {os.path.relpath(OUT, ROOT)}: {len(doc_html) / 1024:.0f} KB, {len(
 <p>Get an independent review for any change to facts, figures or interaction. Give the reviewer the files and the brief, never your conclusions.</p>
 <h3 id="agents-publishing-the-page">Publishing the page</h3>
 <p>The live page is <a href="https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq" target="_blank" rel="noopener">https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq</a>. Publish updates to that same URL with the Artifact tool, passing <code>url</code>. Publishing is outward-facing, so do it only when the owner asks.</p>
+<p>Every push to <code>main</code> also publishes <code>site/index.html</code> (as the site's home page) and the compendium (as <code>compendium.html</code>) to GitHub Pages, through <code>.github/workflows/pages.yml</code>. Merging to <code>main</code> therefore publishes; rebuild both files before you merge.</p>
 <h3 id="agents-git">Git</h3>
 <ul><li>Work on a branch, not on <code>main</code>.</li><li>Each clone runs <code>git config merge.ours.driver true</code> once: <code>.gitattributes</code> marks the generated compendium <code>merge=ours</code>, so a merge or revert keeps it, and you rebuild it after. How <code>main</code> was formed: <span class="file-ref" title="docs/main-branch.md">docs/main-branch.md</span>.</li><li>Make small, logical commits with plain messages.</li><li>Add no AI attribution: no Co-Authored-By trailer and no "Generated with" line.</li><li>Never commit secrets, <code>.env</code> files or <code>build/</code>.</li></ul></section>
   </main>
