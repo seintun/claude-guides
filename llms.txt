@@ -2,11 +2,13 @@
 
 > A guide for building, orchestrating and guiding AI coding agents with Claude. The playbook is the source of truth; the wiki turns it into runbooks; the orchestration index tells an agent which sections to read in each phase; the teaching page and the offline compendium present it to people.
 
-Agents: a session in another project starts at ENTRY.md. An agent editing this repository reads AGENTS.md for the rules, then orchestration-index.md for which playbook sections a phase needs. Read sections with `python3 -I tools/section.py <id>`; never load the whole playbook when one section will do.
+Agents: a session in another project starts at ENTRY.md. Without a clone, fetch files as https://raw.githubusercontent.com/<owner>/<repo>/main/<path>: ENTRY.md or guide-index.json to route, then sections/<id>.md for each section id the route names (cs:3 is sections/cs-3.md). An agent editing this repository reads AGENTS.md for the rules, then orchestration-index.md for which playbook sections a phase needs. Read sections with `python3 -I tools/section.py <id>`; never load the whole playbook when one section will do.
 
 ## Start here
 
-- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 18 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
+- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 19 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
+- [guide-index.json](guide-index.json): the router, phases, section ids, runbooks and skills as JSON, with a path for each (generated)
+- [sections/README.md](sections/README.md): one file per playbook section, law, template and cheat-sheet section, the text tools/section.py prints (generated)
 - [orchestration-index.md](orchestration-index.md): the phase index. Eight phases, from shape to learn, each listing the sections to read, a review checklist and the expected output
 - [AGENTS.md](AGENTS.md): sources of truth, editing rules, checks, publishing and git rules for agents editing this repository
 - [README.md](README.md): the human home page, with an "I want to… go to" table and the template list
@@ -74,9 +76,10 @@ Agents: a session in another project starts at ENTRY.md. An agent editing this r
 - [tools/section.py](tools/section.py): prints one playbook section, template, law or cheat-sheet section by id (`python3 -I tools/section.py 9.5`; `--list` shows every id)
 - [tests/README.md](tests/README.md): how every feature and skill is tested: the offline suite (tests/run.sh), the mutation suite, live routing and grill sessions, browser checks; what each test guards
 - [tests/run.sh](tests/run.sh): runs every offline check and test; must end with SUMMARY all PASS before a commit
-- [tests/scenarios/routing.json](tests/scenarios/routing.json): 18 routing scenarios, one per ENTRY.md row
+- [tests/scenarios/routing.json](tests/scenarios/routing.json): 19 routing scenarios, one per ENTRY.md row
 - [tests/mutation/mutate.py](tests/mutation/mutate.py): makes catastrophic edits to a throwaway copy and checks the suite catches each
 - [tests/live/route_scenarios.py](tests/live/route_scenarios.py): live routing sessions through /guide, the snippet and the prompt; records results
 - [docs/metrics.md](docs/metrics.md): success, speed, token, reading-time and growth metrics (tools/metrics.py)
 - [tools/metrics.py](tools/metrics.py): builds docs/metrics.md
+- [tools/build_index.py](tools/build_index.py): builds guide-index.json and sections/ from the playbook, cheat sheet, ENTRY.md, wiki and skills
 - [tools/check_entry.py](tools/check_entry.py): checks ENTRY.md is under 150 lines, has at least 15 router rows, and names only section ids that resolve

@@ -7,6 +7,7 @@ Read this first when another project calls this guide, through `/guide`, a CLAUD
 1. **Two folders.** GUIDE is the full path of the folder that holds this file. Your project is your current directory. The guide gives advice; your project gets the work.
 2. **Find your row** in the scenario router. If none fits, use the phase table.
 3. **Load only the row's sections:** `python3 -I GUIDE/tools/section.py 9.5 F` prints §9.5 and Template F, and nothing else. Ids: `9.5` or `17A` for a section, `F` for a template, `law-7` for a law, `cs:3` for the cheat sheet. `--list` lists every id. Template letters are ids too: add them to the same call when you need the artifact the row's output names.
+   **No clone?** Fetch `GUIDE/sections/<id>.md` for each id instead (`cs:3` is `sections/cs-3.md`), where GUIDE is `https://raw.githubusercontent.com/<owner>/<repo>/main` from the link you were given. `GUIDE/guide-index.json` holds this router as JSON.
 4. **Open the runbook** (`GUIDE/wiki/<name>.md`, about 80 lines) only if you need its steps and checklist.
 5. **Produce the row's output** in your project, and follow the rules at the end.
 

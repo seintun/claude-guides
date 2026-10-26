@@ -70,6 +70,10 @@ MUTATIONS = [
     ("The section tool is deleted", "tools/section.py", None),
     ("A playbook edit is not rebuilt into sections/", PB, sub_once(r"^(### 9\.5 .*)$", r"\1 (edited)")),
     ("A section file agents fetch is deleted", "sections/9.5.md", None),
+    ("README loses the no-clone route for linked agents", "README.md", sub_once(r"^## For AI agents given this repository's link\n", "## Notes\n")),
+    ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 19 scenarios", "a router from 18 scenarios")),
+    ("A playbook edit is not rebuilt into sections/", PB, sub_once(r"^(### 9\.5 .*)$", r"\1 (edited)")),
+    ("A section file agents fetch is deleted", "sections/9.5.md", None),
 ]
 
 

@@ -220,5 +220,22 @@ class GuidingStar(unittest.TestCase):
         self.assertFalse(broken, "ENTRY.md routes to missing targets:" + short(broken) + "\nFix the link. Outside sessions follow ENTRY.md blindly.")
 
 
+
+class AgentEntry(unittest.TestCase):
+    def test_scenario_counts_match_the_router(self):
+        """A router row is added or removed and README or llms.txt still claims the old number of scenarios."""
+        rows = len(re.findall(r"^\| \d+ \|", read("ENTRY.md"), re.M))
+        wrong = [(rel, n) for rel in ("README.md", "llms.txt", "AGENTS.md", "tests/README.md")
+                 for n in re.findall(r"(\d+) (?:routing )?scenarios", read(rel)) if int(n) != rows and int(n) > 10]
+        self.assertFalse(wrong, f"ENTRY.md has {rows} router rows, but these files claim another count: {wrong}")
+
+    def test_readme_tells_a_linked_agent_how_to_read_without_a_clone(self):
+        """An agent given only the repository link lands on README and finds no route that works without a clone."""
+        text = read("README.md")
+        head = text[: text.index("## Start here")]
+        for needle in ("## For AI agents given this repository's link", "raw.githubusercontent.com/<owner>/<repo>/main", "ENTRY.md", "guide-index.json", "sections/<id>.md", "npx skills add"):
+            self.assertIn(needle, head, f"README.md must say, before 'Start here', how an agent without a clone reads the guide: missing {needle!r}")
+
+
 if __name__ == "__main__":
     unittest.main()
