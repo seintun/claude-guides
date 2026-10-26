@@ -76,6 +76,7 @@ MUTATIONS = [
     ("/guide loses its default repository", "skills/guide/SKILL.md", sub_once(r"environment variable, else `[^`]+`", "environment variable, else by asking the user")),
     ("ENTRY.md sends every no-clone agent to main", "ENTRY.md", sub_once(r"raw\.githubusercontent\.com/<owner>/<repo>/<branch>", "raw.githubusercontent.com/<owner>/<repo>/main")),
     ("/prompt takes any git root with an ENTRY.md as the guide", "skills/prompt/SKILL.md", sub_once(r"Use it only if it holds `skills/prompt/SKILL.md` and `tools/section.py`\. ", "")),
+    ("GitHub Pages stops publishing the agent files", ".github/workflows/pages.yml", sub_once(r"^\s+git ls-files -z .*\n", "")),
     ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 19 scenarios", "a router from 18 scenarios")),
 ]
 

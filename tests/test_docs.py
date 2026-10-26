@@ -255,6 +255,13 @@ class AgentEntry(unittest.TestCase):
         for rel in ("skills/guide/prompt.md", "skills/guide/SKILL.md"):
             self.assertIn("routes/row-<n>.md", read(rel), f"{rel} must send a no-clone session to the row's bundle in routes/")
 
+    def test_pages_publishes_the_agent_files(self):
+        """GitHub Pages deploys only the page and compendium, so llms.txt and ENTRY.md 404 at the site root (found 2026-10-26)."""
+        wf = read(".github/workflows/pages.yml")
+        line = next((l for l in wf.splitlines() if "git ls-files" in l), "")
+        for needle in ("'*.md'", "llms.txt", "guide-index.json", "tests/live"):
+            self.assertIn(needle, line, f".github/workflows/pages.yml must copy the agent files into _site with git ls-files: missing {needle!r}")
+
     def test_guide_skill_has_a_remote_mode(self):
         """/guide installed by copy (npx skills add) finds no clone and stops instead of fetching the sections it needs."""
         body = read("skills/guide/SKILL.md")
