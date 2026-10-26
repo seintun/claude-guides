@@ -37,6 +37,7 @@ When someone asks you to plan, run or review agent work, use this repository's o
 - This repository is public. Never commit client or employer names, personal paths, email addresses, session ids or personal harness details.
 - Use repo-relative paths or a placeholder such as `/path/to/claude-guides`. Describe a private setup in general terms.
 - To add terms of your own to the check, list them one per line in `.privacy-terms`. That file is git-ignored and stays on your machine.
+- The repository's own public addresses (owner/repo, the Pages host) are listed in the committed `.privacy-public`. A private term inside one of them passes; anywhere else it still fails. Add only full addresses there, never a bare name.
 - Run `python3 -I tools/check_privacy.py` before every commit. It must PASS.
 
 **Facts**
@@ -123,7 +124,7 @@ Get an independent review for any change to facts, figures or interaction. Give 
 
 The live page is https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq. Publish updates to that same URL with the Artifact tool, passing `url`. Publishing is outward-facing, so do it only when the owner asks.
 
-Every push to `main` also publishes `site/index.html` (as the site's home page) and the compendium (as `compendium.html`) to GitHub Pages, through `.github/workflows/pages.yml`. Merging to `main` therefore publishes; rebuild both files before you merge.
+Every push to `main` also publishes `site/index.html` (as the site's home page), the compendium (as `compendium.html`), and `llms.txt`, `guide-index.json` and every tracked Markdown file outside `tests/live/` at its repository path, to GitHub Pages, through `.github/workflows/pages.yml`. Merging to `main` therefore publishes; rebuild both files before you merge.
 
 ## Git
 

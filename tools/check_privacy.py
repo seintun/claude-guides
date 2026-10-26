@@ -9,6 +9,9 @@ Flags: absolute home paths, scratch paths, email addresses, and long UUIDs (sess
 Also reads extra terms, one per line, from the optional git-ignored file .privacy-terms at the
 repository root (case-insensitive substring match; blank lines and lines starting with # are skipped).
 Keep client names and your own username there, never in a committed file.
+The committed file .privacy-public lists the repository's own public addresses (one per line, each
+containing "/" or "."), such as owner/repo. A term inside one of those addresses is not flagged; the
+same term anywhere else still is.
 A line that contains the allow marker is skipped; use it sparingly (the pattern definitions below do).
 Exits 1 if anything is flagged.
 """
@@ -19,6 +22,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TERMS_FILE = ".privacy-terms"
+PUBLIC_FILE = ".privacy-public"
 ALLOW = "privacy: allow"
 SKIP_DIRS = {".git", "build", "node_modules", ".playwright-mcp"}
 # Placeholder email addresses that are fine to publish.
@@ -64,6 +68,22 @@ def extra_terms():
     return terms
 
 
+def public_addresses():
+    """Exact public addresses of this repository; a bare word would hide the term everywhere, so it is refused."""
+    path = os.path.join(ROOT, PUBLIC_FILE)
+    if not os.path.exists(path):
+        return []
+    out = []
+    for no, line in enumerate(open(path, encoding="utf-8"), 1):
+        t = line.strip()
+        if not t or t.startswith("#"):
+            continue
+        if "/" not in t and "." not in t:
+            sys.exit(f"FAIL {PUBLIC_FILE}:{no}: '{t}' is not an address (needs '/' or '.'); it would hide a private term everywhere")
+        out.append(t.lower())
+    return sorted(out, key=len, reverse=True)
+
+
 def email_ok(addr):
     local, _, domain = addr.rpartition("@")
     return domain.lower() in OK_EMAIL_DOMAINS or local.lower() in OK_EMAIL_LOCALS
@@ -85,10 +105,11 @@ if args and (args[0] != "--files" or len(args) < 2):
 explicit = explicit_paths(args[1:]) if args else None
 
 terms = extra_terms()
+public = public_addresses()
 found, scanned = [], 0
 for rel in files():
     path = os.path.join(ROOT, rel)
-    if rel == TERMS_FILE:
+    if rel in (TERMS_FILE, PUBLIC_FILE):
         continue
     if not os.path.isfile(path):
         if explicit is not None:
@@ -108,6 +129,8 @@ for rel in files():
         if any(not email_ok(m.group(0)) for m in EMAIL.finditer(line)):
             found.append(f"{rel}:{no}: email address")
         low = line.lower()
+        for addr in public:
+            low = low.replace(addr, " ")
         for term_no, term in terms:
             if term in low:
                 found.append(f"{rel}:{no}: extra term (line {term_no} of {TERMS_FILE})")
