@@ -19,7 +19,7 @@ You don't need a clone. Every file below is plain text at `https://raw.githubuse
 
 The skills follow the open `SKILL.md` format, so the [skills CLI](https://github.com/vercel-labs/skills) installs them into Claude Code, Codex, Cursor and other agents. No clone needed. From your project, run `npx skills add seintun/claude-guides`. <!-- privacy: allow -->
 
-Add `--skill grill` (or `prompt`, `guide`) for one skill, and `-g` to install for every project. To try one without installing it, run `npx skills use seintun/claude-guides@grill`. For a fork, use its `<owner>/<repo>` instead. <!-- privacy: allow --> `/guide` reads this repository over the network when it has no clone, and uses your clone when you link it with [`skills/guide/install.sh`](skills/guide/README.md).
+Add `--skill grill` (or `prompt`, `guide`) for one skill, and `-g` to install for every project. To try one without installing it, run `npx skills use seintun/claude-guides@grill --agent claude-code`; without `--agent` it prints the skill's prompt instead of starting it. For a fork, use its `<owner>/<repo>` instead. <!-- privacy: allow --> `/guide` reads this repository over the network when it has no clone, and uses your clone when you link it with [`skills/guide/install.sh`](skills/guide/README.md).
 
 ## Start here
 

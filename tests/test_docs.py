@@ -241,6 +241,20 @@ class AgentEntry(unittest.TestCase):
         for rel in ("ENTRY.md", "llms.txt", "skills/guide/SKILL.md"):
             self.assertIn("<branch>", read(rel), f"{rel} must build raw URLs from the branch in the link, not always main")
 
+    def test_copied_skills_never_take_the_host_project_as_the_guide(self):
+        """A skill copied into a project by npx skills add finds that project's git root; with its own ENTRY.md it was taken as the guide (CodeRabbit, PR #5)."""
+        for name in ("guide", "prompt"):
+            body = read(f"skills/{name}/SKILL.md")
+            self.assertIn(f"skills/{name}/SKILL.md` and `tools/section.py`", body,
+                          f"skills/{name}/SKILL.md must accept a git root as the guide only if it holds its own SKILL.md and tools/section.py")
+            self.assertRegex(body, r"even (if it has|one with) (an|its own) `ENTRY\.md`",
+                             f"skills/{name}/SKILL.md must say a host project with an ENTRY.md is still not the guide")
+
+    def test_remote_routes_fetch_the_bundle(self):
+        """The no-clone route fetches one file per section and can drop the row's templates (CodeRabbit, PR #5)."""
+        for rel in ("skills/guide/prompt.md", "skills/guide/SKILL.md"):
+            self.assertIn("routes/row-<n>.md", read(rel), f"{rel} must send a no-clone session to the row's bundle in routes/")
+
     def test_guide_skill_has_a_remote_mode(self):
         """/guide installed by copy (npx skills add) finds no clone and stops instead of fetching the sections it needs."""
         body = read("skills/guide/SKILL.md")
