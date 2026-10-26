@@ -498,11 +498,12 @@ def tree(home):
 
 
 class SkillSafety(Pinned):
-    def test_guide_skill_asks_for_exactly_three_tools(self):
-        """/guide's allowed-tools widens (Write, Edit, plain Bash), so a routing skill can change the user's project unasked."""
+    def test_guide_skill_asks_for_exactly_four_tools(self):
+        """/guide's allowed-tools widens (Write, Edit, plain Bash, curl to any host), so a routing skill can change the user's project unasked."""
         got = frontmatter("skills/guide/SKILL.md").get("allowed-tools")
-        self.assertEqual(got, "Read, Bash(git -C:*), Bash(python3 -I:*)",
-                         f"skills/guide/SKILL.md allowed-tools is {got!r}. /guide only reads files, finds its root with git -C, and runs section.py with python3 -I. {PIN_CHANGED}")
+        self.assertEqual(got, "Read, Bash(git -C:*), Bash(python3 -I:*), Bash(curl -fsSL https://raw.githubusercontent.com/*)",
+                         f"skills/guide/SKILL.md allowed-tools is {got!r}. /guide only reads files, finds its root with git -C, runs section.py with python3 -I, "
+                         f"and in remote mode fetches raw files from GitHub with curl. {PIN_CHANGED}")
 
     def test_grill_skill_cannot_write_and_stays_slash_only(self):
         """/grill is given Write or Edit, or loses disable-model-invocation, so a question-asking skill writes plans or fires on its own."""

@@ -13,7 +13,7 @@
 
 ## Where prompts go
 
-`<guide>/prompts/<project>/<YYYY-MM-DD>-<short-name>.md`. The `prompts/` folder is git-ignored apart from its README, so a prompt never reaches the guide's repository or the project's. The skill finds the guide with `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`, the same way `/guide` does. See [wiki/records.md](../../wiki/records.md).
+`<guide>/prompts/<project>/<YYYY-MM-DD>-<short-name>.md`. The `prompts/` folder is git-ignored apart from its README, so a prompt never reaches the guide's repository or the project's. The skill finds the guide with `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`, the same way `/guide` does. Installed with `npx skills add` (a copy, not a clone), it saves to `~/.claude-guides/prompts/<project>/` instead, still outside every repository. See [wiki/records.md](../../wiki/records.md).
 
 **Known conflict.** A harness hook that blocks edits in a checkout on its default branch also blocks this save once the guide sits on `main`. The skill then does not work around the hook. It keeps the prompt in its scratchpad and gives you one `cp` command to move it into place. Round 3 showed this; see the results below.
 
@@ -52,7 +52,13 @@ Full tables and the reasons behind each revision are in [tests/live/prompt/resul
 
 ## Install
 
-Run this in your own terminal, from your clone; Claude Code's sandbox blocks writes to `~/.claude/skills`:
+Without a clone, with the [skills CLI](https://github.com/vercel-labs/skills); it copies `check_prompt.py` along with the skill:
+
+```bash
+npx skills add <owner>/claude-guides --skill prompt
+```
+
+Or link it from your clone. Run this in your own terminal; Claude Code's sandbox blocks writes to `~/.claude/skills`:
 
 ```bash
 ln -s "$(git rev-parse --show-toplevel)/skills/prompt" ~/.claude/skills/prompt

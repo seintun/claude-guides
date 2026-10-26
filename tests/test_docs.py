@@ -236,6 +236,12 @@ class AgentEntry(unittest.TestCase):
         for needle in ("## For AI agents given this repository's link", "raw.githubusercontent.com/<owner>/<repo>/main", "ENTRY.md", "guide-index.json", "sections/<id>.md", "npx skills add"):
             self.assertIn(needle, head, f"README.md must say, before 'Start here', how an agent without a clone reads the guide: missing {needle!r}")
 
+    def test_guide_skill_has_a_remote_mode(self):
+        """/guide installed by copy (npx skills add) finds no clone and stops instead of fetching the sections it needs."""
+        body = read("skills/guide/SKILL.md")
+        for needle in ("remote mode", "sections/<id>.md", "CLAUDE_GUIDES_REPO"):
+            self.assertIn(needle, body, f"skills/guide/SKILL.md must keep its remote mode: missing {needle!r}")
+
 
 if __name__ == "__main__":
     unittest.main()

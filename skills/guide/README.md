@@ -15,7 +15,15 @@ The guide root is the top of your clone of this repository: whatever `git rev-pa
 - **The snippet and the prompt** are templates with `{{GUIDE}}` in place of the root. `install.sh` fills it in from the same `git rev-parse` and prints them.
 - **If you move or re-clone the repository,** rerun `install.sh --apply` and paste the new snippet. Nothing else changes.
 
-## Install
+## Install without a clone
+
+```bash
+npx skills add <owner>/claude-guides --skill guide
+```
+
+The [skills CLI](https://github.com/vercel-labs/skills) copies the skill folder, so `git rev-parse` finds no clone. The skill then runs in remote mode: it fetches `ENTRY.md` and `sections/<id>.md` from `https://raw.githubusercontent.com/<owner>/claude-guides/main`, where `<owner>/claude-guides` comes from the `CLAUDE_GUIDES_REPO` environment variable or, if it is unset, from asking you once, and never the whole playbook. Install from your clone instead (below) to read local files and pick up your edits at once.
+
+## Install from a clone
 
 1. See the change first. This is a dry run, and it writes nothing:
 

@@ -2,16 +2,16 @@
 name: guide
 description: Route an agent-orchestration request to the claude-guides playbook and load only the sections it needs. Use for starting from a vague idea, a new feature, bug fix, refactor or migration, setting up a harness or hooks, code review by an agent, an overnight loop, a stuck or looping agent, a cost blowup, multi-repo or parallel work, onboarding a repo, writing an agent-ready issue, or a retro.
 argument-hint: <what you are trying to do>
-allowed-tools: Read, Bash(git -C:*), Bash(python3 -I:*)
+allowed-tools: Read, Bash(git -C:*), Bash(python3 -I:*), Bash(curl -fsSL https://raw.githubusercontent.com/*)
 ---
 
 The guide is a separate folder of advice; call it GUIDE. The work happens in the current project, never in GUIDE.
 
-1. Find GUIDE: run `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`. If that fails, tell the user to rerun `skills/guide/install.sh --apply` from their clone of claude-guides, and stop.
+1. Find GUIDE: run `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`. If that prints a folder holding `ENTRY.md`, GUIDE is that clone. Otherwise (the skill was copied in by `npx skills add`, or another agent fetched this file) GUIDE is `https://raw.githubusercontent.com/<owner>/<repo>/main`, with `<owner>/<repo>` taken from the repository link the user gave, else from the `CLAUDE_GUIDES_REPO` environment variable, else by asking the user once for the guide's GitHub link. That is remote mode: read files with `curl -fsSL GUIDE/<path>`, or WebFetch asking for the file's full text.
 2. Read `GUIDE/ENTRY.md`. It is the only guide file you read in full.
 3. Match the request to one row of its scenario router, or to a phase if no row fits. The request: $ARGUMENTS
    If the request is empty or fits no row, ask the user one question that picks a row.
-4. Load that row's sections in one call: `python3 -I GUIDE/tools/section.py <ids>`. Open the row's runbook in `GUIDE/wiki/` only if you need its steps or checklist. Never read `GUIDE/playbook/agent-harness-playbook.md` whole.
+4. Load that row's sections in one call: `python3 -I GUIDE/tools/section.py <ids>`. In remote mode, fetch `GUIDE/sections/<id>.md` for each id instead (`cs:3` is `sections/cs-3.md`). Open the row's runbook in `GUIDE/wiki/` only if you need its steps or checklist. Never read `GUIDE/playbook/agent-harness-playbook.md` whole.
 5. Answer for this project:
    - the row you chose, in one line, and the runner-up if two rows fit;
    - what to do now, as numbered steps drawn from the sections, citing them as §9.5, Template F, and so on;
