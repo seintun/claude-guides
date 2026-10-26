@@ -1,0 +1,473 @@
+{
+ "date": "2026-10-24",
+ "about": "Recorded results of the /prompt battle test (tests/live/prompt/). Full tables and reasons: tests/live/prompt/results.md. Six scenarios, Sonnet writing, Opus reviewing blind.",
+ "blind_reviews": [
+  {
+   "review": 1,
+   "skill": "v1",
+   "skill_wins": 3,
+   "of": 6,
+   "avg_skill": 7.3,
+   "avg_baseline": 7.0
+  },
+  {
+   "review": 2,
+   "skill": "v2",
+   "skill_wins": 6,
+   "of": 6,
+   "avg_skill": 8.0,
+   "avg_baseline": 5.8
+  },
+  {
+   "review": 3,
+   "skill": "v3",
+   "skill_wins": 6,
+   "of": 6,
+   "avg_skill": 7.8,
+   "avg_baseline": 6.0
+  },
+  {
+   "review": 4,
+   "skill": "v4",
+   "skill_wins": 6,
+   "of": 6,
+   "avg_skill": 8.2,
+   "avg_baseline": 6.7,
+   "weaknesses": "constraints contradicting the goal or each other in 5 of 6 drafts; see results.md"
+  },
+  {
+   "review": 5,
+   "skill": "v5",
+   "skill_wins": 6,
+   "of": 6,
+   "avg_skill": 8.2,
+   "avg_baseline": 6.2,
+   "drafted_by": "subagents"
+  },
+  {
+   "review": 6,
+   "skill": "v5 vs v4",
+   "skill_wins": 4,
+   "of": 6,
+   "avg_skill": 8.2,
+   "avg_baseline": 7.3,
+   "drafted_by": "subagents",
+   "conflicts_v5": 9,
+   "conflicts_v4": 15,
+   "note": "the reviewer chose X in all six pairs; possible position bias"
+  },
+  {
+   "review": "7+8",
+   "skill": "checker trial vs v5, both position orders",
+   "skill_wins": 1,
+   "of": 12,
+   "avg_skill": 7.4,
+   "avg_baseline": 8.3,
+   "conflicts_checker_trial": 8,
+   "conflicts_v5": 19,
+   "drafted_by": "subagents, the checker trial with a separate checker",
+   "shipped": false
+  },
+  {
+   "review": "9+10",
+   "skill": "v6 vs v5, both position orders",
+   "skill_wins": 6,
+   "of": 12,
+   "avg_skill": 7.5,
+   "avg_baseline": 7.6,
+   "conflicts_v6": 19,
+   "conflicts_v5": 20,
+   "drafted_by": "subagents; the lead ran check_prompt.py and one fresh review per draft",
+   "note": "Draft X won 10 of 12 across both reviewers; only overnight (v6) and refactor (v5) held in both orders",
+   "shipped": true
+  },
+  {
+   "review": "11+12",
+   "skill": "v7 vs v6, both position orders",
+   "skill_wins": 7,
+   "of": 12,
+   "avg_skill": 7.5,
+   "avg_baseline": 7.5,
+   "conflicts_v7": 4,
+   "conflicts_v6": 6,
+   "drafted_by": "subagents; the lead ran check_prompt.py and one fresh review per draft that called for one",
+   "note": "Draft X won 9 of 12; bugfix and refactor (v7) and overnight (v6) held in both orders",
+   "shipped": true
+  },
+  {
+   "review": "13+14",
+   "skill": "v8 vs v7 (frozen baselines), both position orders",
+   "skill_wins": 1,
+   "of": 12,
+   "avg_skill": 7.0,
+   "avg_baseline": 8.1,
+   "drafted_by": "subagents; the lead ran check_prompt.py and one fresh review per draft that called for one",
+   "shipped": false,
+   "note": "v7 held in both orders in five scenarios; feature -2.5 and refactor -1.5 on the per-scenario mean"
+  },
+  {
+   "review": "15+16",
+   "skill": "v9 vs v7 (frozen baselines), both position orders",
+   "skill_wins": 5,
+   "of": 12,
+   "avg_skill": 7.2,
+   "avg_baseline": 7.7,
+   "drafted_by": "subagents; the lead ran check_prompt.py and one fresh review per draft",
+   "shipped": false,
+   "note": "per-scenario mean v9 minus v7: bugfix -1.5, feature -2.0, migration -0.5, overnight -1.0, refactor +1.0, research +1.0"
+  },
+  {
+   "review": "17+18",
+   "skill": "v10 vs fresh v7 trials T2 and T3, both position orders",
+   "skill_wins": 19,
+   "of": 24,
+   "avg_skill": 7.79,
+   "avg_baseline": 7.0,
+   "drafted_by": "subagents; the lead ran check_prompt.py and a fresh review where the skill called for one",
+   "shipped": true,
+   "margins": {
+    "pairs": 0.25,
+    "scenario": 2.0,
+    "audit": 2,
+    "must_haves": 3,
+    "dry_run": 0
+   },
+   "note": "T1 (round-11 drafts) scored 1.54 above a fresh v7 trial, so v10 was judged against T2 and T3; D3 scored 7.58 against 7.42 and was not shipped; two v10 prompts ran to completion with no false PASS under hidden tests"
+  }
+ ],
+ "rubric": [
+  {
+   "round": 1,
+   "skill": "v1",
+   "skill_score": 64,
+   "baseline_strict": 24,
+   "baseline_lenient": 28,
+   "of": 67
+  },
+  {
+   "round": 2,
+   "skill": "v1",
+   "skill_score": 63,
+   "baseline_strict": 23,
+   "baseline_lenient": 27,
+   "of": 67
+  },
+  {
+   "round": 4,
+   "skill": "v2",
+   "skill_score": 67,
+   "of": 67,
+   "saved_in_guide": "6 of 6"
+  },
+  {
+   "round": 5,
+   "skill": "v3",
+   "skill_score": 65,
+   "of": 67,
+   "saved_in_guide": "6 of 6"
+  },
+  {
+   "round": 6,
+   "skill": "v4",
+   "skill_score": 67,
+   "of": 67,
+   "saved_in_guide": "6 of 6"
+  },
+  {
+   "round": 7,
+   "skill": "v4",
+   "skill_score": 64,
+   "baseline_strict": 25,
+   "baseline_lenient": 29,
+   "of": 67,
+   "saved_in_guide": "6 of 6",
+   "skill_score_after_scorer_fix": 66
+  },
+  {
+   "round": 8,
+   "skill": "v5",
+   "skill_score": 59,
+   "v4_same_round": 66,
+   "baseline_strict": 34,
+   "baseline_lenient": 38,
+   "of": 67,
+   "drafted_by": "subagents"
+  },
+  {
+   "round": 9,
+   "skill": "checker trial (round 9, a v5 variant)",
+   "skill_score": 60,
+   "v5_same_comparison": 59,
+   "of": 67,
+   "drafted_by": "subagents",
+   "shipped": false
+  },
+  {
+   "round": 10,
+   "skill": "v6",
+   "skill_score": 62,
+   "v5_same_comparison": 59,
+   "of": 67,
+   "drafted_by": "subagents"
+  },
+  {
+   "round": 11,
+   "skill": "v7",
+   "skill_score": 60,
+   "v6_same_comparison": 62,
+   "of": 67,
+   "drafted_by": "subagents"
+  },
+  {
+   "round": 12,
+   "skill": "v8",
+   "skill_score": 65,
+   "v7_same_comparison": 60,
+   "of": 67,
+   "drafted_by": "subagents",
+   "shipped": false
+  },
+  {
+   "round": 13,
+   "skill": "v9",
+   "skill_score": 58,
+   "v7_same_comparison": 60,
+   "of": 67,
+   "drafted_by": "subagents",
+   "shipped": false
+  }
+ ],
+ "interview_check": {
+  "passed": 8,
+  "of": 8
+ },
+ "not_yet": [
+  "no generated prompt has been run to completion"
+ ],
+ "scorer_note": "p-3 and p-18 tightened after review: a bare digit or an unrelated 'never' no longer passes. All rounds re-scored; only round 2 skill changed (64 to 63). After round 7: a clean git status or working tree is not vague, and a per-writer gate counts as a batch gate.",
+ "contradiction_audit": {
+  "round": 8,
+  "v5": {
+   "contradictions": 10,
+   "over_spec": 9
+  },
+  "v4": {
+   "contradictions": 12,
+   "over_spec": 10
+  },
+  "drafts_each": 6,
+  "over_spec_max": 18
+ },
+ "contradiction_audit_round9": {
+  "checker_trial": {
+   "contradictions": 2,
+   "over_spec": 6,
+   "missing_essentials": 0
+  },
+  "v5": {
+   "contradictions": 10,
+   "over_spec": 10,
+   "missing_essentials": 0
+  },
+  "drafts_each": 6,
+  "over_spec_max": 18
+ },
+ "lines": {
+  "checker_trial_round9": "57-78",
+  "v5_round8": "84-147",
+  "v6_round10": "85-137",
+  "v7_round11": "75-129"
+ },
+ "contradiction_audit_round10": {
+  "v6": {
+   "contradictions": 3,
+   "over_spec": 14,
+   "missing_essentials": 0
+  },
+  "v5": {
+   "contradictions": 7,
+   "over_spec": 11,
+   "missing_essentials": 0
+  },
+  "drafts_each": 6,
+  "over_spec_max": 18
+ },
+ "check_prompt_round10": {
+  "first_drafts_with_a_fail": 4,
+  "final_drafts_with_a_fail": 0,
+  "of": 6,
+  "review_blockers": 13,
+  "reviews": 5
+ },
+ "dry_run_v6": {
+  "kit": "tests/live/grill-prompt/",
+  "round": 4,
+  "failures": 4,
+  "of": 30,
+  "earlier_rounds": [
+   13,
+   10,
+   9
+  ],
+  "check_prompt_fail_on_final": 0,
+  "check_prompt_fail_on_first_draft": 2,
+  "pass_bar": "9 or fewer failures of 30 and no FAIL from check_prompt.py",
+  "verdict": "PASS",
+  "method": "Sonnet runners limited to Write and Edit (no shell or git); the lead ran check_prompt.py and two rounds of fresh Sonnet review; a fresh Opus judge"
+ },
+ "contradiction_audit_round11": {
+  "v7": {
+   "contradictions": 11,
+   "over_spec": 11,
+   "missing_essentials": 0
+  },
+  "v6": {
+   "contradictions": 4,
+   "over_spec": 11,
+   "missing_essentials": 1
+  },
+  "drafts_each": 6,
+  "over_spec_max": 18
+ },
+ "size_round11": {
+  "v7": {
+   "lines": 602,
+   "words": 13177,
+   "assumed_tags": 63
+  },
+  "v6": {
+   "lines": 627,
+   "words": 14089,
+   "assumed_tags": 100
+  }
+ },
+ "check_prompt_round11": {
+  "first_drafts_with_a_fail": 5,
+  "final_drafts_with_a_fail": 0,
+  "of": 6,
+  "reviews": 4,
+  "review_blockers": 12,
+  "final_drafts_with_c7_warn": 2
+ },
+ "contradiction_audit_round12": {
+  "v8": {
+   "contradictions": 6,
+   "over_spec": 8,
+   "missing_essentials": 1
+  },
+  "v7": {
+   "contradictions": 4,
+   "over_spec": 14,
+   "missing_essentials": 0
+  },
+  "drafts_each": 6,
+  "over_spec_max": 18
+ },
+ "must_haves_round12": {
+  "v8_lost": [
+   "B2 bugfix",
+   "F1 feature",
+   "M1 migration",
+   "RF2 refactor",
+   "R2 research"
+  ],
+  "v7_lost": [],
+  "scenarios_with_a_loss": 5,
+  "of": 6
+ },
+ "frozen_scores_round12": {
+  "playbook": {
+   "v7": "25.5/46 (55.4%)",
+   "v8": "30.5/46 (66.3%)"
+  },
+  "external": {
+   "v7": "74.8% (skill 72.4, output 79.6, research 72.2)",
+   "v8": "90.9% (skill 93.1, output 90.7, research 88.9)"
+  }
+ },
+ "size_round12": {
+  "v8": {
+   "words": 9115
+  },
+  "v7": {
+   "words": 13177
+  }
+ },
+ "dry_run_round6": {
+  "v8": {
+   "failures": 7,
+   "of": 60,
+   "set_a": 4,
+   "set_b": 3
+  },
+  "v7_baselines_regraded": {
+   "failures": 2,
+   "of": 60,
+   "set_a": 1,
+   "set_b": 1
+  }
+ },
+ "contradiction_audit_round13": {
+  "v9": {
+   "contradictions": 12,
+   "over_spec": 10,
+   "missing_essentials": 0
+  },
+  "v7": {
+   "contradictions": 8,
+   "over_spec": 12,
+   "missing_essentials": 0
+  },
+  "drafts_each": 6,
+  "over_spec_max": 18
+ },
+ "must_haves_round13": {
+  "v9_lost": [
+   "R2 research"
+  ],
+  "v9_gained": [
+   "M1 migration"
+  ],
+  "absent_in_both": [
+   "F2 feature",
+   "O1 overnight"
+  ],
+  "scenarios_with_a_loss": 1,
+  "of": 6,
+  "probe": "feature and migration, reviewed drafts: no must-have lost"
+ },
+ "frozen_scores_round13": {
+  "playbook": {
+   "v7": "27.0/46 (58.7%)",
+   "v9": "31.0/46 (67.4%)"
+  },
+  "external": {
+   "v7": "76.0% (skill 72.4, output 77.8, research 77.8)",
+   "v9": "87.8% (skill 93.1, output 87.0, research 83.3)"
+  }
+ },
+ "size_round13": {
+  "v9": {
+   "words": 11881,
+   "skill_md_words": 1895
+  },
+  "v7": {
+   "words": 13177
+  }
+ },
+ "dry_run_round7": {
+  "v9": {
+   "failures": 13,
+   "of": 60,
+   "set_a": 6,
+   "set_b": 7
+  },
+  "v7_baselines_regraded": {
+   "failures": 6,
+   "of": 60,
+   "set_a": 2,
+   "set_b": 4
+  },
+  "rubric": "frozen, with R7 N/A for every Dump 1 run (the one allowed change); the judge marked it N/A on all four"
+ }
+}

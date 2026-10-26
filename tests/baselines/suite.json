@@ -1,0 +1,16 @@
+{
+  "note": "The test floor, read by tests/test_harness.py. Removing a file from the list or lowering min_test_cases is a deliberate, reviewed change: make it in the same commit as the removal and say why in the message. Raise the floor when you add tests.",
+  "min_test_cases": 219,
+  "files": [
+    "tests/test_critical.py",
+    "tests/test_docs.py",
+    "tests/test_generated.py",
+    "tests/test_guardrails.py",
+    "tests/test_harness.py",
+    "tests/test_playbook.py",
+    "tests/test_prompt_skill.py",
+    "tests/test_router.py",
+    "tests/test_skills.py",
+    "tests/test_templates.py"
+  ]
+}

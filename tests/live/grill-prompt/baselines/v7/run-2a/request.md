@@ -1,0 +1,1 @@
+Need a write-up for my manager on whether we should move CI from GitHub Actions to Buildkite. Costs have gone up and builds are slow on the monorepo. She wants it next Friday, and she cares most about cost and how much migration work it is. I don't know our actual monthly CI spend.

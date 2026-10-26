@@ -1,0 +1,798 @@
+{
+ "date": "2026-10-25",
+ "results": [
+  {
+   "n": 1,
+   "what": "ENTRY.md: delete the Receipts and Two-strikes rules",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_rules_that_apply_everywhere_keep_goal_first_and_the_rest (test_guardrails.EntryPins.test_rules_that_apply_everywhere_keep_goal_first_and_the_rest) (rule='Receipts')",
+    "FAIL: test_rules_that_apply_everywhere_keep_goal_first_and_the_rest (test_guardrails.EntryPins.test_rules_that_apply_everywhere_keep_goal_first_and_the_rest) (rule='Two strikes')",
+    "FAIL: test_not_run_is_not_pass_is_said_in_every_layer (test_guardrails.RulesAndRunbooks.test_not_run_is_not_pass_is_said_in_every_layer) (file='ENTRY.md')"
+   ]
+  },
+  {
+   "n": 2,
+   "what": "ENTRY.md: 'NOT RUN is not PASS' flipped to 'NOT RUN counts as PASS'",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_rules_that_apply_everywhere_keep_goal_first_and_the_rest (test_guardrails.EntryPins.test_rules_that_apply_everywhere_keep_goal_first_and_the_rest) (rule='Receipts')",
+    "FAIL: test_no_layer_says_not_run_counts_as_pass (test_guardrails.RulesAndRunbooks.test_no_layer_says_not_run_counts_as_pass)",
+    "FAIL: test_not_run_is_not_pass_is_said_in_every_layer (test_guardrails.RulesAndRunbooks.test_not_run_is_not_pass_is_said_in_every_layer) (file='ENTRY.md')"
+   ]
+  },
+  {
+   "n": 3,
+   "what": "ENTRY.md: keep 'never load whole playbook' line, step 3 says load the whole playbook anyway",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_never_load_the_whole_playbook_and_never_say_to (test_guardrails.EntryPins.test_never_load_the_whole_playbook_and_never_say_to)"
+   ]
+  },
+  {
+   "n": 4,
+   "what": "ENTRY.md: step 3 command points at a wrong path (tool/section.py)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_guide_paths_in_code_spans_exist (test_guardrails.EntryPins.test_guide_paths_in_code_spans_exist)"
+   ]
+  },
+  {
+   "n": 5,
+   "what": "ENTRY.md: phase table replaced by a stub",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_phase_table_has_eight_phases_with_real_section_ids (test_guardrails.EntryPins.test_phase_table_has_eight_phases_with_real_section_ids)"
+   ]
+  },
+  {
+   "n": 6,
+   "what": "ENTRY.md: scenario labels of rows 11 and 14 swapped",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_each_row_keeps_its_scenario (test_critical.RouterMeaning.test_each_row_keeps_its_scenario)"
+   ]
+  },
+  {
+   "n": 7,
+   "what": "ENTRY.md: row 9 output says it approves the PR",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_review_never_approves_and_loops_keep_caps (test_critical.RouterMeaning.test_review_never_approves_and_loops_keep_caps)"
+   ]
+  },
+  {
+   "n": 8,
+   "what": "ENTRY.md: row 8 output drops retry cap and cost ceiling",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_review_never_approves_and_loops_keep_caps (test_critical.RouterMeaning.test_review_never_approves_and_loops_keep_caps)"
+   ]
+  },
+  {
+   "n": 9,
+   "what": "ENTRY.md: Read cells of rows 9 and 10 swapped (control)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_core_rows_keep_their_core_sections (test_critical.RouterMeaning.test_core_rows_keep_their_core_sections)",
+    "FAIL: test_rows_still_offer_their_sections (test_router.Router.test_rows_still_offer_their_sections)"
+   ]
+  },
+  {
+   "n": 10,
+   "what": "ENTRY.md row 12 and its routing scenario deleted together",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "ERROR: test_each_row_keeps_its_scenario (test_critical.RouterMeaning.test_each_row_keeps_its_scenario)",
+    "FAIL: test_thin_rows_keep_naming_their_gap (test_guardrails.EntryPins.test_thin_rows_keep_naming_their_gap) (row=12)"
+   ]
+  },
+  {
+   "n": 11,
+   "what": "ENTRY.md row 9 drops law-7 and its scenario drops it too",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_core_rows_keep_their_core_sections (test_critical.RouterMeaning.test_core_rows_keep_their_core_sections)"
+   ]
+  },
+  {
+   "n": 12,
+   "what": "ENTRY.md: row 14 runbook link swapped to unstick (control)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_rows_still_name_their_templates_and_runbooks (test_router.Router.test_rows_still_name_their_templates_and_runbooks)"
+   ]
+  },
+  {
+   "n": 13,
+   "what": "ENTRY.md: step 1 says do the work inside GUIDE",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_entry_says_the_work_happens_in_your_project (test_guardrails.EntryPins.test_entry_says_the_work_happens_in_your_project)"
+   ]
+  },
+  {
+   "n": 14,
+   "what": "Template B: STOP AND ASK block removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_template_b_keeps_its_stop_rules (test_guardrails.KeyPhrases.test_template_b_keeps_its_stop_rules) (phrase='STOP AND ASK ME IF')"
+   ]
+  },
+  {
+   "n": 15,
+   "what": "Template B: 'NOT RUN is not PASS' and 'two strikes' rules removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_not_run_is_not_pass_is_stated_in_the_playbook (test_guardrails.KeyPhrases.test_not_run_is_not_pass_is_stated_in_the_playbook) (section='B')",
+    "FAIL: test_template_b_keeps_its_stop_rules (test_guardrails.KeyPhrases.test_template_b_keeps_its_stop_rules) (phrase='NOT RUN is not PASS')",
+    "FAIL: test_template_b_keeps_its_stop_rules (test_guardrails.KeyPhrases.test_template_b_keeps_its_stop_rules) (phrase='If the same check fails twice for the same reason, stop and ask for a second opinion')"
+   ]
+  },
+  {
+   "n": 16,
+   "what": "Section 9.4 receipt format emptied, heading kept",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_receipt_format_keeps_pass_fail_not_run (test_guardrails.KeyPhrases.test_receipt_format_keeps_pass_fail_not_run) (status='PASS')",
+    "FAIL: test_receipt_format_keeps_pass_fail_not_run (test_guardrails.KeyPhrases.test_receipt_format_keeps_pass_fail_not_run) (status='FAIL')",
+    "FAIL: test_receipt_format_keeps_pass_fail_not_run (test_guardrails.KeyPhrases.test_receipt_format_keeps_pass_fail_not_run) (status='NOT RUN')",
+    "FAIL: test_no_section_is_hollowed_out (test_guardrails.SectionBaseline.test_no_section_is_hollowed_out)"
+   ]
+  },
+  {
+   "n": 17,
+   "what": "Law 7 body flipped: builder reviews its own work",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_law_7_keeps_the_reviewer_away_from_the_authors_reasoning (test_critical.PlaybookMeaning.test_law_7_keeps_the_reviewer_away_from_the_authors_reasoning)"
+   ]
+  },
+  {
+   "n": 18,
+   "what": "Law 9 body weakened: prose is enough",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_law_9_keeps_controls_in_code (test_critical.PlaybookMeaning.test_law_9_keeps_controls_in_code)"
+   ]
+  },
+  {
+   "n": 19,
+   "what": "Five [D] grades promoted to [P]",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_evidence_tags_are_not_stripped (test_critical.PlaybookMeaning.test_evidence_tags_are_not_stripped)",
+    "FAIL: test_no_grade_is_promoted_without_a_source (test_guardrails.SectionBaseline.test_no_grade_is_promoted_without_a_source)"
+   ]
+  },
+  {
+   "n": 20,
+   "what": "Evidence grade stripped from 18 [P] claims",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_evidence_tags_are_not_stripped (test_critical.PlaybookMeaning.test_evidence_tags_are_not_stripped)"
+   ]
+  },
+  {
+   "n": 21,
+   "what": "Template F guardrails: terraform, kubectl, vercel and force-with-lease denies removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_guardrails_block_keeps_every_deny (test_critical.PlaybookMeaning.test_guardrails_block_keeps_every_deny)"
+   ]
+  },
+  {
+   "n": 22,
+   "what": "Template M: contents:write and actions pinned to @main",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_template_m_stays_read_only_and_pinned (test_guardrails.KeyPhrases.test_template_m_stays_read_only_and_pinned)"
+   ]
+  },
+  {
+   "n": 23,
+   "what": "Template H: stop condition and retry cap removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_loop_prompts_keep_their_stop_condition_and_caps (test_guardrails.KeyPhrases.test_loop_prompts_keep_their_stop_condition_and_caps) (phrase='Stop when <end condition>')",
+    "FAIL: test_loop_prompts_keep_their_stop_condition_and_caps (test_guardrails.KeyPhrases.test_loop_prompts_keep_their_stop_condition_and_caps) (phrase='after 2 failures with the same cause')",
+    "FAIL: test_loop_prompts_keep_their_stop_condition_and_caps (test_guardrails.KeyPhrases.test_loop_prompts_keep_their_stop_condition_and_caps) (phrase='retry at most once')"
+   ]
+  },
+  {
+   "n": 24,
+   "what": "Sections 10.3 and 12.4 hollowed out, headings kept",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_no_section_is_hollowed_out (test_guardrails.SectionBaseline.test_no_section_is_hollowed_out)"
+   ]
+  },
+  {
+   "n": 25,
+   "what": "Template I: retro changes applied without asking",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_retro_and_grill_prompts_keep_their_core_rules (test_guardrails.KeyPhrases.test_retro_and_grill_prompts_keep_their_core_rules) (template='I', phrase=\"Don't apply anything until I say yes\")"
+   ]
+  },
+  {
+   "n": 26,
+   "what": "Template K: grill asks all questions in one message",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_retro_and_grill_prompts_keep_their_core_rules (test_guardrails.KeyPhrases.test_retro_and_grill_prompts_keep_their_core_rules) (template='K', phrase='One question per message')"
+   ]
+  },
+  {
+   "n": 27,
+   "what": "Cheat sheet cs:3 (stuck signs) body replaced by a stub",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_cheat_sheet_stuck_signs_keep_their_rows (test_guardrails.KeyPhrases.test_cheat_sheet_stuck_signs_keep_their_rows)",
+    "FAIL: test_no_section_is_hollowed_out (test_guardrails.SectionBaseline.test_no_section_is_hollowed_out)"
+   ]
+  },
+  {
+   "n": 28,
+   "what": "section.py prints only the heading line of every id",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_section_prints_its_exact_text (test_guardrails.SectionToolFidelity.test_every_section_prints_its_exact_text)"
+   ]
+  },
+  {
+   "n": 29,
+   "what": "section.py caps every section at 25 lines",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_section_prints_its_exact_text (test_guardrails.SectionToolFidelity.test_every_section_prints_its_exact_text)"
+   ]
+  },
+  {
+   "n": 30,
+   "what": "section.py silently drops the last line of each section",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_section_prints_its_exact_text (test_guardrails.SectionToolFidelity.test_every_section_prints_its_exact_text)"
+   ]
+  },
+  {
+   "n": 31,
+   "what": "check_privacy.py always exits 0, and a leak lands in README",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_privacy_checker_fails_on_a_missing_named_file (test_harness.CheckerSelfTests.test_privacy_checker_fails_on_a_missing_named_file)",
+    "FAIL: test_privacy_checker_fails_on_personal_path_and_email (test_harness.CheckerSelfTests.test_privacy_checker_fails_on_personal_path_and_email)"
+   ]
+  },
+  {
+   "n": 32,
+   "what": "check_links.py always exits 0, and a broken link lands in orchestration-index.md",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_links_checker_fails_on_broken_file_and_anchor (test_harness.CheckerSelfTests.test_links_checker_fails_on_broken_file_and_anchor)"
+   ]
+  },
+  {
+   "n": 33,
+   "what": "check_entry.py always exits 0, and row 2 cites a nonexistent id",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_entry_checker_fails_on_unknown_section_id (test_harness.CheckerSelfTests.test_entry_checker_fails_on_unknown_section_id)",
+    "FAIL: test_entry_checker_fails_when_entry_grows_past_150_lines (test_harness.CheckerSelfTests.test_entry_checker_fails_when_entry_grows_past_150_lines)",
+    "FAIL: test_entry_checker_fails_with_fourteen_rows (test_harness.CheckerSelfTests.test_entry_checker_fails_with_fourteen_rows)",
+    "FAIL: test_entry_checker_passes_the_real_entry (test_harness.CheckerSelfTests.test_entry_checker_passes_the_real_entry)"
+   ]
+  },
+  {
+   "n": 34,
+   "what": "tests/run.sh always exits 0",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "runner integrity: run.sh and the commit hook still run every check",
+    "unit and guard tests",
+    "FAIL: test_run_sh_cannot_exit_zero_early_or_hide_a_failure (__main__.RunnerIntegrityTests.test_run_sh_cannot_exit_zero_early_or_hide_a_failure)",
+    "FAIL: test_run_sh_cannot_exit_zero_early_or_hide_a_failure (test_harness.RunnerIntegrityTests.test_run_sh_cannot_exit_zero_early_or_hide_a_failure)"
+   ]
+  },
+  {
+   "n": 35,
+   "what": "tests/run.sh skips the unittest step",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "runner integrity: run.sh and the commit hook still run every check",
+    "FAIL: test_run_sh_calls_every_check_and_the_unittest_step (__main__.RunnerIntegrityTests.test_run_sh_calls_every_check_and_the_unittest_step)"
+   ]
+  },
+  {
+   "n": 36,
+   "what": "tests/test_templates.py deleted and unlinked from the README",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_listed_test_file_exists (test_harness.SuiteFloorTests.test_every_listed_test_file_exists)",
+    "FAIL: test_every_test_file_named_in_the_readme_exists (test_harness.SuiteFloorTests.test_every_test_file_named_in_the_readme_exists)",
+    "FAIL: test_total_test_cases_meet_the_floor (test_harness.SuiteFloorTests.test_total_test_cases_meet_the_floor)",
+    "FAIL: test_unittest_discovery_collects_the_floor (test_harness.SuiteFloorTests.test_unittest_discovery_collects_the_floor)"
+   ]
+  },
+  {
+   "n": 37,
+   "what": "tests/test_router.py deleted and unlinked from the README",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_listed_test_file_exists (test_harness.SuiteFloorTests.test_every_listed_test_file_exists)",
+    "FAIL: test_every_test_file_named_in_the_readme_exists (test_harness.SuiteFloorTests.test_every_test_file_named_in_the_readme_exists)",
+    "FAIL: test_total_test_cases_meet_the_floor (test_harness.SuiteFloorTests.test_total_test_cases_meet_the_floor)",
+    "FAIL: test_unittest_discovery_collects_the_floor (test_harness.SuiteFloorTests.test_unittest_discovery_collects_the_floor)"
+   ]
+  },
+  {
+   "n": 38,
+   "what": ".githooks/pre-commit replaced by exit 0",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "runner integrity: run.sh and the commit hook still run every check",
+    "unit and guard tests",
+    "FAIL: test_pre_commit_hook_runs_the_suite_and_cannot_pass_early (__main__.RunnerIntegrityTests.test_pre_commit_hook_runs_the_suite_and_cannot_pass_early)",
+    "FAIL: test_pre_commit_hook_runs_the_suite_and_cannot_pass_early (test_harness.RunnerIntegrityTests.test_pre_commit_hook_runs_the_suite_and_cannot_pass_early)"
+   ]
+  },
+  {
+   "n": 39,
+   "what": "AGENTS.md: tests optional, weakening tests allowed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_agents_md_keeps_its_rules (test_guardrails.RulesAndRunbooks.test_agents_md_keeps_its_rules) (phrase='Never weaken or delete a test')"
+   ]
+  },
+  {
+   "n": 40,
+   "what": "AGENTS.md: facts rule replaced by 'add claims freely'",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_agents_md_keeps_its_rules (test_guardrails.RulesAndRunbooks.test_agents_md_keeps_its_rules) (phrase='Add no new factual claim without a primary source')"
+   ]
+  },
+  {
+   "n": 41,
+   "what": "AGENTS.md: privacy bullet says the repo is private, heading and tool name kept",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_agents_md_keeps_its_rules (test_guardrails.RulesAndRunbooks.test_agents_md_keeps_its_rules) (phrase='This repository is public')"
+   ]
+  },
+  {
+   "n": 42,
+   "what": "wiki/grill.md: checklist emptied, heading kept",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_runbook_keeps_a_checklist_and_steps (test_guardrails.RulesAndRunbooks.test_every_runbook_keeps_a_checklist_and_steps) (runbook='grill.md')"
+   ]
+  },
+  {
+   "n": 43,
+   "what": "wiki/verify.md: 'NOT RUN counts as PASS'",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_no_layer_says_not_run_counts_as_pass (test_guardrails.RulesAndRunbooks.test_no_layer_says_not_run_counts_as_pass)"
+   ]
+  },
+  {
+   "n": 44,
+   "what": "wiki/verify.md: Stop hook exit code 2 changed to 1",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_stop_hook_blocks_with_exit_2_everywhere (test_critical.LayersAgree.test_stop_hook_blocks_with_exit_2_everywhere)"
+   ]
+  },
+  {
+   "n": 45,
+   "what": "orchestration-index.md: 'never mark PASS without evidence' reversed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_index_never_marks_pass_without_evidence (test_critical.LayersAgree.test_index_never_marks_pass_without_evidence)"
+   ]
+  },
+  {
+   "n": 46,
+   "what": "skills/guide/SKILL.md: allowed-tools widened to unrestricted Bash, Write, Edit",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_guide_skill_asks_for_exactly_three_tools (test_guardrails.SkillSafety.test_guide_skill_asks_for_exactly_three_tools)"
+   ]
+  },
+  {
+   "n": 47,
+   "what": "Drop python -I from SKILL.md, snippet, prompt and ENTRY commands",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_command_runs_python_isolated (test_critical.LayersAgree.test_every_command_runs_python_isolated)"
+   ]
+  },
+  {
+   "n": 48,
+   "what": "skills/guide/SKILL.md: 'say what the playbook lacks for thin rows' removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_guide_names_thin_gaps (test_critical.SkillMeaning.test_guide_names_thin_gaps)"
+   ]
+  },
+  {
+   "n": 49,
+   "what": "snippet.md points at tool/section.py (control)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_printed_snippet_and_prompt_have_real_root (test_skills.InstallScript.test_printed_snippet_and_prompt_have_real_root)"
+   ]
+  },
+  {
+   "n": 50,
+   "what": "install.sh --apply also appends the snippet to ~/.claude/CLAUDE.md",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_installer_leaves_only_its_symlink_in_home (test_guardrails.SkillSafety.test_installer_leaves_only_its_symlink_in_home)"
+   ]
+  },
+  {
+   "n": 51,
+   "what": "llms.txt calls ENTRY.md deprecated and points at the whole playbook",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_llms_txt_sends_outside_sessions_to_entry (test_critical.LayersAgree.test_llms_txt_sends_outside_sessions_to_entry)"
+   ]
+  },
+  {
+   "n": 52,
+   "what": "skills/grill/SKILL.md: disable-model-invocation removed (grill can auto-trigger)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_grill_skill_cannot_write_and_stays_slash_only (test_guardrails.SkillSafety.test_grill_skill_cannot_write_and_stays_slash_only)"
+   ]
+  },
+  {
+   "n": 53,
+   "what": "skills/grill/SKILL.md: 'cover the ground' rule and plain-text fallback removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_grill_keeps_coverage_and_plain_text_fallback (test_critical.SkillMeaning.test_grill_keeps_coverage_and_plain_text_fallback)",
+    "FAIL: test_covers_problem_and_riskiest_assumption (test_skills.GrillSkillRules.test_covers_problem_and_riskiest_assumption)"
+   ]
+  },
+  {
+   "n": 54,
+   "what": "Playbook: every 14th prose line outside code fences deleted (~7% silent decay)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_evidence_tags_are_not_stripped (test_critical.PlaybookMeaning.test_evidence_tags_are_not_stripped)",
+    "FAIL: test_rule_keeps_its_evidence (test_critical.ReviewsEnd.test_rule_keeps_its_evidence)",
+    "FAIL: test_evidence_tag_counts_do_not_collapse (test_playbook.Baseline.test_evidence_tag_counts_do_not_collapse)",
+    "FAIL: test_no_source_url_removed (test_playbook.Baseline.test_no_source_url_removed)"
+   ]
+  },
+  {
+   "n": 55,
+   "what": "wiki/run-unattended.md: Steps body replaced by a stub, heading kept",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_every_runbook_keeps_a_checklist_and_steps (test_guardrails.RulesAndRunbooks.test_every_runbook_keeps_a_checklist_and_steps) (runbook='run-unattended.md')"
+   ]
+  },
+  {
+   "n": 56,
+   "what": "Compendium builder injects an <img> beacon and a fetch() to a remote host",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_compendium_makes_no_network_request (test_guardrails.CompendiumOffline.test_compendium_makes_no_network_request)"
+   ]
+  },
+  {
+   "n": 57,
+   "what": "skills/grill/SKILL.md: fact questions get options again (figures can slip in through a click)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_fact_questions_are_open (test_skills.GrillSkillRules.test_fact_questions_are_open)"
+   ]
+  },
+  {
+   "n": 58,
+   "what": "skills/prompt/SKILL.md: trace-every-figure rule and the fresh review before saving removed",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_checks_run_in_order_before_saving (test_prompt_skill.SkillRules.test_checks_run_in_order_before_saving)",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 59,
+   "what": "skills/prompt/SKILL.md: self-check allowed in place of the fresh review, and gaps may be merged under the cap",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 60,
+   "what": "skills/prompt/check_prompt.py always exits 0 and stops flagging relative terms",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_four_unknowns_without_not_ready_fail_c4 (test_prompt_skill.PromptCheck.test_four_unknowns_without_not_ready_fail_c4)",
+    "FAIL: test_missing_part_fails_c1 (test_prompt_skill.PromptCheck.test_missing_part_fails_c1)",
+    "FAIL: test_missing_risk_line_fails_c9 (test_prompt_skill.PromptCheck.test_missing_risk_line_fails_c9)",
+    "FAIL: test_old_low_label_fails_c9 (test_prompt_skill.PromptCheck.test_old_low_label_fails_c9)",
+    "FAIL: test_relative_term_fails_c5_unless_quoted_or_marked (test_prompt_skill.PromptCheck.test_relative_term_fails_c5_unless_quoted_or_marked)"
+   ]
+  },
+  {
+   "n": 61,
+   "what": "skills/prompt/SKILL.md: chosen figures tagged ASSUMED on every use again, and check_prompt.py stops flagging repeats",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_a_figure_marked_twice_warns_c7 (test_prompt_skill.PromptCheck.test_a_figure_marked_twice_warns_c7)",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 62,
+   "what": "skills/prompt/SKILL.md: the reviewer's three questions and the test of stop conditions against the current state dropped",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 63,
+   "what": "skills/grill and skills/prompt stop asking where the code, data and records live",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)",
+    "FAIL: test_covers_problem_and_riskiest_assumption (test_skills.GrillSkillRules.test_covers_problem_and_riskiest_assumption)"
+   ]
+  },
+  {
+   "n": 64,
+   "what": "skills/prompt/SKILL.md: the risk line above the title dropped (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)",
+    "FAIL: test_skill_and_check_change_together (test_prompt_skill.SkillRules.test_skill_and_check_change_together)"
+   ]
+  },
+  {
+   "n": 65,
+   "what": "skills/prompt/check_prompt.py: c-9 always PASS, so a prompt with no risk line passes (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_missing_risk_line_fails_c9 (test_prompt_skill.PromptCheck.test_missing_risk_line_fails_c9)",
+    "FAIL: test_old_low_label_fails_c9 (test_prompt_skill.PromptCheck.test_old_low_label_fails_c9)",
+    "FAIL: test_risk_line_after_goal_fails_c9 (test_prompt_skill.PromptCheck.test_risk_line_after_goal_fails_c9)"
+   ]
+  },
+  {
+   "n": 66,
+   "what": "skills/prompt/check_prompt.py: the trivial form shrinks to v8's four parts, dropping BUDGET, STOP AND ASK IF and HOW TO WORK (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_trivial_keeps_template_b_parts (test_prompt_skill.PromptCheck.test_trivial_keeps_template_b_parts)"
+   ]
+  },
+  {
+   "n": 72,
+   "what": "skills/prompt/SKILL.md: the risk rule's definitions deleted, leaving a risk line with no rule behind it (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 67,
+   "what": "skills/prompt/SKILL.md: normal and high prompts no longer end with a fresh diff review (R2)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 68,
+   "what": "skills/prompt/SKILL.md: high-risk prompts no longer name the gate behind each hard constraint (R3)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 69,
+   "what": "skills/prompt/SKILL.md: helper briefs no longer carry what is ruled out and decided (R4)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 70,
+   "what": "skills/prompt/SKILL.md: loops lose idempotence, least privilege and the capped output (R5)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 71,
+   "what": "skills/prompt/SKILL.md: plan files lose their docs/plans path and go back to scratch (R6)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 73,
+   "what": "skills/prompt/SKILL.md: step 5 no longer lets a trivial prompt leave out CONTEXT (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_keeps_every_rule (test_prompt_skill.SkillRules.test_keeps_every_rule)"
+   ]
+  },
+  {
+   "n": 74,
+   "what": "skills/prompt/check_prompt.py: c-9 accepts a risk line anywhere, not only before GOAL (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_risk_line_after_goal_fails_c9 (test_prompt_skill.PromptCheck.test_risk_line_after_goal_fails_c9)"
+   ]
+  },
+  {
+   "n": 75,
+   "what": "skills/prompt/check_prompt.py: the trivial form keeps only BUDGET, STOP AND ASK IF and HOW TO WORK (R1)",
+   "verdict": "CAUGHT",
+   "stage": "firm",
+   "detail": [
+    "unit and guard tests",
+    "FAIL: test_trivial_needs_every_other_template_b_part (test_prompt_skill.PromptCheck.test_trivial_needs_every_other_template_b_part)"
+   ]
+  }
+ ]
+}

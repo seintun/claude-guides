@@ -1,0 +1,21 @@
+# Version history
+
+## Teaching page (artifact https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq)
+
+| Version | What changed | Checks |
+|---|---|---|
+| 1–10 | First build of 17 lessons and Sources; research folded in; fact-check corrections; graded P/S/R/D tags with links and tooltips; Lesson 17 on proven orchestration; tooltip theming; D tags made tooltip-only | Manual review in the built-in browser; link check: 77 of 82 links returned 2xx, the rest load in a browser |
+| 11 | Baseline for the UX issue (`site/history/orchestrating-claude-v11.html`) | `checks/baseline-v11.txt`: 12 PASS, 57 FAIL |
+| 12 | 30-minute launch. Children 0–7, 9 and 10, plus the takeaways and callouts from child 11 | 20 of 20 in 6 views |
+| 13 | Phase buttons under the diagram; the panel height is held; the page no longer jumps | Steady over 18 clicks in 3 views |
+| 14 | Phase nav centered, with "← Prev" and "Next →" | Steady and symmetric at 1280, 375 and 320px |
+| 15 | Fixes from the reviews and the blocking chart items; child 8 diagrams (L1, L3, L5, L6, L9, L11, L12); the rest of child 11; child 12 (running example, recall items, try-now, quiz); glossary tooltips; quiz colours | 20 of 20 in 6 views |
+| 16 | Final review fixes: keyboard-safe quiz, 12px figure text at every width, tables that wrap at mid widths, two more folded tables, glosses, wording, safe hash handling | 21 of 21 in 8 views (320, 375 ×2, 414, 768, 1024, 1280 ×2) |
+
+## Playbook (`playbook/agent-harness-playbook.md`)
+
+| Version | What changed |
+|---|---|
+| 0.1–0.3 | First draft; research sections; Templates A–M; the fact-check; hardened Templates F, G and M |
+| 0.4 | Contents, find-it-fast, the page map as a table, a template index, Read-when notes, page-term aliases, Build-it-first Laws, a text version of the §3 diagram, and corrected Google-study wording. Independent review: PASS |
+| 0.5 | Fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): the Stop gate is protected by an `Edit` deny rule and leaves a `.gate-failed` marker on give-up; a guardrails block for irreversible actions; a RISK switch in Template B; 23 corrected claims and six caveats; §0 and §19 link the review as their evidence. Checks: `bash -n` and `shellcheck` on both hook scripts, a YAML parse of Template M, a scripted give-up test |

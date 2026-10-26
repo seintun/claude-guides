@@ -1,0 +1,2 @@
+# A generated file: a revert or merge keeps the current copy; rebuild it with tools/build_compendium.py.
+docs/orchestrating-claude-compendium.html merge=ours

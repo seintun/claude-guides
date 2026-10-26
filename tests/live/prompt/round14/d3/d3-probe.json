@@ -1,0 +1,43 @@
+{
+ "seed": 1111,
+ "pairs": {
+  "bugfix": {
+   "pair-1": {
+    "X": "D3",
+    "Y": "U1"
+   },
+   "pair-2": {
+    "X": "U1",
+    "Y": "D3"
+   }
+  },
+  "refactor": {
+   "pair-1": {
+    "X": "D3",
+    "Y": "U1"
+   },
+   "pair-2": {
+    "X": "U1",
+    "Y": "D3"
+   }
+  }
+ },
+ "single": {
+  "D01": {
+   "scenario": "bugfix",
+   "version": "D3"
+  },
+  "D02": {
+   "scenario": "bugfix",
+   "version": "U1"
+  },
+  "D03": {
+   "scenario": "refactor",
+   "version": "D3"
+  },
+  "D04": {
+   "scenario": "refactor",
+   "version": "U1"
+  }
+ }
+}

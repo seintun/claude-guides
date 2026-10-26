@@ -1,0 +1,115 @@
+{
+ "seed": 6006,
+ "pairs": {
+  "bugfix": {
+   "pair-1": {
+    "X": "U2",
+    "Y": "T3"
+   },
+   "pair-2": {
+    "X": "T3",
+    "Y": "U2"
+   }
+  },
+  "feature": {
+   "pair-1": {
+    "X": "U2",
+    "Y": "T3"
+   },
+   "pair-2": {
+    "X": "T3",
+    "Y": "U2"
+   }
+  },
+  "migration": {
+   "pair-1": {
+    "X": "T3",
+    "Y": "U2"
+   },
+   "pair-2": {
+    "X": "U2",
+    "Y": "T3"
+   }
+  },
+  "overnight": {
+   "pair-1": {
+    "X": "U2",
+    "Y": "T3"
+   },
+   "pair-2": {
+    "X": "T3",
+    "Y": "U2"
+   }
+  },
+  "refactor": {
+   "pair-1": {
+    "X": "U2",
+    "Y": "T3"
+   },
+   "pair-2": {
+    "X": "T3",
+    "Y": "U2"
+   }
+  },
+  "research": {
+   "pair-1": {
+    "X": "U2",
+    "Y": "T3"
+   },
+   "pair-2": {
+    "X": "T3",
+    "Y": "U2"
+   }
+  }
+ },
+ "single": {
+  "D01": {
+   "scenario": "feature",
+   "version": "U2"
+  },
+  "D02": {
+   "scenario": "research",
+   "version": "U2"
+  },
+  "D03": {
+   "scenario": "migration",
+   "version": "U2"
+  },
+  "D04": {
+   "scenario": "bugfix",
+   "version": "U2"
+  },
+  "D05": {
+   "scenario": "refactor",
+   "version": "T3"
+  },
+  "D06": {
+   "scenario": "feature",
+   "version": "T3"
+  },
+  "D07": {
+   "scenario": "research",
+   "version": "T3"
+  },
+  "D08": {
+   "scenario": "overnight",
+   "version": "T3"
+  },
+  "D09": {
+   "scenario": "bugfix",
+   "version": "T3"
+  },
+  "D10": {
+   "scenario": "refactor",
+   "version": "U2"
+  },
+  "D11": {
+   "scenario": "overnight",
+   "version": "U2"
+  },
+  "D12": {
+   "scenario": "migration",
+   "version": "T3"
+  }
+ }
+}

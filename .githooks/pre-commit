@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Refuses a commit while the offline suite fails, so a change that breaks the guide never lands.
+# Enable once per clone: git config core.hooksPath .githooks
+# (Skip this if you already use a global core.hooksPath; it would replace it for this clone.)
+exec "$(git rev-parse --show-toplevel)/tests/run.sh"

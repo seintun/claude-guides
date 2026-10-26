@@ -1,0 +1,306 @@
+{
+ "about": "Routing scenarios for ENTRY.md. tests/test_router.py checks offline that each expected row still offers the listed sections, template and runbook. tests/live/route_scenarios.sh sends the request to a fresh claude -p session and checks it picks the expected row. 'also' lists rows a session may reasonably pick instead.",
+ "scenarios": [
+  {
+   "id": "vague-idea",
+   "request": "I have a vague idea: make onboarding faster for new engineers. Where do I start?",
+   "row": 1,
+   "ids": [
+    "5.1",
+    "5.2"
+   ],
+   "templates": [
+    "K",
+    "L"
+   ],
+   "runbook": "start-a-task",
+   "also": [
+    15
+   ]
+  },
+  {
+   "id": "new-feature",
+   "request": "Plan a new CSV export feature for our reports page and get an agent to build it.",
+   "row": 2,
+   "ids": [
+    "5.3",
+    "5.4"
+   ],
+   "templates": [
+    "B",
+    "D"
+   ],
+   "runbook": "orchestrate",
+   "also": [
+    1
+   ]
+  },
+  {
+   "id": "bug-fix",
+   "request": "Fix the bug where the date filter drops the last day of the range.",
+   "row": 3,
+   "ids": [
+    "9.1",
+    "14"
+   ],
+   "templates": [
+    "L",
+    "B"
+   ],
+   "runbook": "verify",
+   "also": []
+  },
+  {
+   "id": "refactor",
+   "request": "Refactor the billing module into smaller files without changing behaviour.",
+   "row": 4,
+   "ids": [
+    "9.3",
+    "18"
+   ],
+   "templates": [
+    "D",
+    "B"
+   ],
+   "runbook": "verify",
+   "also": []
+  },
+  {
+   "id": "migration",
+   "request": "Migrate 400 test files from Jest to Vitest with an agent.",
+   "row": 5,
+   "ids": [
+    "11.1",
+    "11.3",
+    "E"
+   ],
+   "templates": [
+    "D",
+    "E"
+   ],
+   "runbook": "run-unattended",
+   "also": [
+    8
+   ]
+  },
+  {
+   "id": "harness-setup",
+   "request": "Set up a Claude Code harness for my team from scratch.",
+   "row": 6,
+   "ids": [
+    "17",
+    "17A"
+   ],
+   "templates": [
+    "A",
+    "F"
+   ],
+   "runbook": "build-a-harness",
+   "also": [
+    14
+   ]
+  },
+  {
+   "id": "add-hooks",
+   "request": "Set up hooks so Claude can't say done while tests fail.",
+   "row": 7,
+   "ids": [
+    "9.5",
+    "F"
+   ],
+   "templates": [
+    "F"
+   ],
+   "runbook": "verify",
+   "also": []
+  },
+  {
+   "id": "overnight",
+   "request": "Run an agent overnight to work through our backlog of small issues.",
+   "row": 8,
+   "ids": [
+    "11.3",
+    "11.5"
+   ],
+   "templates": [
+    "H",
+    "E"
+   ],
+   "runbook": "run-unattended",
+   "also": []
+  },
+  {
+   "id": "code-review",
+   "request": "Have an agent review this pull request before I merge it.",
+   "row": 9,
+   "ids": [
+    "9.2",
+    "law-7"
+   ],
+   "templates": [
+    "C",
+    "M"
+   ],
+   "runbook": "verify",
+   "also": []
+  },
+  {
+   "id": "research-spike",
+   "request": "Research which vector database fits our search feature before we build anything.",
+   "row": 10,
+   "ids": [
+    "5.4",
+    "7"
+   ],
+   "templates": [
+    "C"
+   ],
+   "runbook": "orchestrate",
+   "also": [
+    1
+   ]
+  },
+  {
+   "id": "stuck-agent",
+   "request": "My agent keeps retrying the same failing test and never finishes.",
+   "row": 11,
+   "ids": [
+    "cs:3",
+    "14"
+   ],
+   "templates": [
+    "B"
+   ],
+   "runbook": "unstick",
+   "also": [
+    3
+   ]
+  },
+  {
+   "id": "cost-blowup",
+   "request": "Our Claude bill tripled overnight. What do we do?",
+   "row": 12,
+   "ids": [
+    "18",
+    "11.5"
+   ],
+   "templates": [
+    "B",
+    "H"
+   ],
+   "runbook": "run-unattended",
+   "also": []
+  },
+  {
+   "id": "multi-repo",
+   "request": "Change an API in our backend repo and update the three client repos that call it.",
+   "row": 13,
+   "ids": [
+    "18",
+    "12.1"
+   ],
+   "templates": [
+    "D"
+   ],
+   "runbook": "orchestrate",
+   "also": [
+    2
+   ]
+  },
+  {
+   "id": "onboard-repo",
+   "request": "Onboard this new repo so agents can work in it.",
+   "row": 14,
+   "ids": [
+    "8",
+    "law-5"
+   ],
+   "templates": [
+    "A"
+   ],
+   "runbook": "build-a-harness",
+   "also": [
+    6
+   ]
+  },
+  {
+   "id": "agent-ready-issue",
+   "request": "Write an agent-ready issue for a dark mode toggle.",
+   "row": 15,
+   "ids": [
+    "5.1",
+    "law-3"
+   ],
+   "templates": [
+    "L"
+   ],
+   "runbook": "start-a-task",
+   "also": [
+    1
+   ]
+  },
+  {
+   "id": "retro",
+   "request": "Run a retro on the task we just finished.",
+   "row": 16,
+   "ids": [
+    "13",
+    "law-8"
+   ],
+   "templates": [
+    "I"
+   ],
+   "runbook": "improve",
+   "also": []
+  },
+  {
+   "id": "security-review",
+   "request": "Review our agent setup for prompt injection and leaked secrets.",
+   "row": 17,
+   "ids": [
+    "10.1",
+    "12.4"
+   ],
+   "templates": [
+    "F",
+    "M"
+   ],
+   "runbook": "guardrails",
+   "also": []
+  },
+  {
+   "id": "parallel-writers",
+   "request": "Three agents need to work on the same codebase at once without clobbering each other.",
+   "row": 18,
+   "ids": [
+    "7",
+    "3A"
+   ],
+   "templates": [
+    "D",
+    "C"
+   ],
+   "runbook": "orchestrate",
+   "also": []
+  },
+  {
+   "id": "write-a-prompt",
+   "request": "Write me a prompt I can hand to an agent to add pagination to our API.",
+   "row": 19,
+   "ids": [
+    "cs:6",
+    "law-3",
+    "9.1"
+   ],
+   "templates": [
+    "B",
+    "C",
+    "H"
+   ],
+   "runbook": "skills/prompt/README.md",
+   "also": [
+    2
+   ]
+  }
+ ]
+}

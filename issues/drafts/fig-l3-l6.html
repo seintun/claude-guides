@@ -1,0 +1,122 @@
+<!-- Draft: Lesson 3 pipeline (VZ-7) and Lesson 6 lead-and-helpers (VZ-9) redrawn. Nothing here has been applied to site/orchestrating-claude.html.
+     How to apply: the L3 SVG block replaces the whole svg element in section #discovery (old viewBox 0 0 880 170). The L6 SVG block replaces the whole svg element in the first figure of section #orchestration (old viewBox 0 0 880 400).
+     Optional: L3 CAPTION is the new inner HTML for that figure's figcaption; L3 KEY is the new inner HTML for its fig-key list. The L6 caption and key need no change. -->
+
+<!-- L3 SVG -->
+<svg viewBox="0 0 880 234" style="--vbw:880px;max-width:880px" role="img" aria-label="You own the why and the bet; the agent drafts the rest. Discovery pipeline: Frame, Assumptions and Bet are yours; Grill, Shape, Specify and Slice are drafted by the agent; then agents deliver. Ideas that are not bet on go to a Parked box. QA findings from delivery come back to Slice as new issues, and the measured outcome feeds back to Frame as the next idea.">
+  <defs>
+    <marker id="d-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow"/></marker>
+    <marker id="d-al" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow loop"/></marker>
+  </defs>
+  <rect x="12" y="14" width="748" height="22" rx="4" class="d-band"/>
+  <text x="386" y="29" text-anchor="middle" class="d-band-text">DISCOVERY · YOU OWN THE WHY</text>
+  <rect x="768" y="14" width="100" height="22" rx="4" class="d-band"/>
+  <text x="818" y="29" text-anchor="middle" class="d-band-text">DELIVERY</text>
+  <rect x="12" y="52" width="100" height="58" rx="16" class="d-you"/>
+  <text x="62" y="78" text-anchor="middle" class="d-title sm">Frame</text>
+  <text x="62" y="97" text-anchor="middle" class="d-sub">you</text>
+  <rect x="120" y="52" width="100" height="58" rx="16" class="d-you"/>
+  <text x="170" y="78" text-anchor="middle" class="d-title sm">Assumptions</text>
+  <text x="170" y="97" text-anchor="middle" class="d-sub">you rank</text>
+  <rect x="228" y="52" width="100" height="58" rx="8" class="d-box"/>
+  <text x="278" y="78" text-anchor="middle" class="d-title sm">Grill</text>
+  <text x="278" y="97" text-anchor="middle" class="d-sub">agent asks</text>
+  <rect x="336" y="52" width="100" height="58" rx="8" class="d-box"/>
+  <text x="386" y="78" text-anchor="middle" class="d-title sm">Shape</text>
+  <text x="386" y="97" text-anchor="middle" class="d-sub">agent drafts</text>
+  <rect x="444" y="52" width="100" height="58" rx="16" class="d-you"/>
+  <text x="494" y="78" text-anchor="middle" class="d-title sm">Bet</text>
+  <text x="494" y="97" text-anchor="middle" class="d-sub">you decide</text>
+  <rect x="552" y="52" width="100" height="58" rx="8" class="d-box"/>
+  <text x="602" y="78" text-anchor="middle" class="d-title sm">Specify</text>
+  <text x="602" y="97" text-anchor="middle" class="d-sub">agent drafts</text>
+  <rect x="660" y="52" width="100" height="58" rx="8" class="d-box"/>
+  <text x="710" y="78" text-anchor="middle" class="d-title sm">Slice</text>
+  <text x="710" y="97" text-anchor="middle" class="d-sub">agent drafts</text>
+  <rect x="768" y="52" width="100" height="58" rx="8" class="d-box"/>
+  <text x="818" y="78" text-anchor="middle" class="d-title sm">Deliver</text>
+  <text x="818" y="97" text-anchor="middle" class="d-sub">agents build</text>
+  <path d="M113,81 L119,81" class="d-edge" marker-end="url(#d-a)"/>
+  <path d="M221,81 L227,81" class="d-edge" marker-end="url(#d-a)"/>
+  <path d="M329,81 L335,81" class="d-edge" marker-end="url(#d-a)"/>
+  <path d="M437,81 L443,81" class="d-edge" marker-end="url(#d-a)"/>
+  <path d="M545,81 L551,81" class="d-edge" marker-end="url(#d-a)"/>
+  <path d="M653,81 L659,81" class="d-edge" marker-end="url(#d-a)"/>
+  <path d="M761,81 L767,81" class="d-edge" marker-end="url(#d-a)"/>
+  <!-- Bet, not chosen: the branch now ends in a real terminal -->
+  <path d="M494,110 L494,137" class="d-edge" marker-end="url(#d-a)"/>
+  <text x="504" y="128" class="d-label">not now: park it</text>
+  <rect x="434" y="140" width="120" height="54" rx="8" class="d-box parked"/>
+  <text x="494" y="164" text-anchor="middle" class="d-title sm">Parked</text>
+  <text x="494" y="183" text-anchor="middle" class="d-sub">not bet on now</text>
+  <!-- QA findings: a send-back (orange), Deliver to Slice -->
+  <path d="M818,110 C818,146 710,146 710,114" class="d-edge loop" marker-end="url(#d-al)"/>
+  <text x="738" y="160" text-anchor="middle" class="d-label loop">QA findings become new issues</text>
+  <!-- Measured outcome: the next idea, not a failure (neutral dashed), Deliver to Frame, outside the arcs above -->
+  <path d="M856,110 V206 Q856,218 844,218 H74 Q62,218 62,206 V114" class="d-edge dash" marker-end="url(#d-a)"/>
+  <text x="270" y="208" text-anchor="middle" class="d-label">measured outcome feeds the next idea</text>
+</svg>
+
+<!-- L3 CAPTION -->
+<strong>You own the why and the bet; the agent drafts the rest.</strong> Each stage leaves a file behind, so the next one starts from writing rather than memory. Ideas you do not bet on are parked. QA findings go back to Slice as new issues (orange), and the dashed line shows what happens after shipping: the measured outcome feeds the next idea.
+
+<!-- L3 KEY -->
+<li><i class="k-you"></i>You decide</li><li><i class="k-box"></i>The agent drafts or builds</li><li><i class="k-auto"></i>Parked, not bet on</li><li><i class="k-line auto"></i>Next idea</li><li><i class="k-line loop"></i>Sent back</li>
+
+<!-- L6 SVG -->
+<svg viewBox="0 0 880 472" style="--vbw:880px;max-width:880px" role="img" aria-label="Helpers do the reading; the lead keeps only their summaries. You give the lead session a goal and get a receipt back. The lead sends a brief to each of five helpers: scout, planner, builder, critic and verifier. Each helper has its own context window, reads many files and returns one short summary. Hooks and gates run automatically whenever the lead stops or pushes.">
+  <defs>
+    <marker id="o-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow"/></marker>
+    <marker id="o-aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow accent"/></marker>
+  </defs>
+  <!-- You -->
+  <rect x="16" y="158" width="120" height="64" rx="32" class="d-you"/>
+  <text x="76" y="185" text-anchor="middle" class="d-title">You</text>
+  <text x="76" y="204" text-anchor="middle" class="d-sub">goal, approvals</text>
+  <path d="M136,178 L196,178" class="d-edge accent" marker-end="url(#o-aa)"/>
+  <text x="166" y="170" text-anchor="middle" class="d-label">goal</text>
+  <path d="M200,204 L140,204" class="d-edge" marker-end="url(#o-a)"/>
+  <text x="168" y="222" text-anchor="middle" class="d-label">receipt</text>
+  <!-- Lead -->
+  <rect x="200" y="96" width="220" height="184" rx="10" class="d-box lead"/>
+  <text x="310" y="126" text-anchor="middle" class="d-title">Lead session</text>
+  <text x="310" y="144" text-anchor="middle" class="d-sub">the orchestrator</text>
+  <text x="222" y="178" class="d-sub">· goal + success criteria</text>
+  <text x="222" y="200" class="d-sub">· plan file (source of truth)</text>
+  <text x="222" y="222" class="d-sub">· decisions and trade-offs</text>
+  <text x="222" y="244" class="d-sub">· final say on "done"</text>
+  <!-- header for the briefs -->
+  <text x="490" y="22" text-anchor="middle" class="d-small">brief out · summary back</text>
+  <!-- briefs: one elbow per helper, each from its own y on the lead's right edge, one arrowhead at the helper -->
+  <path d="M420,118 H462 Q470,118 470,110 V68 Q470,60 478,60 H596" class="d-edge" marker-end="url(#o-a)"/>
+  <path d="M420,153 H512 Q520,153 520,145 V132 Q520,124 528,124 H596" class="d-edge" marker-end="url(#o-a)"/>
+  <path d="M420,188 H596" class="d-edge" marker-end="url(#o-a)"/>
+  <path d="M420,223 H512 Q520,223 520,231 V244 Q520,252 528,252 H596" class="d-edge" marker-end="url(#o-a)"/>
+  <path d="M420,258 H462 Q470,258 470,266 V308 Q470,316 478,316 H596" class="d-edge" marker-end="url(#o-a)"/>
+  <!-- helpers -->
+  <rect x="600" y="34" width="264" height="52" rx="8" class="d-box"/>
+  <text x="616" y="56" class="d-title">Scout</text>
+  <text x="616" y="75" class="d-sub">explores, read-only, cheap model</text>
+  <rect x="600" y="98" width="264" height="52" rx="8" class="d-box"/>
+  <text x="616" y="120" class="d-title">Planner</text>
+  <text x="616" y="139" class="d-sub">slices, tests, risks, rollback</text>
+  <rect x="600" y="162" width="264" height="52" rx="8" class="d-box"/>
+  <text x="616" y="184" class="d-title">Builder</text>
+  <text x="616" y="203" class="d-sub">one slice, in its own worktree</text>
+  <rect x="600" y="226" width="264" height="52" rx="8" class="d-box"/>
+  <text x="616" y="248" class="d-title">Critic</text>
+  <text x="616" y="267" class="d-sub">argues against the plan or diff</text>
+  <rect x="600" y="290" width="264" height="52" rx="8" class="d-box"/>
+  <text x="616" y="312" class="d-title">Verifier</text>
+  <text x="616" y="331" class="d-sub">re-runs the checks, PASS or FAIL</text>
+  <!-- one bracket for all five helpers, and the reduction -->
+  <path d="M600,350 V357 H864 V350" class="d-edge"/>
+  <text x="864" y="378" text-anchor="end" class="d-label">each has its own context window</text>
+  <text x="864" y="398" text-anchor="end" class="d-label">reads many files → returns one short summary</text>
+  <!-- gates -->
+  <path d="M310,280 L310,412" class="d-edge dash" marker-end="url(#o-a)"/>
+  <text x="320" y="352" class="d-label">every stop or push</text>
+  <rect x="200" y="416" width="664" height="44" rx="8" class="d-box auto"/>
+  <text x="216" y="443" class="d-title">Hooks and gates</text>
+  <text x="370" y="443" class="d-sub">scripts that run on their own, e.g. re-run the tests. Claude can't skip them.</text>
+</svg>

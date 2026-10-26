@@ -1,0 +1,148 @@
+<!-- L11 SVG -->
+<svg viewBox="0 0 880 284" style="--vbw:880px;max-width:880px" role="img" aria-label="What wakes Claude decides whether your computer must stay on. Timeline over three days with a column that answers: computer on? /loop runs every 30 minutes only while a session is open, Monday 09:00 to 17:00, then stops when the session closes: yes, your computer must stay on. /schedule runs at 08:00 every day in the cloud, with your laptop closed: no. Hooks run inside your session, so yes; GitHub events (CI fails, a PR comment, a push) reach the Claude GitHub Action in the cloud, so no.">
+  <!-- day grid; the last line also closes the timeline before the answer column -->
+  <line x1="176" y1="30" x2="176" y2="276" class="d-grid"/>
+  <line x1="358" y1="30" x2="358" y2="276" class="d-grid"/>
+  <line x1="540" y1="30" x2="540" y2="276" class="d-grid"/>
+  <line x1="722" y1="30" x2="722" y2="276" class="d-grid"/>
+  <text x="182" y="22" class="d-small">MON</text>
+  <text x="364" y="22" class="d-small">TUE</text>
+  <text x="546" y="22" class="d-small">WED</text>
+  <text x="730" y="22" class="d-small">COMPUTER ON?</text>
+  <!-- lane labels -->
+  <text x="16" y="80" class="d-title">/loop</text>
+  <text x="16" y="98" class="d-sub halo">in this session</text>
+  <text x="16" y="152" class="d-title">/schedule</text>
+  <text x="16" y="170" class="d-sub halo">cloud scheduled task</text>
+  <text x="16" y="224" class="d-title">Hooks + events</text>
+  <text x="16" y="242" class="d-sub halo">react to something</text>
+  <!-- lane baselines -->
+  <line x1="176" y1="86" x2="722" y2="86" class="d-grid"/>
+  <line x1="176" y1="158" x2="722" y2="158" class="d-grid"/>
+  <line x1="176" y1="230" x2="722" y2="230" class="d-grid"/>
+  <!-- loop lane: session open Mon 09:00-17:00, a run every 30 minutes -->
+  <rect x="244.2" y="72" width="60.7" height="28" rx="4" class="d-window"/>
+  <g class="d-tick"><line x1="248" y1="78" x2="248" y2="94"/><line x1="251.8" y1="78" x2="251.8" y2="94"/><line x1="255.6" y1="78" x2="255.6" y2="94"/><line x1="259.4" y1="78" x2="259.4" y2="94"/><line x1="263.2" y1="78" x2="263.2" y2="94"/><line x1="267" y1="78" x2="267" y2="94"/><line x1="270.8" y1="78" x2="270.8" y2="94"/><line x1="274.6" y1="78" x2="274.6" y2="94"/><line x1="278.4" y1="78" x2="278.4" y2="94"/><line x1="282.2" y1="78" x2="282.2" y2="94"/><line x1="286" y1="78" x2="286" y2="94"/><line x1="289.8" y1="78" x2="289.8" y2="94"/><line x1="293.5" y1="78" x2="293.5" y2="94"/><line x1="297.3" y1="78" x2="297.3" y2="94"/><line x1="301.1" y1="78" x2="301.1" y2="94"/></g>
+  <text x="274.6" y="46" text-anchor="middle" class="d-label">session open</text>
+  <text x="274.6" y="62" text-anchor="middle" class="d-label">09:00–17:00</text>
+  <text x="274.6" y="114" text-anchor="middle" class="d-small">every 30 min</text>
+  <text x="311.9" y="90" class="d-sub halo">session closed: the loop stops</text>
+  <!-- schedule lane: 08:00 daily, in the cloud -->
+  <circle cx="236.7" cy="158" r="6" class="d-dot"/>
+  <circle cx="418.7" cy="158" r="6" class="d-dot"/>
+  <circle cx="600.7" cy="158" r="6" class="d-dot"/>
+  <text x="248.7" y="148" class="d-label">08:00 daily</text>
+  <text x="248.7" y="178" class="d-sub halo">runs with your</text>
+  <text x="248.7" y="194" class="d-sub halo">laptop closed</text>
+  <!-- event lane: a hook inside the session, three GitHub events outside it -->
+  <circle cx="259.4" cy="230" r="6" class="d-dot ev"/>
+  <text x="259.4" y="252" text-anchor="middle" class="d-label">Claude stops:</text>
+  <text x="259.4" y="268" text-anchor="middle" class="d-label">tests rerun</text>
+  <circle cx="403.5" cy="230" r="6" class="d-dot ev"/>
+  <text x="403.5" y="218" text-anchor="middle" class="d-label">CI fails</text>
+  <circle cx="471.8" cy="230" r="6" class="d-dot ev"/>
+  <text x="471.8" y="252" text-anchor="middle" class="d-label">PR comment</text>
+  <circle cx="615.8" cy="230" r="6" class="d-dot ev"/>
+  <text x="615.8" y="218" text-anchor="middle" class="d-label">push: checks run</text>
+  <!-- answer column -->
+  <text x="730" y="83" class="d-title">Yes</text>
+  <text x="730" y="101" class="d-sub halo">session stays open</text>
+  <text x="730" y="155" class="d-title">No</text>
+  <text x="730" y="173" class="d-sub halo">runs in the cloud</text>
+  <text x="730" y="209" class="d-title sm">Hooks: yes</text>
+  <text x="730" y="225" class="d-sub halo">in your session</text>
+  <text x="730" y="243" class="d-title sm">GitHub: no</text>
+  <text x="730" y="259" class="d-sub halo">runs in the cloud</text>
+</svg>
+
+<!-- L12 SVG -->
+<svg viewBox="0 0 880 606" style="--vbw:880px;max-width:880px" role="img" aria-label="You act only at the edges; checks and status moves happen on their own. Numbered sequence between You, Linear, Agent, GitHub and CI with gates. 1: you write an issue in Linear, in Triage. 2: you delegate it and stay owner. 3: Linear starts an agent session. 4: the agent acknowledges and the issue moves to In Progress. 5: the agent opens a branch and draft PR on GitHub. 6: required checks run. 7: failures go back to the agent to auto-fix. 8: the agent posts the PR link or questions in Linear. 9: with the PR open, your team's GitHub automation moves the issue to In Review. 10: you review and approve. 11a and 11b: the merge queue reruns checks, and when they pass GitHub merges. 12: merging a PR that says Fixes ID moves the issue to Done.">
+  <defs>
+    <marker id="s-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow"/></marker>
+    <marker id="s-al" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow loop"/></marker>
+    <marker id="s-ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow good"/></marker>
+    <marker id="s-aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="d-arrow accent"/></marker>
+  </defs>
+  <!-- lifeline heads -->
+  <rect x="8" y="12" width="112" height="36" rx="18" class="d-you"/>
+  <text x="64" y="35" text-anchor="middle" class="d-title">You</text>
+  <rect x="206" y="12" width="112" height="36" rx="8" class="d-box"/>
+  <text x="262" y="35" text-anchor="middle" class="d-title">Linear</text>
+  <rect x="364" y="12" width="112" height="36" rx="8" class="d-box"/>
+  <text x="420" y="35" text-anchor="middle" class="d-title">Agent</text>
+  <rect x="554" y="12" width="112" height="36" rx="8" class="d-box"/>
+  <text x="610" y="35" text-anchor="middle" class="d-title">GitHub</text>
+  <rect x="760" y="12" width="112" height="36" rx="8" class="d-box auto"/>
+  <text x="816" y="35" text-anchor="middle" class="d-title">CI + gates</text>
+  <!-- lifelines -->
+  <line x1="64" y1="48" x2="64" y2="596" class="d-edge dash life"/>
+  <line x1="262" y1="48" x2="262" y2="596" class="d-edge dash life"/>
+  <line x1="420" y1="48" x2="420" y2="596" class="d-edge dash life"/>
+  <line x1="610" y1="48" x2="610" y2="596" class="d-edge dash life"/>
+  <line x1="816" y1="48" x2="816" y2="596" class="d-edge dash life"/>
+  <!-- status strip on the Linear lifeline: where the status changes -->
+  <text x="262" y="66" text-anchor="middle" class="d-small halo">status</text>
+  <!-- steps, in reading order; the small number sits just behind each arrow's tail -->
+  <path d="M64,90 L258,90" class="d-edge accent" marker-end="url(#s-aa)"/>
+  <text x="56" y="94" text-anchor="end" class="d-small">1</text>
+  <text x="163" y="83" text-anchor="middle" class="d-label">write issue in Triage</text>
+  <text x="262" y="106" text-anchor="middle" class="d-small halo">Triage</text>
+  <path d="M64,130 L258,130" class="d-edge accent" marker-end="url(#s-aa)"/>
+  <text x="56" y="134" text-anchor="end" class="d-small">2</text>
+  <text x="163" y="123" text-anchor="middle" class="d-label">delegate; you stay owner</text>
+  <path d="M262,170 L416,170" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="254" y="174" text-anchor="end" class="d-small">3</text>
+  <text x="341" y="163" text-anchor="middle" class="d-label">session starts</text>
+  <path d="M420,210 L266,210" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="428" y="214" class="d-small">4</text>
+  <text x="341" y="203" text-anchor="middle" class="d-label">ack; In Progress</text>
+  <text x="262" y="226" text-anchor="middle" class="d-small halo">In Progress</text>
+  <path d="M420,250 L606,250" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="412" y="254" text-anchor="end" class="d-small">5</text>
+  <text x="515" y="243" text-anchor="middle" class="d-label">branch + draft PR</text>
+  <path d="M610,290 L812,290" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="602" y="294" text-anchor="end" class="d-small">6</text>
+  <text x="713" y="283" text-anchor="middle" class="d-label">required checks</text>
+  <path d="M816,330 L424,330" class="d-edge loop" marker-end="url(#s-al)"/>
+  <text x="824" y="334" class="d-small">7</text>
+  <text x="713" y="323" text-anchor="middle" class="d-label loop">failures: auto-fix</text>
+  <path d="M420,370 L266,370" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="428" y="374" class="d-small">8</text>
+  <text x="341" y="363" text-anchor="middle" class="d-label">PR link; questions</text>
+  <path d="M610,410 L266,410" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="618" y="414" class="d-small">9</text>
+  <text x="515" y="403" text-anchor="middle" class="d-label">PR open: In Review</text>
+  <text x="262" y="426" text-anchor="middle" class="d-small halo">In Review</text>
+  <path d="M64,450 L606,450" class="d-edge accent" marker-end="url(#s-aa)"/>
+  <text x="56" y="454" text-anchor="end" class="d-small">10</text>
+  <text x="341" y="443" text-anchor="middle" class="d-label">review and approve</text>
+  <path d="M610,490 L812,490" class="d-edge" marker-end="url(#s-a)"/>
+  <text x="602" y="494" text-anchor="end" class="d-small">11a</text>
+  <text x="713" y="483" text-anchor="middle" class="d-label">merge queue reruns checks</text>
+  <path d="M816,530 L614,530" class="d-edge good" marker-end="url(#s-ag)"/>
+  <text x="824" y="534" class="d-small">11b</text>
+  <text x="713" y="523" text-anchor="middle" class="d-label good">pass: merge</text>
+  <path d="M610,570 L266,570" class="d-edge good" marker-end="url(#s-ag)"/>
+  <text x="618" y="574" class="d-small">12</text>
+  <text x="515" y="563" text-anchor="middle" class="d-label good">&quot;Fixes ID&quot; merged: Done</text>
+  <text x="262" y="586" text-anchor="middle" class="d-small halo">Done</text>
+</svg>
+
+<!-- L12 PANEL EDITS -->
+<b>Triage to Todo:</b> ⟶ <b>Triage to Todo (steps 1–2):</b>
+<b>Todo to In Progress:</b> ⟶ <b>Todo to In Progress (steps 2–4):</b>
+<b>In Progress to In Review:</b> ⟶ <b>In Progress to In Review (step 9):</b>
+<b>In Review to Done:</b> ⟶ <b>In Review to Done (steps 10–12):</b>
+<b>Anything to awaiting input:</b> ⟶ <b>Anything to awaiting input (step 8):</b>
+<b>Intake:</b> ⟶ <b>Intake (steps 1–2):</b>
+<b>Agent run:</b> ⟶ <b>Agent run (steps 3–5, 7–8):</b>
+<b>Draft PR:</b> ⟶ <b>Draft PR (step 5):</b>
+<b>Checks:</b> ⟶ <b>Checks (steps 6–7):</b>
+<b>Review:</b> ⟶ <b>Review (step 10):</b>
+<b>Merge and deploy:</b> ⟶ <b>Merge and deploy (steps 11–12):</b>
+
+<!-- L11 CAPTION -->
+<strong>What wakes Claude decides whether your computer must stay on.</strong> <code>/loop</code> lives inside an open session and stops when it closes, so the computer must stay on. <code>/schedule</code> runs on a timetable in the cloud, so your laptop can be closed. Hooks run inside your session; GitHub events (CI, comments, pushes) reach the Claude GitHub Action in the cloud, at any hour.
+
+<!-- L12 CAPTION -->
+<strong>You act only at the edges; checks and status moves happen on their own.</strong> You act at three points: writing the issue (step 1), delegating (2) and approving (10). Failed checks go back to the agent to fix (7). The labels on the Linear line show each status change: Triage, In Progress, In Review, Done. Steps 11a and 11b are the merge queue's round trip through CI.

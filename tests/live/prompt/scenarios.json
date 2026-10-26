@@ -1,0 +1,45 @@
+[
+ {
+  "id": "feature",
+  "needs": [
+   "tests"
+  ],
+  "text": "Add CSV export to the reports page of our Node app. The export must contain exactly the rows currently visible after filters, with a header row. Tests run with npm test."
+ },
+ {
+  "id": "bugfix",
+  "needs": [
+   "tests"
+  ],
+  "text": "Users get logged out right after resetting their password. It started last week. Write a prompt for an agent to find and fix it."
+ },
+ {
+  "id": "overnight",
+  "needs": [
+   "loop"
+  ],
+  "text": "Every night, check open dependency-update PRs, merge the ones whose CI is green and that only bump patch versions, and report the rest."
+ },
+ {
+  "id": "research",
+  "needs": [
+   "helpers"
+  ],
+  "text": "Compare three ways to add full-text search to our Postgres-backed notes app (Postgres tsvector, Meilisearch, OpenSearch). Use three research helpers in parallel, one per option, then combine their findings into a recommendation."
+ },
+ {
+  "id": "refactor",
+  "needs": [
+   "tests"
+  ],
+  "text": "Split the 1,200-line src/billing.js into smaller modules without changing behaviour. Test coverage there is weak."
+ },
+ {
+  "id": "migration",
+  "needs": [
+   "tests",
+   "writers"
+  ],
+  "text": "Migrate our 400 Jest test files to Vitest. Several agents could help, but the suite must stay green."
+ }
+]

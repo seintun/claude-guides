@@ -1,0 +1,15 @@
+build/
+.DS_Store
+.playwright-mcp/
+__pycache__/
+.env
+.env.*
+.privacy-terms
+prompts/*
+!prompts/README.md
+private/*
+!private/README.md
+.claude/settings.local.json
+.claude/.cc-writes/
+.claude/worktrees/
+**/.claude/.cc-writes/

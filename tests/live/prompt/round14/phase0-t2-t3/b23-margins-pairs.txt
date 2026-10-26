@@ -1,0 +1,10 @@
+T2: mean 7.500 over 12 judgments
+T3: mean 7.250 over 12 judgments
+M_pair = 0.250
+  bugfix: T2 8.00  T3 6.00  gap 2.00
+  feature: T2 8.00  T3 6.50  gap 1.50
+  migration: T2 8.00  T3 7.50  gap 0.50
+  overnight: T2 7.00  T3 8.00  gap 1.00
+  refactor: T2 7.00  T3 7.50  gap 0.50
+  research: T2 7.00  T3 8.00  gap 1.00
+M_scen = 2.00 (bugfix)

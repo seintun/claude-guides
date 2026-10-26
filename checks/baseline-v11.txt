@@ -1,0 +1,31 @@
+Baseline: Orchestrating Claude v11, 2026-10-24
+Static: checks/static.sh issues/orchestrating-claude-v11.html
+DOM: Playwright run_code with checks/run-dom.js (Chromium, fonts loaded) at 320, 375 and 414 light; 375 dark; 1280 light and dark
+
+STATIC
+FAIL static-1 Loop colour only on loop-back marks: .d-box.warn, .d-dot.loop, td.want.down, .ev.s (and its hover and focus), .ev-tip.s, .layer.detect, .v2
+FAIL static-2 No --series-* tokens: 18 occurrences
+PASS static-3 Artifact page contract
+PASS static-4 External links open in a new tab with noopener
+PASS static-5 Every baseline source URL is still linked (82 URLs)
+
+DOM (summary 12 PASS, 57 FAIL across 6 views)
+FAIL dom-1  Page overflows sideways at 320 and 375 (scrollWidth 396)
+FAIL dom-2  h1 overflows its column in every view, including 1280 (scrollWidth 778 > 658; 372 > 327 at 375)
+FAIL dom-3  SVG text under 12px: 155 labels on phones (min 7.2px in #discovery, #phases), 75 at 1280 (min 9.9px)
+FAIL dom-4  18 inner scrollers at phone widths (every .scroll figure and .tbl-wrap table); none at 1280
+FAIL dom-5a Light theme: 52-54 text elements below AA (--ink-3 #6B7885 on paper 4.13:1: th, D tags, hints, band text)
+            Dark theme: "the orchestrator" 4.24:1 on accent-soft (#orchestration); "danger" 3.23:1 (#guardrails, phone only)
+FAIL dom-5b Goal-builder field borders 1.28:1 light, 1.46:1 dark (need 3:1)
+FAIL dom-6  3 plain "Lesson N" references (#phases ×2, #prompts); 0 internal links in <main>
+FAIL dom-7  15 card h3s nested under an h3 subhead (#discovery, #orchestration, #running, …)
+PASS dom-8  Evidence tags: 130 links open a new tab; 11 tooltip-only spans focusable
+FAIL dom-9  No #glossary
+FAIL dom-10 Evidence chart: caption names 4 benchmarks, chart draws 3
+FAIL kbd-1  Phase explorer: focus node 7, ArrowRight moves focus to node 2 (uses the selected index)
+FAIL kbd-2  Phase explorer: 10 tab stops
+PASS kbd-3  Focus survives reaching phase 10 (Chromium keeps focus on the disabled button; UX-8 expected loss)
+
+Notes
+- The desktop h1 overflow was unverified in the UX review; it is real (Archivo 92px at 125% stretch).
+- dom-5a counts every element with its own text; fixing the --ink-3 token clears most light-theme fails.

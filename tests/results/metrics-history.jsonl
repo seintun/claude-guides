@@ -1,0 +1,2 @@
+{"date": "2026-10-24", "suite_ok": true, "suite_s": 2.2, "test_cases": 0, "route_tokens_median": 4351, "playbook_tokens": 32586, "runbooks": 10, "skills": 3, "router_rows": 18, "scenarios": 0, "playbook_lines": 1512}
+{"date": "2026-10-24", "suite_ok": true, "suite_s": 6.5, "test_cases": 160, "route_tokens_median": 4508, "playbook_tokens": 32586, "runbooks": 11, "skills": 3, "router_rows": 18, "scenarios": 18, "playbook_lines": 1512}

@@ -1,0 +1,1 @@
+Agent orchestration guide: to plan, orchestrate, review or run Claude agents unattended, run /guide <request>, or read {{GUIDE}}/ENTRY.md and load only the sections it names with `python3 -I {{GUIDE}}/tools/section.py <ids>`.

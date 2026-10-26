@@ -1,0 +1,61 @@
+# UI/UX and accessibility review (UX), v11
+
+Basis: page source, screenshots and playbook. The page was not rendered, so desktop hero overflow is unverified. Contrast was computed from the tokens. Line numbers refer to the v11 source.
+
+- **UX-1 P1. No navigation below 980px.**
+  - `.rail{display:none}` (line 316).
+  - No Next, Contents or Back-to-top links anywhere.
+  - Fix: add a sticky `<details class="lessons-menu">` at ≤980px whose summary shows the current lesson, reusing `markRail`. Add `section{scroll-margin-top:64px}`, a "Next: Lesson N →" and "↑ Contents" link at the end of each section, and "Back to top" in the footer.
+  - Check: at 375px the menu is visible at any depth. Choosing 17 shows its full h2. Every lesson ends with Next and Contents links.
+- **UX-2 P1. The h1 clips at 375px.**
+  - `h1{font-size:clamp(44px,7.4vw,92px);font-stretch:125%}` (line 52).
+  - Fix: use `clamp(30px,9vw,92px)`, or `font-stretch:100%` at ≤480px. Also check 981–1280px for overlap with `.thesis`.
+  - Check: `h1.scrollWidth<=clientWidth` at 320, 375 and 414px, with no page overflow.
+- **UX-3 P1. Diagram text is 7–9px on phones.**
+  - `.scroll>svg{min-width:640px}` against viewBoxes of 980 (L3, L5), 900 (L6, L11) and 880 (L12). There is no scroll cue. `show()` never scrolls the selected phase node into view.
+  - Fix: set min-width to the viewBox width and add an edge fade with a "swipe →" hint. At ≤720px, make L5 a grid of 10 buttons and L3 an ordered list. Call `scrollIntoView({inline:'center'})` in `show()`.
+  - Check: at 375px diagram text is at least 11px effective. Next to phase 10 brings the node into view.
+- **UX-4 P1. Wall of tables on phones.**
+  - `.tbl-wrap table{min-width:720px}` and `td.job{white-space:nowrap}`. `#ctx-table` inherits the 720px minimum.
+  - Fix: at ≤720px show cards via `td::before{content:attr(data-label)}`, filled by JS from the th text. Drop the nowrap, set `#ctx-table{min-width:0}`, and make the first column `th scope=row`.
+  - Check: at 375px no `.tbl-wrap` has `scrollWidth>clientWidth`.
+- **UX-5 P1. No start point, grouping or skip signal.**
+  - The flat 18-item rail mixes core, reference and optional lessons. L2 is a wall of 16 tags. L3, which is optional, comes before Goals. `.yours` (lines 869–881) uses the author's private tools.
+  - Fix:
+    - Add Start-here paths: Core about 15 minutes (1→4→5→6→9), Unattended (10→11→12), Trust (17 + Sources).
+    - Group the rail into Core, Operate, Reference and Evidence. Keep the numbers.
+    - Collapse L2 after 3 cards.
+    - Put `.yours` in a `<details>` titled "Example: one author's harness".
+  - Check: 5 newcomers name their next lesson within 10 seconds. The rail shows 4 groups, and `.yours` is collapsed.
+- **UX-6 P1. Evidence tags on touch, and the key.**
+  - The legend appears only in L2, and the intro says "hover". On touch a tap opens a new tab with no preview. Tags are about 16×21px. The tooltip has `pointer-events:none` and no Esc (WCAG 1.4.13). `aria-describedby` duplicates `aria-label`.
+  - Fix: add a "Key" chip, a first tap that previews on `(hover:none)` (see conflict note C2 in the issue), Esc to dismiss, a 24px hit area on coarse pointers, and the wording "hover, focus or tap".
+- **UX-7 P2. Light-theme contrast.**
+  - `--ink-3 #6B7885` on paper is 4.13:1, which fails for th 12px, `.hint` 13px, the footer and `.d-band-text` 11px. On code-bg it is 3.84:1.
+  - Field borders (`--rule`) are 1.40:1 on surface, which fails WCAG 1.4.11 (3:1).
+  - Fix: light `--ink-3:#5B6875` (5.22:1), field borders `var(--ink-3)`, and 11px mono raised to 12px.
+  - Check: axe reports zero contrast violations in both themes.
+- **UX-8 P2. Phase explorer keyboard bugs.**
+  - The arrow handler uses `cur`, not the focused node. All 10 nodes are tab stops. Focus is lost when Next becomes `disabled` at phase 10. The `aria-live` region covers the whole of `#phase-detail`.
+  - Fix: a roving tabindex, `+n.dataset.i` in the handler, Home and End keys, `aria-disabled`, and a narrower live region.
+  - Check: Tab enters the group once, and focus survives phase 10.
+- **UX-9 P2. Structure and tab load.**
+  - Card titles are h3s nested under h3 subheads (lines 549–553, 1522–1524, and `.surfaces` in L11). There are about 244 tab stops and no skip link.
+  - Every Sources entry is linked twice, giving about 45 duplicate stops.
+  - There is no `aria-current`, no table captions or row headers, and copy feedback is silent.
+  - Fix: make card titles h4, turn Sources tags into `<span aria-hidden>`, add a skip link, add `aria-current` in `markRail`, add captions, and add a `role=status` for copy.
+- **UX-10 P2. Cross-links.**
+  - `<main>` has 0 internal `href="#…"`, so every "Lesson N" is plain text, including strings built in JS (line 1776).
+  - Line 1498 mentions "the playbook" with no link. Playbook line 18 says "16 lessons".
+  - Fix: link every "Lesson N" and end each lesson with a "Playbook: §…" reference. Add lesson-link columns to the L15 and L8 tables. Turn the playbook map into a table and correct it to 17.
+- **UX-11 P2. Playbook navigation.**
+  - There is no TOC, and §0 routes only in prose. The schemes are irregular (§3A, §17A, Laws 1–10, Templates A–M). Tags sit in headings. The Mermaid block has no text fallback.
+  - Fix: add a TOC, a template index at §16, a "Find it fast" table, a "Read when" line per section, and move the tags out of headings. (The reviewer suggested renumbering 3A to 3.1; see conflict C3.)
+- **UX-12 P2. Builder, prompts and checklist.**
+  - Placeholders are unmarked, and "Lesson 4" in L14 is not linked. Below 980px the builder output sits under 7 fields. `#g-sink` always shows. There is no reset, no checklist clear, and progress is not announced.
+  - Fix: add a `.ph` highlight with an "n left" count, show `#g-sink` only for schedule, and add Reset, Clear and `aria-live`.
+- **UX-13 P3. Density.**
+  - Every unit is the same card. L17 has 26 tags. "Stop after 2 failures" is restated in L4, L11, L14 and L15.
+  - Fix: a takeaway line under each h2, "Show all" after 5 rows, L7 grouped into Default and Specialist, and back-links on repeated rules.
+
+Top 3: the phone lessons menu with Next, Contents and Top (UX-1); Start-here paths, a grouped rail and real internal links (UX-5, UX-10); the playbook TOC and template index with the page↔playbook link and the count of 17 (UX-10, UX-11).

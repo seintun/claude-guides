@@ -1,0 +1,82 @@
+# Claude Guides
+
+> A guide for building, orchestrating and guiding AI coding agents with Claude. The playbook is the source of truth; the wiki turns it into runbooks; the orchestration index tells an agent which sections to read in each phase; the teaching page and the offline compendium present it to people.
+
+Agents: a session in another project starts at ENTRY.md. An agent editing this repository reads AGENTS.md for the rules, then orchestration-index.md for which playbook sections a phase needs. Read sections with `python3 -I tools/section.py <id>`; never load the whole playbook when one section will do.
+
+## Start here
+
+- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 18 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
+- [orchestration-index.md](orchestration-index.md): the phase index. Eight phases, from shape to learn, each listing the sections to read, a review checklist and the expected output
+- [AGENTS.md](AGENTS.md): sources of truth, editing rules, checks, publishing and git rules for agents editing this repository
+- [README.md](README.md): the human home page, with an "I want to… go to" table and the template list
+
+## Reference
+
+- [playbook/agent-harness-playbook.md](playbook/agent-harness-playbook.md): the canonical reference (v0.5). Laws, architecture, lifecycle, patterns, delegation, context, verification, guardrails, unattended runs, toolchain, evals, failure modes, Templates A–M, roadmap, evidence and sources. Every claim is graded P, S, R or D
+- [playbook/claude-cheat-sheet.md](playbook/claude-cheat-sheet.md): Claude Code surfaces, commands, stuck signs, a prompt template
+- [research/thin-scenarios.md](research/thin-scenarios.md): sourced recipes proposed for the seven thin router scenarios; not yet in the playbook
+- [research/prompt-skill-sources.md](research/prompt-skill-sources.md): Anthropic guidance and research on writing prompts for agents, each checked against its source
+- [research/prompt-skill-review.md](research/prompt-skill-review.md): /prompt v7 scored against the playbook, Anthropic's guidance and research, with the findings v8 acts on
+- [research/google-scaling-check.md](research/google-scaling-check.md): a primary-source fact-check of the Google agent-scaling study
+
+## Runbooks
+
+- [wiki/README.md](wiki/README.md): index of the runbooks
+- [wiki/start-a-task.md](wiki/start-a-task.md): idea to a goal Claude can check (Templates B, K, L)
+- [wiki/grill.md](wiki/grill.md): grill before you plan: one question per message, recommendation first, a decision log; a validation checklist and the skill's cold test
+- [wiki/orchestrate.md](wiki/orchestrate.md): lead and helpers, briefs, one writer, picking a pattern (Template C)
+- [wiki/verify.md](wiki/verify.md): criterion to scenario to gate, receipts, trust ladder, independent review (Templates F, G)
+- [wiki/run-unattended.md](wiki/run-unattended.md): /loop, /schedule, hooks, stop conditions and caps (Template H)
+- [wiki/guardrails.md](wiki/guardrails.md): deny rules, sandbox limits, the lethal trifecta, prevent/detect/recover
+- [wiki/build-a-harness.md](wiki/build-a-harness.md): maturity roadmap, CLAUDE.md, state files, PR review (Templates A, E, M)
+- [wiki/records.md](wiki/records.md): where records live (decisions, plans, state, scratch) and the flow from grill to merged PR
+- [wiki/improve.md](wiki/improve.md): retros, evals, scorecard, pruning (Templates I, J)
+- [wiki/unstick.md](wiki/unstick.md): a stuck agent: looping, a false "done", the same mistake twice, lost context, overbuilding
+- [wiki/case-study.md](wiki/case-study.md): this repository's own build, mapped to the playbook
+
+## Skills
+
+- [skills/guide/README.md](skills/guide/README.md): how to install `/guide` and wire it into another project; the one place that explains how the repository root is resolved
+- [skills/guide/SKILL.md](skills/guide/SKILL.md): `/guide` routes a session in any project to ENTRY.md and the right sections
+- [skills/guide/snippet.md](skills/guide/snippet.md): a one-line pointer to paste into another project's CLAUDE.md
+- [skills/guide/prompt.md](skills/guide/prompt.md): a paste-in prompt that points a one-off session at this guide
+- [skills/guide/install.sh](skills/guide/install.sh): dry run by default; with `--apply` it links the skill into `~/.claude/skills/guide` and prints the snippet and prompt with this repository's root filled in
+- [skills/grill/README.md](skills/grill/README.md): `/grill`: install and test
+- [skills/grill/SKILL.md](skills/grill/SKILL.md): `/grill` grills an idea one question at a time before any plan (§5.2, Template K)
+- [skills/grill/test.sh](skills/grill/test.sh): cold test of `/grill` in a throwaway project; `check_transcript.py` checks 8 rules
+- [prompts/README.md](prompts/README.md): where `/prompt` saves prompts (git-ignored, one folder per project)
+- [private/README.md](private/README.md): git-ignored folder for notes, plans and research that are not part of the guide
+- [skills/prompt/README.md](skills/prompt/README.md): `/prompt`: install, how it was tested, results
+- [skills/prompt/SKILL.md](skills/prompt/SKILL.md): `/prompt` turns a description into a ready-to-run agent prompt (Templates B, C, H) saved in the guide's git-ignored prompts/ folder
+- [skills/prompt/check_prompt.py](skills/prompt/check_prompt.py): deterministic check `/prompt` runs on a draft: missing parts for its risk size, a missing risk line, DONE WHEN count, merged UNKNOWN lines, "not ready", relative terms, untraced figures
+- [tests/live/prompt/](tests/live/prompt/): /prompt battle tests: A/B against a plain request, a 21-check rubric, an interview check
+- [tests/live/grill-prompt/](tests/live/grill-prompt/): dry run of /grill then /prompt on three requests, a 10-risk rubric judged by a fresh agent, and results before and after the /brief rules moved in
+
+## Record of the work
+
+- [docs/decision-log.md](docs/decision-log.md): 27 decisions, with the reason and the decider for each
+- [docs/session-log.md](docs/session-log.md): every request in the build session and its outcome
+- [docs/version-history.md](docs/version-history.md): page versions 1–16, playbook versions 0.1–0.5
+- [research/bounded-review-evidence.md](research/bounded-review-evidence.md): primary-source evidence for bounded review (playbook §9.2): when LLM review rounds help and hurt, what multi-round review misses, human review and gates, risk-based security
+- [docs/proposals/bounded-review.md](docs/proposals/bounded-review.md): bounded review: only blockers with evidence reopen a review, re-reviews read the fix diff and decision log, two rounds then a human; global light, strict per repo
+- [docs/plans/guide-entry.md](docs/plans/guide-entry.md): the plan for the guide entry point: goal, design and slices
+- [issues/orchestrating-claude-ux.md](issues/orchestrating-claude-ux.md): a real issue in Templates L, B and D, with 13 children and a plan table
+- [issues/reviews/](issues/reviews/README.md): every independent review
+- [docs/orchestrating-claude-compendium.html](docs/orchestrating-claude-compendium.html): everything above in one searchable offline HTML file (generated)
+
+## Teaching page and checks
+
+- [site/index.html](site/index.html): the 17-lesson teaching page as a full HTML document; open this one locally (generated)
+- [site/orchestrating-claude.html](site/orchestrating-claude.html): the page source (artifact body), live at https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq
+- [checks/README.md](checks/README.md): static and browser checks that gate every page change
+- [tools/README.md](tools/README.md): build, maintenance, link-check and privacy-check scripts (run `python3 -I tools/check_privacy.py` before every commit)
+- [tools/section.py](tools/section.py): prints one playbook section, template, law or cheat-sheet section by id (`python3 -I tools/section.py 9.5`; `--list` shows every id)
+- [tests/README.md](tests/README.md): how every feature and skill is tested: the offline suite (tests/run.sh), the mutation suite, live routing and grill sessions, browser checks; what each test guards
+- [tests/run.sh](tests/run.sh): runs every offline check and test; must end with SUMMARY all PASS before a commit
+- [tests/scenarios/routing.json](tests/scenarios/routing.json): 18 routing scenarios, one per ENTRY.md row
+- [tests/mutation/mutate.py](tests/mutation/mutate.py): makes catastrophic edits to a throwaway copy and checks the suite catches each
+- [tests/live/route_scenarios.py](tests/live/route_scenarios.py): live routing sessions through /guide, the snippet and the prompt; records results
+- [docs/metrics.md](docs/metrics.md): success, speed, token, reading-time and growth metrics (tools/metrics.py)
+- [tools/metrics.py](tools/metrics.py): builds docs/metrics.md
+- [tools/check_entry.py](tools/check_entry.py): checks ENTRY.md is under 150 lines, has at least 15 router rows, and names only section ids that resolve

@@ -1,0 +1,204 @@
+{
+ "date": "2026-10-25",
+ "caught": 23,
+ "not_caught": 0,
+ "duration_s": 104.4,
+ "mutations": [
+  {
+   "n": 1,
+   "mutation": "A playbook section is deleted (\u00a79.5)",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "ENTRY.md router: size, rows, section ids (0.0s)",
+    "unit and guard tests (3.0s) \u2014 Ran 219 tests in 2.950s FAILED (failures=8, skipped=2) "
+   ]
+  },
+  {
+   "n": 2,
+   "mutation": "A playbook template is deleted (Template K)",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "unit and guard tests (3.3s) \u2014 Ran 219 tests in 3.246s FAILED (failures=8, errors=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 3,
+   "mutation": "A law is renamed",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "unit and guard tests (3.2s) \u2014 Ran 219 tests in 3.128s FAILED (failures=6, skipped=2) "
+   ]
+  },
+  {
+   "n": 4,
+   "mutation": "The playbook is truncated to half",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "ENTRY.md router: size, rows, section ids (0.0s)",
+    "unit and guard tests (2.7s) \u2014 Ran 219 tests in 2.626s FAILED (failures=46, errors=12, skipped=2) "
+   ]
+  },
+  {
+   "n": 5,
+   "mutation": "A primary source URL is removed from \u00a720",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.5s) \u2014 Ran 219 tests in 3.399s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 6,
+   "mutation": "A router row is deleted (row 11)",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 3.038s FAILED (failures=2, errors=4, skipped=2) "
+   ]
+  },
+  {
+   "n": 7,
+   "mutation": "A router row points to a section that doesn't exist",
+   "caught": true,
+   "failing": [
+    "ENTRY.md router: size, rows, section ids (0.0s)",
+    "unit and guard tests (3.2s) \u2014 Ran 219 tests in 3.095s FAILED (failures=4, skipped=2) "
+   ]
+  },
+  {
+   "n": 8,
+   "mutation": "ENTRY.md tells sessions to read the whole playbook",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 3.050s FAILED (failures=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 9,
+   "mutation": "A runbook is deleted (unstick)",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "unit and guard tests (3.2s) \u2014 Ran 219 tests in 3.118s FAILED (failures=8, skipped=2) "
+   ]
+  },
+  {
+   "n": 10,
+   "mutation": "A runbook loses its checklist",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.3s) \u2014 Ran 219 tests in 3.242s FAILED (failures=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 11,
+   "mutation": "A wiki link breaks",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 3.010s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 12,
+   "mutation": "A personal path is committed",
+   "caught": true,
+   "failing": [
+    "privacy: no personal paths, emails or private terms (0.2s)"
+   ]
+  },
+  {
+   "n": 13,
+   "mutation": "The 'playbook wins' rule is dropped from AGENTS.md",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 219 tests in 3.083s FAILED (failures=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 14,
+   "mutation": "The privacy hard rule is dropped from AGENTS.md",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 219 tests in 3.089s FAILED (failures=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 15,
+   "mutation": "/guide gets a pre-run shell line again",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 2.986s FAILED (failures=1, skipped=2) "
+   ]
+  },
+  {
+   "n": 16,
+   "mutation": "The CLAUDE.md snippet becomes an @ import",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 3.034s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 17,
+   "mutation": "Template M lets Bash comment on the PR",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 2.998s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 18,
+   "mutation": "Template M loses the secret scrub",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 2.986s FAILED (failures=2, errors=1, skipped=2) "
+   ]
+  },
+  {
+   "n": 19,
+   "mutation": "Template F's deny rule becomes a Write rule that never matches",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 2.995s FAILED (failures=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 20,
+   "mutation": "The Stop hook stops blocking",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.0s) \u2014 Ran 219 tests in 2.956s FAILED (failures=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 21,
+   "mutation": "The page source changes without rebuilding site/index.html",
+   "caught": true,
+   "failing": [
+    "page source: static checks, standalone copy current (0.2s)",
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 3.004s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 22,
+   "mutation": "A wiki page changes without rebuilding the compendium",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.1s) \u2014 Ran 219 tests in 3.030s FAILED (failures=1, skipped=2) "
+   ]
+  },
+  {
+   "n": 23,
+   "mutation": "The section tool is deleted",
+   "caught": true,
+   "failing": [
+    "links and anchors in every Markdown file (0.1s)",
+    "ENTRY.md router: size, rows, section ids (0.0s)",
+    "unit and guard tests (2.2s) \u2014 Ran 152 tests in 2.081s FAILED (failures=6, errors=21, skipped=2) "
+   ]
+  }
+ ]
+}

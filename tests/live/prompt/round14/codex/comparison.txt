@@ -1,0 +1,42 @@
+Codex : v10 mean 6.583  v7 mean 6.625  v10 wins 10/24
+Claude: v10 mean 7.792  v7 mean 7.000  v10 wins 19/24
+  a pair-1 bugfix    Codex v7   Claude v10  DIFFERENT
+  a pair-1 feature   Codex v10  Claude v10  same
+  a pair-1 migration Codex v7   Claude v10  DIFFERENT
+  a pair-1 overnight Codex v10  Claude v10  same
+  a pair-1 refactor  Codex v7   Claude v10  DIFFERENT
+  a pair-1 research  Codex v7   Claude v10  DIFFERENT
+  a pair-2 bugfix    Codex v7   Claude v7   same
+  a pair-2 feature   Codex v10  Claude v10  same
+  a pair-2 migration Codex v7   Claude v10  DIFFERENT
+  a pair-2 overnight Codex v10  Claude v10  same
+  a pair-2 refactor  Codex v10  Claude v10  same
+  a pair-2 research  Codex v7   Claude v10  DIFFERENT
+  b pair-1 bugfix    Codex v10  Claude v10  same
+  b pair-1 feature   Codex v10  Claude v10  same
+  b pair-1 migration Codex v7   Claude v7   same
+  b pair-1 overnight Codex v7   Claude v10  DIFFERENT
+  b pair-1 refactor  Codex v7   Claude v10  DIFFERENT
+  b pair-1 research  Codex v7   Claude v7   same
+  b pair-2 bugfix    Codex v10  Claude v7   DIFFERENT
+  b pair-2 feature   Codex v10  Claude v10  same
+  b pair-2 migration Codex v7   Claude v10  DIFFERENT
+  b pair-2 overnight Codex v7   Claude v10  DIFFERENT
+  b pair-2 refactor  Codex v10  Claude v10  same
+  b pair-2 research  Codex v7   Claude v7   same
+Per-judgment agreement: 13/24
+  J01 v7f-1a   Codex 1 Claude 0
+  J02 v10-1a   Codex 2 Claude 1
+  J03 v7f-3a   Codex 3 Claude 0
+  J04 v7f-3b   Codex 4 Claude 3
+  J05 v10-3b   Codex 2 Claude 0
+  J06 v10-2a   Codex 3 Claude 1
+  J07 v10-3a   Codex 4 Claude 3
+  J08 v7f-2b   Codex 7 Claude 3
+  J09 v7f-1b   Codex 3 Claude 1
+  J10 v10-2b   Codex 3 Claude 1
+  J11 v10-1b   Codex 2 Claude 1
+  J12 v7f-2a   Codex 1 Claude 0
+Dry run, Codex : v10 16  fresh v7 19  (runs parsed 12/12)
+Dry run, Claude: v10 7  fresh v7 7
+RULE: CONFIRM
