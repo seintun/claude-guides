@@ -1,0 +1,33 @@
+# CodeRabbit review settings. Generated files and recorded run evidence are skipped:
+# the compendium and site/index.html are rebuilt from their sources, and tests/results and the
+# recorded runs in tests/live (rounds, baselines, archived variants, results.md) are records, not
+# code. The live-test scripts, briefs, rubrics and scenarios stay in review.
+# AGENTS.md and CLAUDE.md are read by default; the path instructions repeat their rules per folder,
+# and AGENTS.md wins if the two ever disagree.
+reviews:
+  sequence_diagrams: false
+  path_instructions:
+    - path: "playbook/**"
+      instructions: |
+        Every factual claim keeps its evidence grade (P, S, R or D). Flag a new claim with no primary source.
+    - path: "wiki/**"
+      instructions: |
+        A wiki page summarises a playbook section and links to it. Flag any fact that is not in the playbook.
+    - path: "site/orchestrating-claude.html"
+      instructions: |
+        Artifact contract: no doctype, html or body tags; colours only as :root tokens with dark values;
+        external links open in a new tab; scripts only from the CDN allowlist. Keep section ids and lesson numbers.
+    - path: "skills/**"
+      instructions: |
+        Flag a rule added, changed or removed in a SKILL.md with no matching change under tests/.
+    - path: "tests/**"
+      instructions: |
+        Flag any test that is weakened or deleted, or a lowered floor in tests/baselines, unless the commit explains why.
+  path_filters:
+    - "!docs/orchestrating-claude-compendium.html"
+    - "!site/index.html"
+    - "!tests/live/prompt/round*/**"
+    - "!tests/live/**/baselines/**"
+    - "!tests/live/prompt/variants/**"
+    - "!tests/live/**/results.md"
+    - "!tests/results/**"
