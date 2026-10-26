@@ -26,6 +26,9 @@ reviews:
   path_filters:
     - "!docs/orchestrating-claude-compendium.html"
     - "!site/index.html"
+    - "!guide-index.json"
+    - "!sections/**"
+    - "!routes/**"
     - "!tests/live/prompt/round*/**"
     - "!tests/live/**/baselines/**"
     - "!tests/live/prompt/variants/**"
