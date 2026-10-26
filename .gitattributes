@@ -1,2 +1,6 @@
 # A generated file: a revert or merge keeps the current copy; rebuild it with tools/build_compendium.py.
 docs/orchestrating-claude-compendium.html merge=ours
+
+# Generated for agents without a clone: rebuild with tools/build_index.py, never merge by hand.
+guide-index.json linguist-generated=true merge=ours
+sections/** linguist-generated=true merge=ours

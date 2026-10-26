@@ -68,6 +68,8 @@ MUTATIONS = [
     ("The page source changes without rebuilding site/index.html", "site/orchestrating-claude.html", lambda t: t.replace("<title>Orchestrating Claude</title>", "<title>Orchestrating Claude!</title>", 1)),
     ("A wiki page changes without rebuilding the compendium", "wiki/improve.md", lambda t: t + "\nOne more line.\n"),
     ("The section tool is deleted", "tools/section.py", None),
+    ("A playbook edit is not rebuilt into sections/", PB, sub_once(r"^(### 9\.5 .*)$", r"\1 (edited)")),
+    ("A section file agents fetch is deleted", "sections/9.5.md", None),
 ]
 
 
