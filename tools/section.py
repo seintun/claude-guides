@@ -63,6 +63,17 @@ def index(path, cheatsheet=False):
     return lines, found
 
 
+VERSION_LINE = re.compile(r"^Version (\d+\.\d+), last updated (\d{4}-\d{2}-\d{2}):", re.M)
+
+
+def version(path=PLAYBOOK):
+    """(version, last-updated date) from the playbook's Version line; the builders and the drift test read it here."""
+    m = VERSION_LINE.search(path.read_text(encoding="utf-8"))
+    if not m:
+        raise ValueError(f"{path.name} has no 'Version X.Y, last updated YYYY-MM-DD:' line")
+    return m.group(1), m.group(2)
+
+
 def main(argv):
     if not argv:
         print(__doc__.strip())

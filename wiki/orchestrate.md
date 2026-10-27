@@ -26,7 +26,8 @@ of it to helper agents.
    Template C for read-only work.
 6. **Say what comes back.** Ask for a short summary, findings with file:line or URL and a confidence,
    unknowns and artifact paths (D). Have helpers write long output to files and pass paths back, to
-   avoid a "game of telephone" (P).
+   avoid a "game of telephone" (P). For unfamiliar work, search the repo first, then the official
+   docs, then other projects for ideas, not code (D). [§5.4](../playbook/agent-harness-playbook.md#54-delivery-phases)
 7. **Scale effort to the task.** Use 1 agent and 3 to 10 tool calls for simple fact-finding, 2 to 4
    subagents with 10 to 15 calls each for a direct comparison, and more than 10 only for complex
    research (P). Cap agents per task and calls per agent in the lead's prompt (D).

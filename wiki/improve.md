@@ -10,7 +10,8 @@ repeating a bad habit.
    empty. Propose up to 3 changes, and apply none until you say yes (D).
 2. **Turn each lesson into one change.** A change is a CLAUDE.md rule, a skill, a hook, a test or a
    tool fix (D). Keep detailed learnings in `docs/solutions/` or skills, and promote to CLAUDE.md only
-   the rules that stop a repeated mistake (D).
+   the rules that stop a repeated mistake (D). Keep a mined rule or skill only if re-running the
+   evals shows it helps (D). [§13](../playbook/agent-harness-playbook.md#13-evals-and-learning)
    [Law 8](../playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule)
 3. **Start an eval set from real failures.** Collect 20 to 50 simple tasks drawn from real failures
    (P), one JSONL line per task (Template J). Record where each task came from, such as an incident
@@ -18,7 +19,8 @@ repeating a bad habit.
 4. **Pick graders and read transcripts.** Code-based graders are fast, objective and brittle,
    model-based graders need calibration, and humans are the gold standard but slow (P). Prefer code
    checks before LLM judges, and validate any judge against expert labels (P). Scores say that
-   something broke; transcripts say why (P).
+   something broke; transcripts say why (P). Label failures by hand (R).
+   [§13](../playbook/agent-harness-playbook.md#13-evals-and-learning)
 5. **Track the scorecard.** Count first-try pass rate, rework loops, human interventions, escaped
    defects, cost per task and pass^k on the eval set (D). Read the trend after ten tasks to see where
    to invest, as page Lesson 13 (Growing) advises.

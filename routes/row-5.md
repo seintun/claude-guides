@@ -14,7 +14,7 @@ Sections and templates this route names, in order: 19.3, 11.1, 11.3, E, D. Runbo
 - Put verification first and don't count on self-critique without a signal (§9).
 - Track pass^k and cost per task (§13).
 - Size agent output to human review capacity (§18).
-- Keep CLAUDE.md a short map into deeper docs (§8).
+- Keep CLAUDE.md a short map into deeper docs, holding what the agent can't discover, not a generated overview (§8).
 
 <!-- id: 11.1 -->
 ### 11.1 The long-running harness recipe

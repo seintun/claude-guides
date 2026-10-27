@@ -7,7 +7,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 ## Start here
 
 - [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 19 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
-- [guide-index.json](guide-index.json): the router, phases, section ids, runbooks and skills as JSON, with a path for each (generated)
+- [guide-index.json](guide-index.json): the router, phases, section ids, runbooks and skills as JSON, with a path for each, plus the playbook's version and last-updated date (generated)
 - [routes/README.md](routes/README.md): one file per router row and phase, bundling the sections and templates it names (generated)
 - [sections/README.md](sections/README.md): one file per playbook section, law, template and cheat-sheet section, the text tools/section.py prints (generated)
 - [orchestration-index.md](orchestration-index.md): the phase index. Eight phases, from shape to learn, each listing the sections to read, a review checklist and the expected output
@@ -16,12 +16,13 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 ## Reference
 
-- [playbook/agent-harness-playbook.md](playbook/agent-harness-playbook.md): the canonical reference (v0.5). Laws, architecture, lifecycle, patterns, delegation, context, verification, guardrails, unattended runs, toolchain, evals, failure modes, Templates A–M, roadmap, evidence and sources. Every claim is graded P, S, R or D
+- [playbook/agent-harness-playbook.md](playbook/agent-harness-playbook.md): the canonical reference (version 0.6, last updated 2026-10-27). Laws, architecture, lifecycle, patterns, delegation, context, verification, guardrails, unattended runs, toolchain, evals, failure modes, Templates A–M, roadmap, evidence and sources. Every claim is graded P, S, R or D
 - [playbook/claude-cheat-sheet.md](playbook/claude-cheat-sheet.md): Claude Code surfaces, commands, stuck signs, a prompt template
 - [research/thin-scenarios.md](research/thin-scenarios.md): sourced recipes proposed for the seven thin router scenarios; not yet in the playbook
 - [research/prompt-skill-sources.md](research/prompt-skill-sources.md): Anthropic guidance and research on writing prompts for agents, each checked against its source
 - [research/prompt-skill-review.md](research/prompt-skill-review.md): /prompt v7 scored against the playbook, Anthropic's guidance and research, with the findings v8 acts on
 - [research/google-scaling-check.md](research/google-scaling-check.md): a primary-source fact-check of the Google agent-scaling study
+- [research/mega-workshop-evidence.md](research/mega-workshop-evidence.md): which workshop advice on running coding agents holds up, a verdict per claim with sources, behind the playbook's evidence on context files, tests, evals, review load and delivery
 
 ## Runbooks
 
@@ -60,7 +61,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 - [docs/decision-log.md](docs/decision-log.md): 27 decisions, with the reason and the decider for each
 - [docs/session-log.md](docs/session-log.md): every request in the build session and its outcome
-- [docs/version-history.md](docs/version-history.md): page versions 1–16, playbook versions 0.1–0.5
+- [docs/version-history.md](docs/version-history.md): page versions 1–16, playbook versions 0.1–0.6
 - [research/bounded-review-evidence.md](research/bounded-review-evidence.md): primary-source evidence for bounded review (playbook §9.2): when LLM review rounds help and hurt, what multi-round review misses, human review and gates, risk-based security
 - [docs/proposals/bounded-review.md](docs/proposals/bounded-review.md): bounded review: only blockers with evidence reopen a review, re-reviews read the fix diff and decision log, two rounds then a human; global light, strict per repo
 - [docs/plans/guide-entry.md](docs/plans/guide-entry.md): the plan for the guide entry point: goal, design and slices

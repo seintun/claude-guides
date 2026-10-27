@@ -48,7 +48,7 @@ criterion  →  scenario            →  automated check   →  gate            
 | Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
 | Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
-| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths |
+| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |

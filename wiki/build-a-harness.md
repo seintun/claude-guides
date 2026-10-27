@@ -12,7 +12,8 @@ to build next.
 2. **Level 1: write CLAUDE.md from Template A.** It holds build, test and lint commands, conventions
    that differ from defaults, known gotchas, "never" rules and pointers to deeper docs. It leaves out
    what the model does anyway, long documents, secrets and stale history, and it stays short and in
-   git (D).
+   git (D). Cut generated `/init` output to what the agent can't discover (D).
+   [§8](../playbook/agent-harness-playbook.md#8-context-engineering)
 3. **Level 1: let the agent run its own tests.** Add Plan mode, the test command in CLAUDE.md and
    allowlisted permissions, and review plans before code (D). Write each plan as a plan file with a
    test per slice (Template D).

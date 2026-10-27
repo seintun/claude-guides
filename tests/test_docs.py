@@ -166,6 +166,23 @@ class Maps(unittest.TestCase):
         missing = [f for f in ("ENTRY.md", "AGENTS.md") if f not in listed]
         self.assertFalse(missing, f"README.md does not link {missing}. Restore the links: they are the two doors into the repository.")
 
+    def test_version_mentions_match_the_playbook_version_line(self):
+        """The playbook moves to a new version or date, but a README or llms.txt still shows the old one."""
+        sys.path.insert(0, str(ROOT / "tools"))
+        import section
+        version, updated = section.version()
+        want = f"version {version}, last updated {updated}"
+        mention = re.compile(r"(?i)\b(?:version|v)\s*(\d+\.\d+)(?:, last updated (\d{4}-\d{2}-\d{2}))?")
+        stale = []
+        for rel, needle in (("README.md", "The full reference"), ("README.md", "**Playbook:**"),
+                            ("playbook/README.md", "The canonical reference"), ("llms.txt", "the canonical reference")):
+            line = next((l for l in read(rel).splitlines() if needle in l), "")
+            found = [m.groups() for m in mention.finditer(line)]
+            if (version, updated) not in found:
+                stale.append(f"{rel} ({needle}): {found or 'no version'}")
+        self.assertFalse(stale, f"These mentions disagree with the playbook's Version line ({want}):" + short(stale) +
+                         f"\nMake each read '{want}'.")
+
     def test_tools_readme_names_every_script(self):
         """A script is added to tools/ but tools/README.md never mentions it."""
         readme = read("tools/README.md")

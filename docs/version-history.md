@@ -21,8 +21,9 @@
 
 ## Playbook (`playbook/agent-harness-playbook.md`)
 
-| Version | What changed |
-|---|---|
-| 0.1–0.3 | First draft; research sections; Templates A–M; the fact-check; hardened Templates F, G and M |
-| 0.4 | Contents, find-it-fast, the page map as a table, a template index, Read-when notes, page-term aliases, Build-it-first Laws, a text version of the §3 diagram, and corrected Google-study wording. Independent review: PASS |
-| 0.5 | Fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): the Stop gate is protected by an `Edit` deny rule and leaves a `.gate-failed` marker on give-up; a guardrails block for irreversible actions; a RISK switch in Template B; 23 corrected claims and six caveats; §0 and §19 link the review as their evidence. Checks: `bash -n` and `shellcheck` on both hook scripts, a YAML parse of Template M, a scripted give-up test |
+| Version | Date | What changed |
+|---|---|---|
+| 0.1–0.3 | — | First draft; research sections; Templates A–M; the fact-check; hardened Templates F, G and M |
+| 0.4 | — | Contents, find-it-fast, the page map as a table, a template index, Read-when notes, page-term aliases, Build-it-first Laws, a text version of the §3 diagram, and corrected Google-study wording. Independent review: PASS |
+| 0.5 | 2026-10-24 | Fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): the Stop gate is protected by an `Edit` deny rule and leaves a `.gate-failed` marker on give-up; a guardrails block for irreversible actions; a RISK switch in Template B; 23 corrected claims and six caveats; §0 and §19 link the review as their evidence. Checks: `bash -n` and `shellcheck` on both hook scripts, a YAML parse of Template M, a scripted give-up test |
+| 0.6 | 2026-10-27 | Evidence additions from a review of a workshop's advice on running coding agents, cut to the rule under each finding: generated context files (§8); a hidden acceptance check, LLM-judge bias and over-mocking (§9.3); mined lessons, reviewed skills and hand-labelled failures (§13); approval fatigue, merge rate, flaky tests, dark launches and restore tests (§18); a prior-art rule (§5.4); UTBoost, Cursor adoption, skill formation and Intercom (§19); follow-on qualifiers in Laws 2, 5 and 8, §14 and §19; router rows 9, 10, 14 and 16; one clause in four runbooks. Evidence: [research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md). Checks: six `doc-checker` passes on every claim and number (20 playbook claims: 9 confirmed, 10 partial, 1 wrong, all reworded to match the source), a one-off tag-to-source check, `tests/run.sh`, the mutation suite. Independent review: pending |

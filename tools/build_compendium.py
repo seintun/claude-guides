@@ -14,6 +14,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # An optional first argument writes elsewhere; tests/test_generated.py uses it to compare.
 OUT = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(ROOT, "docs", "orchestrating-claude-compendium.html")
 ARTIFACT_URL = "https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq"
+sys.path.insert(0, os.path.join(ROOT, "tools"))   # python3 -I leaves the script's folder off sys.path
+import section as playbook_sections  # noqa: E402  (this file has its own section())
+
+PB_VERSION, PB_UPDATED = playbook_sections.version()   # from the playbook's Version line, never hard-coded
 
 
 def read(rel):
@@ -289,7 +293,7 @@ def section(sid, title, lead, body):
 layout = [
     ("site/orchestrating-claude.html", "The teaching page, version 16 (artifact body: no doctype; the viewer wraps it)"),
     ("site/history/orchestrating-claude-v11.html", "The version 11 baseline the UX issue was written against"),
-    ("playbook/agent-harness-playbook.md", "The agent harness playbook, version 0.4"),
+    ("playbook/agent-harness-playbook.md", f"The agent harness playbook, version {PB_VERSION}, last updated {PB_UPDATED}"),
     ("research/google-scaling-check.md", "Primary-source fact-check of the Google agent-scaling study"),
     ("issues/orchestrating-claude-ux.md", "The UX issue: parent, 13 children, plan and task contract"),
     ("issues/reviews/", "Every review report: UX, learning, charts, playbook, chart, post-launch, final"),
@@ -336,7 +340,7 @@ section("session", "Session log", "Every request in the session and its outcome.
 section("decisions", "Decisions", "What was decided, why, and by whom, plus one open proposal.",
         doc("docs/decision-log.md", "decisions")
         + doc("docs/proposals/harness-reset-proposal.md", "prop", "Proposal (draft): reset a personal harness to a lean baseline"))
-section("versions", "Version history", "Page versions 1–16 and playbook versions 0.1–0.4.", doc("docs/version-history.md", "versions"))
+section("versions", "Version history", f"Page versions 1–16 and playbook versions 0.1–{PB_VERSION}.", doc("docs/version-history.md", "versions"))
 
 # The page: embedded, plus its text
 blocks = page_text_blocks(PAGE)
@@ -355,7 +359,7 @@ follows the viewer's theme, and here it follows your system theme. This copy use
 {''.join(page_text)}
 """
 section("page", "Teaching page", "Orchestrating Claude: 17 lessons and Sources, embedded and as text.", page_body)
-section("playbook", "Agent Harness Playbook", "The build reference behind the page, version 0.4.", doc("playbook/agent-harness-playbook.md", "pb"))
+section("playbook", "Agent Harness Playbook", f"The build reference behind the page, version {PB_VERSION}, last updated {PB_UPDATED}.", doc("playbook/agent-harness-playbook.md", "pb"))
 
 # Research
 src_rows = page_sources(PAGE)

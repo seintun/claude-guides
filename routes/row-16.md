@@ -11,7 +11,7 @@ Sections and templates this route names, in order: 13, law-8, 14, I, J. Runbook,
 
 - **Start small and real.** 20 to 50 simple tasks drawn from real failures [P: Demystifying evals]; Anthropic's research team began with about 20 queries from real usage [P].
 - **Graders:** code-based (fast, objective, brittle), model-based (flexible, needs calibration), human (the gold standard, slow and expensive). [P]
-- **Read the transcripts.** Scores tell you that something broke; transcripts tell you why. [P]
+- **Read the transcripts.** Scores tell you that something broke; transcripts tell you why. [P] Label failures by hand: automated attribution rarely found the decisive failing step. [R: ICML 2025]
 - **Version the harness.** CLAUDE.md, agent definitions, skills, hooks and tool descriptions live in git. Change one thing at a time and re-run the eval set. [D]
 - **Harness scorecard** [D]:
 
@@ -25,12 +25,14 @@ Sections and templates this route names, in order: 13, law-8, 14, I, J. Runbook,
 | pass^k on the eval set | All k runs succeed | Up |
 
 - **The learning loop:** run, write the receipt, hold a retro, turn each lesson into a rule, skill, hook, test or tool fix, re-run the evals, prune what no longer helps. [D]
+- **Mined lessons need an outcome signal.** In an online finance setting without reliable feedback, self-evolving context could fall below the base model [R: ICLR 2026], and an unguided LLM judge was near chance at picking the better of two skills. [R: preprint, skill extraction, 2026] Keep a mined rule only if re-running the eval set shows it helps, and never let one pass rewrite the whole rules file. [D]
+- **Reviewed skills beat self-written ones.** In SkillsBench, curated skills reviewed by maintainers raised pass rates, skills a model wrote for itself before the task did worse than none, and focused sets of at most three skills beat larger or exhaustive bundles. [R: preprint, SkillsBench v4, 2026; earlier versions report a smaller loss, so cite the version]
 
 ---
 
 <!-- id: law-8 -->
 ### Law 8. Turn every correction into a rule
-- **Build it:** a short retro after real tasks; each lesson becomes a rule, a skill, a hook, a test or a tool fix. Prune rules that never fire. [D]
+- **Build it:** a short retro after real tasks; each lesson becomes a rule, a skill, a hook, a test or a tool fix. Review a skill before it lands, and keep a mined rule only if re-running the evals shows it helps (§13). Prune rules that never fire. [D]
 - Boris Cherny, as quoted in recaps: after a correction, tell Claude to update CLAUDE.md so the mistake doesn't repeat; his team keeps one shared CLAUDE.md in git. [S]
 - Anthropic: start with a minimal prompt and add instructions from observed failures. [P]
 - Every's "compound engineering" makes this a phase: plan, work, review, then compound, writing learnings into CLAUDE.md and `docs/solutions/`. [P]
@@ -50,7 +52,7 @@ Sections and templates this route names, in order: 13, law-8, 14, I, J. Runbook,
 | Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
 | Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
-| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths |
+| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |
