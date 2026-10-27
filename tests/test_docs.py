@@ -194,13 +194,16 @@ class Maps(unittest.TestCase):
             line = next((l for l in read(rel).splitlines() if needle in l), "")
             if want not in line.lower():
                 stale.append(f"{rel} ({needle}): {line.strip()[:90] or 'line missing'}")
-        for rel in ("docs/README.md", "llms.txt"):
-            if f"versions 1–{version}" not in read(rel):
-                stale.append(f"{rel}: does not say page versions 1–{version}")
-
         sys.path.insert(0, str(ROOT / "tools"))
         import section
         pb_version, pb_updated = section.version()
+        for rel in ("docs/README.md", "llms.txt"):
+            text = read(rel)
+            if f"versions 1–{version}" not in text:
+                stale.append(f"{rel}: does not say page versions 1–{version}")
+            if f"playbook versions 0.1–{pb_version}" not in text:
+                stale.append(f"{rel}: does not say playbook versions 0.1–{pb_version}")
+
         history = read("docs/version-history.md")
 
         def newest_row(heading):
