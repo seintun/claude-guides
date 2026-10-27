@@ -2,15 +2,16 @@
 
 ## Teaching page (artifact https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq)
 
-| Version | What changed | Checks |
-|---|---|---|
-| 1–10 | First build of 17 lessons and Sources; research folded in; fact-check corrections; graded P/S/R/D tags with links and tooltips; Lesson 17 on proven orchestration; tooltip theming; D tags made tooltip-only | Manual review in the built-in browser; link check: 77 of 82 links returned 2xx, the rest load in a browser |
-| 11 | Baseline for the UX issue (`site/history/orchestrating-claude-v11.html`) | `checks/baseline-v11.txt`: 12 PASS, 57 FAIL |
-| 12 | 30-minute launch. Children 0–7, 9 and 10, plus the takeaways and callouts from child 11 | 20 of 20 in 6 views |
-| 13 | Phase buttons under the diagram; the panel height is held; the page no longer jumps | Steady over 18 clicks in 3 views |
-| 14 | Phase nav centered, with "← Prev" and "Next →" | Steady and symmetric at 1280, 375 and 320px |
-| 15 | Fixes from the reviews and the blocking chart items; child 8 diagrams (L1, L3, L5, L6, L9, L11, L12); the rest of child 11; child 12 (running example, recall items, try-now, quiz); glossary tooltips; quiz colours | 20 of 20 in 6 views |
-| 16 | Final review fixes: keyboard-safe quiz, 12px figure text at every width, tables that wrap at mid widths, two more folded tables, glosses, wording, safe hash handling | 21 of 21 in 8 views (320, 375 ×2, 414, 768, 1024, 1280 ×2) |
+| Version | Date | What changed | Checks |
+|---|---|---|---|
+| 1–10 | — | First build of 17 lessons and Sources; research folded in; fact-check corrections; graded P/S/R/D tags with links and tooltips; Lesson 17 on proven orchestration; tooltip theming; D tags made tooltip-only | Manual review in the built-in browser; link check: 77 of 82 links returned 2xx, the rest load in a browser |
+| 11 | — | Baseline for the UX issue (`site/history/orchestrating-claude-v11.html`) | `checks/baseline-v11.txt`: 12 PASS, 57 FAIL |
+| 12 | — | 30-minute launch. Children 0–7, 9 and 10, plus the takeaways and callouts from child 11 | 20 of 20 in 6 views |
+| 13 | — | Phase buttons under the diagram; the panel height is held; the page no longer jumps | Steady over 18 clicks in 3 views |
+| 14 | — | Phase nav centered, with "← Prev" and "Next →" | Steady and symmetric at 1280, 375 and 320px |
+| 15 | — | Fixes from the reviews and the blocking chart items; child 8 diagrams (L1, L3, L5, L6, L9, L11, L12); the rest of child 11; child 12 (running example, recall items, try-now, quiz); glossary tooltips; quiz colours | 20 of 20 in 6 views |
+| 16 | — | Final review fixes: keyboard-safe quiz, 12px figure text at every width, tables that wrap at mid widths, two more folded tables, glosses, wording, safe hash handling | 21 of 21 in 8 views (320, 375 ×2, 414, 768, 1024, 1280 ×2) |
+| 17 | 2026-10-27 | Five lessons gain one sentence or list item each, matching playbook 0.6: a CLAUDE.md of what Claude can't discover (Lesson 2), the prior-art search order with dependency and licence checks (Lesson 5), a hidden acceptance check and judges from another model family (Lesson 9), approval fatigue and merge rate (Lesson 12), mined rules kept only if the evals improve (Lesson 13); a Sources panel with their 7 sources; a sun and moon theme toggle, dark by default, remembered in the browser; the version and date in the footer. The live page also picks up the bounded-review wording already in the source | 27 of 27 in 8 views (new: dom-13, theme-1 to theme-5); static checks 1 to 6. Independent review: pending |
 
 ## Repository releases
 

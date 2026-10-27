@@ -61,7 +61,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 - [docs/decision-log.md](docs/decision-log.md): 27 decisions, with the reason and the decider for each
 - [docs/session-log.md](docs/session-log.md): every request in the build session and its outcome
-- [docs/version-history.md](docs/version-history.md): page versions 1–16, playbook versions 0.1–0.6
+- [docs/version-history.md](docs/version-history.md): page versions 1–17, playbook versions 0.1–0.6
 - [research/bounded-review-evidence.md](research/bounded-review-evidence.md): primary-source evidence for bounded review (playbook §9.2): when LLM review rounds help and hurt, what multi-round review misses, human review and gates, risk-based security
 - [docs/proposals/bounded-review.md](docs/proposals/bounded-review.md): bounded review: only blockers with evidence reopen a review, re-reviews read the fix diff and decision log, two rounds then a human; global light, strict per repo
 - [docs/plans/guide-entry.md](docs/plans/guide-entry.md): the plan for the guide entry point: goal, design and slices

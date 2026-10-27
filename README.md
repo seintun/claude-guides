@@ -141,6 +141,6 @@ Checks that no file holds private data: personal paths, email addresses, session
 
 ## Status
 
-- **Page:** version 16. All 21 browser checks pass in 8 views.
+- **Page:** version 17, last updated 2026-10-27. All 27 browser checks pass in 8 views.
 - **Playbook:** version 0.6, last updated 2026-10-27. Every open item from the [v0.3 fact-check review](issues/reviews/playbook-factcheck-v0.3.md) is fixed or rejected with a reason, and the 0.6 evidence additions are checked claim by claim in [research/mega-workshop-evidence.md](research/mega-workshop-evidence.md).
 - **Not yet done:** a blind three-reader test of the page's quiz, vertical phone layouts for the figures, and the remaining PARTLY items in [`issues/reviews/final-review-v15.md`](issues/reviews/final-review-v15.md).

@@ -171,6 +171,16 @@ details.yours[open] summary{margin-bottom:10px}
 /* Skip link, lesson menu for narrow screens, and the links at the end of each lesson */
 .skip{position:absolute;left:12px;top:-80px;z-index:80;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:6px;font-weight:700;text-decoration:none}
 .skip:focus{top:12px}
+
+/* Theme toggle: one icon button at the top of the hero. The page starts dark; the button shows
+   a sun while dark (switch to light) and a moon while light (switch to dark). */
+.hero{position:relative}
+.theme-btn{position:absolute;top:10px;right:0;z-index:2;width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;border-radius:999px;border:1.5px solid var(--ink-3);background:var(--surface);color:var(--ink);cursor:pointer;transition:border-color .15s,color .15s}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+.theme-btn svg{width:20px;height:20px;margin:0}
+.theme-btn .moon{display:none}
+:root[data-theme="light"] .theme-btn .sun{display:none}
+:root[data-theme="light"] .theme-btn .moon{display:block}
 .lessons-menu{display:none}
 .lesson-end{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;margin:36px 0 0;padding-top:16px;border-top:1px dashed var(--rule);font-size:15px}
 .lesson-end a{font-weight:600;text-decoration:none;padding:6px 0}
@@ -512,10 +522,27 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:48px;padding
 }
 </style>
 
+<script>
+/* Theme: dark unless the reader chose light before. Runs before the page paints, so it never
+   flashes light. If the viewer sets data-theme itself, the reader's choice is put back. */
+(function(){
+  var KEY = 'orchestrating-claude-theme', root = document.documentElement, theme = 'dark';
+  try { if (localStorage.getItem(KEY) === 'light') theme = 'light'; } catch (e) {}
+  function apply(){ if (root.getAttribute('data-theme') !== theme) root.setAttribute('data-theme', theme); }
+  apply();
+  try { new MutationObserver(apply).observe(root, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) {}
+  window.ocTheme = {
+    get: function(){ return theme; },
+    set: function(t){ theme = t === 'light' ? 'light' : 'dark'; try { localStorage.setItem(KEY, theme); } catch (e) {} apply(); }
+  };
+})();
+</script>
+
 <a class="skip" href="#main">Skip to the lessons</a>
 <div class="shell">
 
 <header class="hero" id="top">
+  <button type="button" class="theme-btn" id="theme-btn" aria-label="Switch to light mode" title="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" fill="currentColor"/></svg></button>
   <div>
     <p class="eyebrow">Field guide · goals, agents, loops</p>
     <h1>Orchestrating Claude</h1>
@@ -702,7 +729,7 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:48px;padding
     <li><span class="n">05</span><h3>Let it search</h3><p>Fast grep-style search and a good map beat a retrieval pipeline for code.</p><p class="src"><a class="ev p" href="https://latent.space/p/claude-code" target="_blank" rel="noopener" data-src="Latent Space: Boris Cherny and Cat Wu on Claude Code (May 2025)" aria-label="P, primary source: Latent Space: Boris Cherny and Cat Wu on Claude Code (May 2025) (opens in a new tab)">P</a> Early Claude Code tried RAG with embeddings; plain agentic search outperformed it, by the team's own impressions rather than a benchmark.</p></li>
     <li><span class="n">06</span><h3>Plan before building</h3><p>Approve a plan of small, testable slices instead of approving every edit.</p><p class="src"><a class="ev s" href="https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny" target="_blank" rel="noopener" data-src="Pragmatic Engineer: Building Claude Code with Boris Cherny (Mar 2026)" aria-label="S, second-hand report: Pragmatic Engineer: Building Claude Code with Boris Cherny (Mar 2026) (opens in a new tab)">S</a> Boris Cherny starts most sessions in Plan mode; a good plan often lands in one shot. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Official best practices: explore, plan, code, commit.</p></li>
     <li><span class="n">07</span><h3>Keep maker and checker apart</h3><p>Reviewers get the work and the criteria, never the author's reasoning.</p><p class="src"><a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Best practices: an adversarial review subagent in a fresh context. Karpathy's llm-council has models review each other anonymously.</p></li>
-    <li><span class="n">08</span><h3>Turn corrections into rules</h3><p>Capture each lesson, but keep CLAUDE.md short and push detail into skills and docs.</p><p class="src"><a class="ev s" href="https://www.jitendrazaa.com/blog/others/tips/10-claude-code-tips-from-the-creator-boris-cherny-february/" target="_blank" rel="noopener" data-src="Recap of the Claude Code team&#x27;s tips thread (Jan 2026)" aria-label="S, second-hand report: Recap of the Claude Code team&#x27;s tips thread (Jan 2026) (opens in a new tab)">S</a> Boris Cherny: after a correction, tell Claude to update CLAUDE.md. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Best practices: cut any CLAUDE.md line whose removal wouldn't cause a mistake.</p></li>
+    <li><span class="n">08</span><h3>Turn corrections into rules</h3><p>Capture each lesson, but keep CLAUDE.md short and push detail into skills and docs. A generated CLAUDE.md, such as <code>/init</code> output, added cost without helping in one study, so cut it to what Claude can't find out on its own. <a class="ev r" href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener" data-src="Evaluating AGENTS.md: are context files helpful? (preprint, v3 2026)" aria-label="R, research paper: Evaluating AGENTS.md (opens in a new tab)">R</a></p><p class="src"><a class="ev s" href="https://www.jitendrazaa.com/blog/others/tips/10-claude-code-tips-from-the-creator-boris-cherny-february/" target="_blank" rel="noopener" data-src="Recap of the Claude Code team&#x27;s tips thread (Jan 2026)" aria-label="S, second-hand report: Recap of the Claude Code team&#x27;s tips thread (Jan 2026) (opens in a new tab)">S</a> Boris Cherny: after a correction, tell Claude to update CLAUDE.md. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Best practices: cut any CLAUDE.md line whose removal wouldn't cause a mistake.</p></li>
     <li><span class="n">09</span><h3>Enforce with code</h3><p>Anything that must happen every time lives in a hook (such as a <a class="term" id="fu-stophook" href="#gl-stophook">Stop hook</a>, which runs when Claude tries to finish), CI or a permission rule, not only in prose.</p><p class="src"><a class="ev p" href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener" data-src="Claude Code docs: Hooks" aria-label="P, primary source: Claude Code docs: Hooks (opens in a new tab)">P</a> A Stop hook exiting with code 2 blocks Claude from finishing. Anthropic's long-running harness forbade editing tests and kept state in JSON.</p></li>
     <li><span class="n">10</span><h3>Spend compute where it pays</h3><p>Fan out for wide reading and judgment calls; stay single-agent for tightly coupled edits.</p><p class="src"><a class="ev p" href="https://www.anthropic.com/engineering/multi-agent-research-system" target="_blank" rel="noopener" data-src="Anthropic: How we built our multi-agent research system (Jun 2025)" aria-label="P, primary source: Anthropic: How we built our multi-agent research system (Jun 2025) (opens in a new tab)">P</a> Anthropic's multi-agent research system beat a single agent by 90.2% on its internal eval, at about 15 times the tokens of a chat. Karpathy, October 2025: this is the decade of agents, and they're weak at truly new code. <a class="ev s" href="https://the-decoder.com/former-tesla-ai-chief-andrej-karpathy-now-codes-mostly-in-english-just-three-months-after-calling-ai-agents-useless/" target="_blank" rel="noopener" data-src="The Decoder: Karpathy now codes mostly through agents (Jan 2026)" aria-label="S, second-hand report: The Decoder: Karpathy now codes mostly through agents (Jan 2026) (opens in a new tab)">S</a> By December he was doing most of his own coding through agents.</p></li>
   </ol>
@@ -958,6 +985,7 @@ The same test fails twice</textarea>
     <li><b>Critique</b> (advisory review) happens <i>before</i> building. A fresh reviewer that never saw Claude's reasoning argues against the plan. As HumanLayer puts it, a bad line in a plan costs more than a bad line of code.</li>
     <li><b>Learn</b> turns each run into better rules for the next one. Without it, you correct the same mistakes forever.</li>
   </ul>
+  <p>When a task needs knowledge Claude lacks, Explore searches in order: this repo first, then the official docs, then other projects for ideas, not code to paste. Check that every new dependency really exists in its registry, since models invent package names, then pin it. Copy code only under a permissive licence, and note where it came from. <a class="ev r" href="https://arxiv.org/abs/2406.10279" target="_blank" rel="noopener" data-src="Package hallucinations by code-generating LLMs (USENIX Security 2025)" aria-label="R, research paper: package hallucinations (opens in a new tab)">R</a> <span class="ev d" tabindex="0" role="note" data-src="Design advice: our synthesis, not a quote" aria-label="D, our design advice: Design advice: our synthesis, not a quote">D</span></p>
   <p class="note running-ex"><b>Running example.</b> For the CSV export, Explore returns a few short reports with file paths: where the reports table gets its rows and its columns. Plan is a plan file in <code>docs/</code> with ordered slices, the test for each, and how to undo each one. Verify ends in a receipt: PASS, FAIL or NOT RUN, with the command, for each of the three Done when lines.</p>
   <details class="recall"><summary>Which of the ten phases comes before anything is built and has a fresh reviewer argue against the plan?</summary><p>Critique. Why: a reviewer that never saw Claude's reasoning argues against the plan before building starts.</p></details>
   <p class="lesson-end"><span class="pb">More in the playbook: §5.4</span><a href="#orchestration">Next: 06 Orchestration →</a><a href="#top" class="to-contents">↑ Contents</a></p>
@@ -1236,6 +1264,8 @@ The same test fails twice</textarea>
     <p>The builder never grades its own homework. The check comes from a command, a hook, or a fresh agent.</p>
   </div>
 
+  <p>Read-only tests aren't enough. Where the tests contradicted the spec, models passed by editing the tests or by special-casing them, and making the tests read-only stopped only the edits. <a class="ev r" href="https://arxiv.org/abs/2510.20270" target="_blank" rel="noopener" data-src="ImpossibleBench: tests that contradict the spec (preprint, 2025)" aria-label="R, research paper: ImpossibleBench (opens in a new tab)">R</a> Keep one acceptance check outside Claude's workspace, run by CI or the Stop hook, and let Claude report that a task can't be done as written. <span class="ev d" tabindex="0" role="note" data-src="Design advice: our synthesis, not a quote" aria-label="D, our design advice: Design advice: our synthesis, not a quote">D</span></p>
+  <p>If an LLM judge scores the work, use a model from a different family, or an execution check, and run it more than once: a judge favours its own outputs. <a class="ev r" href="https://arxiv.org/abs/2404.13076" target="_blank" rel="noopener" data-src="LLM evaluators recognize and favor their own generations (NeurIPS 2024)" aria-label="R, research paper: LLM judges favour their own outputs (opens in a new tab)">R</a></p>
   <h3>The trust ladder</h3>
   <p>Each rung catches more, and costs more. Climb as high as the risk calls for: a typo fix needs rung 2; a change to login, payments or the database needs rungs 5 and 6.</p>
   <div class="ladder-head" aria-hidden="true"><span>Who checks</span><span>What it catches</span><span>Trust</span></div>
@@ -1585,6 +1615,8 @@ The same test fails twice</textarea>
     <li><code>pull_request_target</code> runs with secrets: never check out and run PR code there. Pass issue and PR text through <code>env:</code>, and pin actions to a full commit SHA. <a class="ev p" href="https://docs.github.com/en/actions/reference/security/secure-use" target="_blank" rel="noopener" data-src="GitHub docs: Secure use of Actions" aria-label="P, primary source: GitHub docs: Secure use of Actions (opens in a new tab)">P</a></li>
     <li>CODEOWNERS is read from the base branch, so a PR can't add its own owners. A merge queue needs CI to listen for <code>merge_group</code>. <a class="ev p" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue" target="_blank" rel="noopener" data-src="GitHub docs: Managing a merge queue" aria-label="P, primary source: GitHub docs: Managing a merge queue (opens in a new tab)">P</a></li>
     <li>In Linear you stay the assignee and the agent is a delegate. Put repo and gate rules in Linear's agent guidance once, not in every ticket; it's advice to the agent, not a gate. <a class="ev p" href="https://linear.app/docs/agents-in-linear" target="_blank" rel="noopener" data-src="Linear docs: Agents in Linear" aria-label="P, primary source: Linear docs: Agents in Linear (opens in a new tab)">P</a></li>
+    <li>Approving every step wears you down: users accept 93% of Claude Code's permission prompts, and Anthropic warns that over time this leads to approval fatigue. <a class="ev p" href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener" data-src="Anthropic: Claude Code auto mode (Mar 2026)" aria-label="P, primary source: Claude Code auto mode (opens in a new tab)">P</a></li>
+    <li>A high merge rate doesn't mean good PRs: who submits a PR predicts its merge more than what it changes. Track reverts and bugs found after shipping instead. <a class="ev r" href="https://arxiv.org/abs/2601.18749" target="_blank" rel="noopener" data-src="Developer and agentic pull requests: what predicts a merge (MSR 2026)" aria-label="R, research paper: agent PR merges (opens in a new tab)">R</a> <span class="ev d" tabindex="0" role="note" data-src="Design advice: our synthesis, not a quote" aria-label="D, our design advice: Design advice: our synthesis, not a quote">D</span></li>
     <li>Link work with "Fixes ID" in the PR; commit magic words can close an issue without any review. <a class="ev p" href="https://linear.app/docs/github" target="_blank" rel="noopener" data-src="Linear docs: GitHub integration" aria-label="P, primary source: Linear docs: GitHub integration (opens in a new tab)">P</a></li>
     <li>Field report: small, specific tickets merged cleanly, while a vague "make it snappier" ticket got a cosmetic fix that missed the real cause. <a class="ev s" href="https://pub.towardsai.net/i-pointed-openais-symphony-at-20-linear-issues-the-15k-star-orchestrator-killed-my-standup-27e19cf85233" target="_blank" rel="noopener" data-src="Towards AI: a coding agent on 20 Linear issues" aria-label="S, second-hand report: Towards AI: a coding agent on 20 Linear issues (opens in a new tab)">S</a></li>
   </ul>
@@ -1675,6 +1707,7 @@ The same test fails twice</textarea>
       </tbody>
     </table>
   </div>
+  <p>Keep a rule or skill mined from past sessions only if re-running your eval set shows it helps. Without a reliable signal of what worked, lessons a model writes for itself can leave it worse off. <a class="ev r" href="https://arxiv.org/abs/2510.04618" target="_blank" rel="noopener" data-src="Agentic Context Engineering (ICLR 2026)" aria-label="R, research paper: Agentic Context Engineering (opens in a new tab)">R</a> <span class="ev d" tabindex="0" role="note" data-src="Design advice: our synthesis, not a quote" aria-label="D, our design advice: Design advice: our synthesis, not a quote">D</span></p>
   <p class="note running-ex"><b>Running example.</b> The CSV row in the log shows one rework loop: Verify sent the work back to Build once, because the first file held a row the filter had hidden. The retro picks one change: turn the check "3 rows filtered to 2" into a test in <code>npm test</code>, so the gate catches it on the next run.</p>
   <p class="lesson-end"><span class="pb">More in the playbook: §13</span><a href="#prompts">Next: 14 Prompt library →</a><a href="#top" class="to-contents">↑ Contents</a></p>
 </section>
@@ -2016,7 +2049,7 @@ Risk: &lt;trivial | normal | high&gt;</pre>
 <section id="sources" class="prose">
   <p class="kicker">Sources</p>
   <h2>Where this comes from</h2>
-  <p class="intro">These claims were researched and then independently fact-checked on 24 October 2026 against official docs, the authors' own posts and repos, and research papers. Posts on X were not opened directly, so claims that rest on them are tagged S. Features in research preview change fast.</p>
+  <p class="intro">These claims were researched and then independently fact-checked on 24 October 2026, and the version 17 additions on 27 October 2026, against official docs, the authors' own posts and repos, and research papers. Posts on X were not opened directly, so claims that rest on them are tagged S. Features in research preview change fast.</p>
   <div class="src-grid">
     <div class="panel">
       <h3>Claude Code team</h3>
@@ -2098,6 +2131,18 @@ Risk: &lt;trivial | normal | high&gt;</pre>
         <li><a href="https://www.thoughtworks.com/content/dam/thoughtworks/documents/radar/2026/04/tr_technology_radar_vol_34_en.pdf" target="_blank" rel="noopener">Thoughtworks Technology Radar Vol. 34</a> <a class="ev p" tabindex="-1" aria-hidden="true" href="https://www.thoughtworks.com/content/dam/thoughtworks/documents/radar/2026/04/tr_technology_radar_vol_34_en.pdf" target="_blank" rel="noopener" data-src="Thoughtworks Technology Radar Vol. 34 (Apr 2026)" aria-label="P, primary source: Thoughtworks Technology Radar Vol. 34 (opens in a new tab)">P</a></li>
       </ul>
     </div>
+    <div class="panel">
+      <h3>Evidence on checks, review and learning</h3>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2510.20270" target="_blank" rel="noopener">ImpossibleBench: tests that contradict the spec (preprint, 2025)</a> <a class="ev r" tabindex="-1" aria-hidden="true" href="https://arxiv.org/abs/2510.20270" target="_blank" rel="noopener" data-src="ImpossibleBench: tests that contradict the spec (preprint, 2025)" aria-label="R, research paper: ImpossibleBench: tests that contradict the spec (preprint, 2025) (opens in a new tab)">R</a></li>
+        <li><a href="https://arxiv.org/abs/2404.13076" target="_blank" rel="noopener">LLM evaluators recognize and favor their own generations (NeurIPS 2024)</a> <a class="ev r" tabindex="-1" aria-hidden="true" href="https://arxiv.org/abs/2404.13076" target="_blank" rel="noopener" data-src="LLM evaluators recognize and favor their own generations (NeurIPS 2024)" aria-label="R, research paper: LLM evaluators recognize and favor their own generations (NeurIPS 2024) (opens in a new tab)">R</a></li>
+        <li><a href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener">Evaluating AGENTS.md: are context files helpful? (preprint, v3 2026)</a> <a class="ev r" tabindex="-1" aria-hidden="true" href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener" data-src="Evaluating AGENTS.md: are context files helpful? (preprint, v3 2026)" aria-label="R, research paper: Evaluating AGENTS.md: are context files helpful? (preprint, v3 2026) (opens in a new tab)">R</a></li>
+        <li><a href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener">Anthropic: Claude Code auto mode (Mar 2026)</a> <a class="ev p" tabindex="-1" aria-hidden="true" href="https://www.anthropic.com/engineering/claude-code-auto-mode" target="_blank" rel="noopener" data-src="Anthropic: Claude Code auto mode (Mar 2026)" aria-label="P, primary source: Anthropic: Claude Code auto mode (Mar 2026) (opens in a new tab)">P</a></li>
+        <li><a href="https://arxiv.org/abs/2601.18749" target="_blank" rel="noopener">Developer and agentic pull requests: what predicts a merge (MSR 2026)</a> <a class="ev r" tabindex="-1" aria-hidden="true" href="https://arxiv.org/abs/2601.18749" target="_blank" rel="noopener" data-src="Developer and agentic pull requests: what predicts a merge (MSR 2026)" aria-label="R, research paper: Developer and agentic pull requests: what predicts a merge (MSR 2026) (opens in a new tab)">R</a></li>
+        <li><a href="https://arxiv.org/abs/2510.04618" target="_blank" rel="noopener">Agentic Context Engineering (ICLR 2026)</a> <a class="ev r" tabindex="-1" aria-hidden="true" href="https://arxiv.org/abs/2510.04618" target="_blank" rel="noopener" data-src="Agentic Context Engineering (ICLR 2026)" aria-label="R, research paper: Agentic Context Engineering (ICLR 2026) (opens in a new tab)">R</a></li>
+        <li><a href="https://arxiv.org/abs/2406.10279" target="_blank" rel="noopener">Package hallucinations by code-generating LLMs (USENIX Security 2025)</a> <a class="ev r" tabindex="-1" aria-hidden="true" href="https://arxiv.org/abs/2406.10279" target="_blank" rel="noopener" data-src="Package hallucinations by code-generating LLMs (USENIX Security 2025)" aria-label="R, research paper: Package hallucinations by code-generating LLMs (USENIX Security 2025) (opens in a new tab)">R</a></li>
+      </ul>
+    </div>
   </div>
   <p class="lesson-end"><a href="#top" class="to-contents">↑ Contents</a></p>
 </section>
@@ -2105,11 +2150,23 @@ Risk: &lt;trivial | normal | high&gt;</pre>
 </main>
 <p id="sr-status" class="sr-only" role="status" aria-live="polite"></p>
 
-<footer><a href="#top" class="to-top">↑ Back to top</a><br>Features and research checked against official docs and primary sources on 24 October 2026. Commands, limits and research-preview features change between versions; type <code>/help</code> in Claude Code to see what yours supports.</footer>
+<footer><a href="#top" class="to-top">↑ Back to top</a><br>Version 17, last updated 2026-10-27. Features and research checked against official docs and primary sources on 24 October 2026. Commands, limits and research-preview features change between versions; type <code>/help</code> in Claude Code to see what yours supports.</footer>
 </div>
 
 <script>
 (function(){
+  /* ---------- theme toggle ---------- */
+  var themeBtn = document.getElementById('theme-btn');
+  if (themeBtn && window.ocTheme) {
+    var label = function(){
+      var text = window.ocTheme.get() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
+      themeBtn.setAttribute('aria-label', text);
+      themeBtn.setAttribute('title', text);
+    };
+    label();
+    themeBtn.addEventListener('click', function(){ window.ocTheme.set(window.ocTheme.get() === 'dark' ? 'light' : 'dark'); label(); });
+  }
+
   /* ---------- copy helper ---------- */
   function flash(btn, text){
     var label = btn.getAttribute('data-label') || 'Copy';
