@@ -6,9 +6,9 @@ How it was checked:
 - **Admission bar.** Only [R] (a peer-reviewed venue, or a preprint from a major lab or with a large dataset, marked "preprint") and [P] (a first-party report or official doc with concrete content). Vendor marketing, recaps, opinion and social posts were rejected.
 - **Re-check of the shortened wording.** On 2026-10-26 and 2026-10-27, six `doc-checker` passes read the primary source behind every claim the playbook now cites, and every number in the verdict table, in the shortened wording. Each pass opened the paper or page itself and quoted it. Their verdicts, and what each changed, are in [Re-check of the playbook wording](#re-check-of-the-playbook-wording).
 - **Links.** Every URL in [Sources](#sources) was fetched on 2026-10-27. All resolved except two that refuse scripted clients (HTTP 403): the ACM page behind the Luo et al. DOI, which was read in a browser-rendered fetch, and the SEC order on Knight Capital, which a `doc-checker` read in full.
-- **Independent review:** three Fable reviewers at max effort (facts, structure, page) found 3 major and 14 minor issues; the 3 major and 12 minor were fixed in the commit after 61b6900, and 2 pre-existing minor issues outside this change are left as follow-ups; re-check pending.
+- **Independent review:** three Fable reviewers at max effort (facts, structure, page) found 3 major and 14 minor issues; the 3 major and 12 minor were fixed in the commit after 61b6900, and 2 pre-existing minor issues outside this change are left as follow-ups; re-checked on 2026-10-27 by two Fable reviewers: every fix confirmed, the two follow-ups unchanged.
 
-A verdict means the source says what we quote, within the stated scope. It does not mean the finding generalises. Grades follow playbook §0: **[P]** a vendor's or author's own words; **[R]** research. "Preprint" means no venue was found.
+A cited source says what we quote, within the stated scope; that does not mean the finding generalises. Grades follow playbook §0: **[P]** a vendor's or author's own words; **[R]** research. "Preprint" means no venue was found.
 
 ## Verdict on what the workshop said
 
@@ -162,11 +162,11 @@ Considered but not admitted, so nothing above rests on them. Each link was found
 
 | Source | Why it was held back |
 |---|---|
-| Cui et al., The effects of generative AI on high-skilled work: evidence from three field experiments with software developers (Management Science), https://doi.org/10.1287/mnsc.2025.00535 ; author copy https://www.mertdemirer.com/Papers/Demirer_AI_productivity.pdf | Neither checker could open the publisher's page; only the author copy was read |
+| Cui et al., The effects of generative AI on high-skilled work: evidence from three field experiments with software developers (Management Science), https://doi.org/10.1287/mnsc.2025.00535 ; author copy https://www.mertdemirer.com/Papers/Demirer_AI_productivity.pdf | The publisher's page could not be opened; only the author copy was read |
 | How the Claude Code team does code review (claude.dev, Oct 2026), https://claude.dev/blog/solving-code-review-at-anthropic/ | The content matched, but authorship and domain ownership were not confirmed: the canonical claude.com address returned 404. It is the only source found that describes a risk-tiered approval ladder |
 | Vercel, "58% of PRs in our largest monorepo merge without human review", https://vercel.com/blog/58-percent-of-prs-in-our-largest-monorepo-merge-without-human-review | The primary page returned 404 when checked; it was read only through a mirror |
 | Baker et al., Monitoring reasoning models for misbehavior and the risks of promoting obfuscation (OpenAI, 2025), https://arxiv.org/abs/2503.11926 ; METR, MALT (Oct 2025), https://metr.org/blog/2025-10-14-malt-dataset-of-natural-and-prompted-behaviors/ | Both survived the check, but they disagree on whether reading the chain of thought helps, and they concern training and eval monitors more than harness practice |
-| Gunawi et al., Why does the cloud stop computing? Lessons from hundreds of service outages (SoCC 2016), https://doi.org/10.1145/2987550.2987583 | The checkers could not open the paper |
-| Falessi, Cantone, Becker, Documenting design decision rationale to improve individual and team design decision making (ISESE 2006), https://doi.org/10.1145/1159733.1159755 | Checked once, not twice; a 50-student experiment on one case |
-| Lam et al., Root causing flaky tests in a large-scale industrial setting (ISSTA 2019), https://doi.org/10.1145/3293882.3330570 | Checked once, not twice |
+| Gunawi et al., Why does the cloud stop computing? Lessons from hundreds of service outages (SoCC 2016), https://doi.org/10.1145/2987550.2987583 | The paper could not be opened |
+| Falessi, Cantone, Becker, Documenting design decision rationale to improve individual and team design decision making (ISESE 2006), https://doi.org/10.1145/1159733.1159755 | Read once; a 50-student experiment on one case |
+| Lam et al., Root causing flaky tests in a large-scale industrial setting (ISSTA 2019), https://doi.org/10.1145/3293882.3330570 | Read once |
 | Faros AI, The AI productivity paradox (2025), https://www.faros.ai/research/ai-productivity-paradox ; HBR on BCG's "brain fry" survey (Mar 2026), https://hbr.org/2026/03/when-using-ai-leads-to-brain-fry ; HBR, AI doesn't reduce work, it intensifies it (Feb 2026), https://hbr.org/2026/02/ai-doesnt-reduce-work-it-intensifies-it | Vendor or magazine reports without a primary study behind them |
