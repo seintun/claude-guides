@@ -166,6 +166,61 @@ class Maps(unittest.TestCase):
         missing = [f for f in ("ENTRY.md", "AGENTS.md") if f not in listed]
         self.assertFalse(missing, f"README.md does not link {missing}. Restore the links: they are the two doors into the repository.")
 
+    def test_version_mentions_match_the_playbook_version_line(self):
+        """The playbook moves to a new version or date, but a README or llms.txt still shows the old one."""
+        sys.path.insert(0, str(ROOT / "tools"))
+        import section
+        version, updated = section.version()
+        want = f"version {version}, last updated {updated}"
+        mention = re.compile(r"(?i)\b(?:version|v)\s*(\d+\.\d+)(?:, last updated (\d{4}-\d{2}-\d{2}))?")
+        stale = []
+        for rel, needle in (("README.md", "The full reference"), ("README.md", "**Playbook:**"),
+                            ("playbook/README.md", "The canonical reference"), ("llms.txt", "the canonical reference")):
+            line = next((l for l in read(rel).splitlines() if needle in l), "")
+            found = [m.groups() for m in mention.finditer(line)]
+            if (version, updated) not in found:
+                stale.append(f"{rel} ({needle}): {found or 'no version'}")
+        self.assertFalse(stale, f"These mentions disagree with the playbook's Version line ({want}):" + short(stale) +
+                         f"\nMake each read '{want}'.")
+
+    def test_page_version_mentions_match_the_footer(self):
+        """The page or playbook moves to a new version or date, but a README, the version history or the compendium banner keeps the old one."""
+        m = re.search(r"Version (\d+), last updated (\d{4}-\d{2}-\d{2})\.", read("site/orchestrating-claude.html"))
+        self.assertTrue(m, "site/orchestrating-claude.html lost its footer line 'Version N, last updated YYYY-MM-DD.'")
+        version, updated = m.groups()
+        want = f"version {version}, last updated {updated}"
+        stale = []
+        for rel, needle in (("README.md", "**Page:**"), ("site/README.md", "`orchestrating-claude.html`"), ("checks/README.md", "passes all")):
+            line = next((l for l in read(rel).splitlines() if needle in l), "")
+            if want not in line.lower():
+                stale.append(f"{rel} ({needle}): {line.strip()[:90] or 'line missing'}")
+        sys.path.insert(0, str(ROOT / "tools"))
+        import section
+        pb_version, pb_updated = section.version()
+        for rel in ("docs/README.md", "llms.txt"):
+            text = read(rel)
+            if f"versions 1–{version}" not in text:
+                stale.append(f"{rel}: does not say page versions 1–{version}")
+            if f"playbook versions 0.1–{pb_version}" not in text:
+                stale.append(f"{rel}: does not say playbook versions 0.1–{pb_version}")
+
+        history = read("docs/version-history.md")
+
+        def newest_row(heading):
+            block = history.split(heading, 1)[1].split("\n## ", 1)[0]
+            rows = [l for l in block.splitlines() if l.startswith("| ") and not l.startswith("| Version")]
+            return rows[-1] if rows else ""
+        for heading, v, d in (("## Teaching page", version, updated), ("## Playbook", pb_version, pb_updated)):
+            row = newest_row(heading)
+            if not row.startswith(f"| {v} | {d} |"):
+                stale.append(f"docs/version-history.md {heading}: newest row starts {row[:24]!r}, want '| {v} | {d} |'")
+        banner = read("docs/orchestrating-claude-compendium.html")
+        for text in (f"Page <b>v{version}</b>, {updated}", f"Playbook <b>v{pb_version}</b>, {pb_updated}"):
+            if text not in banner:
+                stale.append(f"compendium banner lacks {text!r}: rebuild with python3 -I tools/build_compendium.py")
+        self.assertFalse(stale, f"These disagree with the page footer ({want}) or the playbook Version line "
+                         f"(version {pb_version}, last updated {pb_updated}):" + short(stale))
+
     def test_tools_readme_names_every_script(self):
         """A script is added to tools/ but tools/README.md never mentions it."""
         readme = read("tools/README.md")

@@ -55,6 +55,7 @@ Finish with up to three fixes that block, or say that none do. Do not edit anyth
 - Each hard-to-reverse decision is recorded with the reason for it.
 - Open questions are listed and not silently assumed.
 - Risky plans had a fresh-context critic (Law 7).
+- Unfamiliar work searched the repo first, then the official docs, then other projects for ideas, and every new dependency was vetted (§5.4).
 
 ### 4. Orchestrate
 - There is one writer per set of files; helpers only read or review (§6).
@@ -72,6 +73,7 @@ Finish with up to three fixes that block, or say that none do. Do not edit anyth
 - Receipts use the §9.4 format, with commands.
 - The checker is not the maker (Law 7).
 - Tests were not weakened or deleted to pass.
+- One acceptance check sat outside the builder's reach, run by CI or the Stop gate (§9.3).
 - Hooks enforce what words only request ([Law 9](playbook/agent-harness-playbook.md#law-9-enforce-with-code-request-with-words), §9.5).
 
 ### 7. Overnight
@@ -84,6 +86,7 @@ Finish with up to three fixes that block, or say that none do. Do not edit anyth
 ### 8. Learn
 - Each repeated correction became a rule; dead rules were pruned (Law 8).
 - Failures became eval tasks (§13, §16J).
+- A mined rule or skill stayed only if re-running the evals showed it helps (§13).
 - A retro was written (§16I).
 
 ## Walkthrough: one feature, start to morning

@@ -14,6 +14,10 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # An optional first argument writes elsewhere; tests/test_generated.py uses it to compare.
 OUT = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(ROOT, "docs", "orchestrating-claude-compendium.html")
 ARTIFACT_URL = "https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq"
+sys.path.insert(0, os.path.join(ROOT, "tools"))   # python3 -I leaves the script's folder off sys.path
+import section as playbook_sections  # noqa: E402  (this file has its own section())
+
+PB_VERSION, PB_UPDATED = playbook_sections.version()   # from the playbook's Version line, never hard-coded
 
 
 def read(rel):
@@ -218,6 +222,8 @@ def render_list(items, prefix):
 
 # ---------------------------------------------------------------- the teaching page
 PAGE = read("site/orchestrating-claude.html")
+# The page shows its own version in its footer; read it there, never hard-code it.
+PAGE_VERSION, PAGE_UPDATED = re.search(r"Version (\d+), last updated (\d{4}-\d{2}-\d{2})\.", PAGE).groups()
 
 
 def page_document(src):
@@ -287,9 +293,9 @@ def section(sid, title, lead, body):
 
 # About
 layout = [
-    ("site/orchestrating-claude.html", "The teaching page, version 16 (artifact body: no doctype; the viewer wraps it)"),
+    ("site/orchestrating-claude.html", f"The teaching page, version {PAGE_VERSION}, last updated {PAGE_UPDATED} (artifact body: no doctype; the viewer wraps it)"),
     ("site/history/orchestrating-claude-v11.html", "The version 11 baseline the UX issue was written against"),
-    ("playbook/agent-harness-playbook.md", "The agent harness playbook, version 0.4"),
+    ("playbook/agent-harness-playbook.md", f"The agent harness playbook, version {PB_VERSION}, last updated {PB_UPDATED}"),
     ("research/google-scaling-check.md", "Primary-source fact-check of the Google agent-scaling study"),
     ("issues/orchestrating-claude-ux.md", "The UX issue: parent, 13 children, plan and task contract"),
     ("issues/reviews/", "Every review report: UX, learning, charts, playbook, chart, post-launch, final"),
@@ -336,7 +342,7 @@ section("session", "Session log", "Every request in the session and its outcome.
 section("decisions", "Decisions", "What was decided, why, and by whom, plus one open proposal.",
         doc("docs/decision-log.md", "decisions")
         + doc("docs/proposals/harness-reset-proposal.md", "prop", "Proposal (draft): reset a personal harness to a lean baseline"))
-section("versions", "Version history", "Page versions 1–16 and playbook versions 0.1–0.4.", doc("docs/version-history.md", "versions"))
+section("versions", "Version history", f"Page versions 1–{PAGE_VERSION} and playbook versions 0.1–{PB_VERSION}.", doc("docs/version-history.md", "versions"))
 
 # The page: embedded, plus its text
 blocks = page_text_blocks(PAGE)
@@ -345,17 +351,17 @@ for sid, head, h2, paras in blocks:
     page_text.append(f'<details class="lesson" id="page-{sid}"><summary><span class="kick">{html.escape(head)}</span> {html.escape(h2)}</summary>'
                      + "".join(f"<p>{html.escape(p)}</p>" for p in paras) + "</details>")
 page_body = f"""
-<p>The page as published (version 16), running inside this file. Its links open in a new tab. In the live artifact it
-follows the viewer's theme, and here it follows your system theme. This copy uses system fonts, so it needs no network.</p>
+<p>The page as published (version {PAGE_VERSION}, last updated {PAGE_UPDATED}), running inside this file. Its links open in a new tab. It starts dark,
+and its sun and moon button switches between dark and light. This copy uses system fonts, so it needs no network.</p>
 <p><button type="button" class="btn" id="open-page">Open the page on its own</button>
 <a class="btn ghost" href="{ARTIFACT_URL}" target="_blank" rel="noopener">Open the live artifact</a></p>
-<iframe class="page-frame" title="Orchestrating Claude, version 16" loading="lazy" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" srcdoc="{html.escape(page_document(PAGE), quote=True)}"></iframe>
+<iframe class="page-frame" title="Orchestrating Claude, version {PAGE_VERSION}" loading="lazy" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" srcdoc="{html.escape(page_document(PAGE), quote=True)}"></iframe>
 <h3 id="page-text">The page as text</h3>
 <p class="muted">Every lesson's text, so search can reach it. Open a lesson to read it.</p>
 {''.join(page_text)}
 """
 section("page", "Teaching page", "Orchestrating Claude: 17 lessons and Sources, embedded and as text.", page_body)
-section("playbook", "Agent Harness Playbook", "The build reference behind the page, version 0.4.", doc("playbook/agent-harness-playbook.md", "pb"))
+section("playbook", "Agent Harness Playbook", f"The build reference behind the page, version {PB_VERSION}, last updated {PB_UPDATED}.", doc("playbook/agent-harness-playbook.md", "pb"))
 
 # Research
 src_rows = page_sources(PAGE)
@@ -413,7 +419,7 @@ section("skills", "Skills", "Claude Code skills built along the way.", skills)
 repro = (doc("tests/README.md", "tests", "Tests: what each feature is tested by")
          + doc("checks/README.md", "chk")
          + f"<h3 id='chk-baseline'>Version 11 baseline</h3><pre><code>{html.escape(read('checks/baseline-v11.txt'), quote=False)}</code></pre>"
-         + "<h3 id='chk-final'>Version 16 result</h3><p>21 of 21 page checks pass in 8 views (320, 375 light and dark, 414, 768, 1024, 1280 light and dark): dom-1 to dom-12, phase-explorer keyboard (kbd-1 to kbd-3), phone menu (nav-1, nav-2), quiz keyboard (quiz-1), unique ids and no script errors. Static checks 1 to 5 pass.</p>"
+         + f"<h3 id='chk-final'>Version {PAGE_VERSION} result</h3><p>27 of 27 page checks pass in 8 views (320, 375 light and dark, 414, 768, 1024, 1280 light and dark): dom-1 to dom-13, phase-explorer keyboard (kbd-1 to kbd-3), phone menu (nav-1, nav-2), quiz keyboard (quiz-1), theme toggle (theme-1 to theme-5), unique ids and no script errors. Static checks 1 to 6 pass.</p>"
          + "<h3 id='chk-code'>Scripts</h3>"
          + code_listing("checks/static_checks.py", "static checks on the page source")
          + code_listing("checks/static.sh", "runs the static checks and writes build/preview.html")
@@ -744,7 +750,7 @@ doc_html = f"""<!doctype html>
       <h1>Orchestrating Claude: what we built, checked and decided</h1>
       <p>A 17-lesson teaching page and an agent harness playbook, with the research behind them, three expert reviews,
       a 13-part rework, four more independent reviews, and the checks that gate every change. One file, offline, searchable.</p>
-      <div class="stats"><span><b>{len(sections)}</b> sections</span><span><b>{words:,}</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>{len(src_rows)}</b> sources</span><span>Page <b>v16</b></span><span>Playbook <b>v0.4</b></span></div>
+      <div class="stats"><span><b>{len(sections)}</b> sections</span><span><b>{words:,}</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>{len(src_rows)}</b> sources</span><span>Page <b>v{PAGE_VERSION}</b>, {PAGE_UPDATED}</span><span>Playbook <b>v{PB_VERSION}</b>, {PB_UPDATED}</span></div>
     </header>
     {main}
   </main>

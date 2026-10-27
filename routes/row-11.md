@@ -29,7 +29,7 @@ Sections and templates this route names, in order: cs:3, 14, 4, 8, 11.3, B. Runb
 | Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
 | Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
-| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths |
+| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |
@@ -67,6 +67,8 @@ while not done:
 *Read when: CLAUDE.md, skills or tool descriptions are growing, or the agent runs out of context.*
 
 **CLAUDE.md holds:** build, test and lint commands; conventions that differ from defaults; known gotchas; "never" rules; pointers to deeper docs. **It does not hold:** what the model does anyway, long documents (link them), secrets, or stale history. Keep it short and in git so the team improves it together. [D, consistent with P and S sources above]
+
+**Generated context files don't pay.** On SWE-bench-style Python tasks, LLM-written context files reduced average resolve rate by 0.5% and 2% (neither significant) and raised cost by over 20%. Developer-written files gained 2.4% on the authors' own benchmark (not significant), and codebase overviews didn't help. [R: preprint, ETH Zurich, v3 2026] Don't keep a generated CLAUDE.md, `/init` output included, as written: cut it to what the agent can't discover. [D]
 
 **Skills use progressive disclosure.** The name and description from SKILL.md frontmatter are always in the system prompt; the body loads when the task matches; bundled files open only when needed. [P: Agent Skills] Make a skill when you repeat a workflow; one team tip says anything done more than once a day. [S]
 

@@ -348,10 +348,33 @@
     return result('dom-12', 'Reading paths, levels and minutes, grouped rail, collapsed extras', fails);
   }
 
+  function c13Theme() {
+    var fails = [], root = document.documentElement;
+    var btn = document.getElementById('theme-btn');
+    if (!btn) return { id: 'dom-13', name: 'Theme toggle: dark or light, icon and label follow, two clicks restore', status: 'FAIL', detail: 'no #theme-btn' };
+    if (btn.tagName !== 'BUTTON' || btn.type !== 'button') fails.push('#theme-btn is not a <button type=button>');
+    var r = btn.getBoundingClientRect();
+    if (r.width < 44 || r.height < 44) fails.push('touch target ' + Math.round(r.width) + 'x' + Math.round(r.height));
+    var start = root.getAttribute('data-theme');
+    if (start !== 'dark' && start !== 'light') fails.push('data-theme is ' + start);
+    function state(t) {
+      var sun = btn.querySelector('.sun'), moon = btn.querySelector('.moon');
+      var label = btn.getAttribute('aria-label') || '';
+      if (root.getAttribute('data-theme') !== t) fails.push('expected ' + t + ', got ' + root.getAttribute('data-theme'));
+      if (t === 'dark' && !(sun && visible(sun) && !visible(moon) && label === 'Switch to light mode')) fails.push('dark: sun and "Switch to light mode" expected, label "' + label + '"');
+      if (t === 'light' && !(moon && visible(moon) && !visible(sun) && label === 'Switch to dark mode')) fails.push('light: moon and "Switch to dark mode" expected, label "' + label + '"');
+    }
+    var other = start === 'dark' ? 'light' : 'dark';
+    state(start);
+    btn.click(); state(other);
+    btn.click(); state(start);
+    return result('dom-13', 'Theme toggle: dark or light, icon and label follow, two clicks restore', fails, 'starts ' + start);
+  }
+
   window.__uxChecks = function (o) {
     o = o || {};
     var out = [];
-    [c1Overflow, c2Title, c3SvgText, c4Scrollers, c5Contrast, c5NonText, c6Links, c7Structure, c8Tags, c9Glossary, c10Benchmarks, c11Wayfinding, c12Paths].forEach(function (fn) {
+    [c1Overflow, c2Title, c3SvgText, c4Scrollers, c5Contrast, c5NonText, c6Links, c7Structure, c8Tags, c9Glossary, c10Benchmarks, c11Wayfinding, c12Paths, c13Theme].forEach(function (fn) {
       try { out.push(fn(o)); } catch (e) { out.push({ id: fn.name, name: fn.name, status: 'FAIL', detail: 'check threw: ' + e.message }); }
     });
     return out;

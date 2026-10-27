@@ -21,18 +21,18 @@ One file per playbook section, law, template and cheat-sheet section, so an agen
 | [`3`](3.md) | 3. Reference architecture | 54 |
 | [`3A`](3A.md) | 3A. Claude Code feature map | 42 |
 | [`4`](4.md) | 4. The core loop (one agent) | 21 |
-| [`5`](5.md) | 5. Lifecycle: from idea to production | 90 |
+| [`5`](5.md) | 5. Lifecycle: from idea to production | 92 |
 | [`5.1`](5.1.md) | 5.1 Discovery: from pain point to issues | 20 |
 | [`5.2`](5.2.md) | 5.2 Should you grill? Yes, with rules | 15 |
 | [`5.3`](5.3.md) | 5.3 How much spec before code? | 20 |
-| [`5.4`](5.4.md) | 5.4 Delivery phases | 19 |
+| [`5.4`](5.4.md) | 5.4 Delivery phases | 21 |
 | [`6`](6.md) | 6. Orchestration patterns | 49 |
 | [`7`](7.md) | 7. Delegation protocol | 52 |
-| [`8`](8.md) | 8. Context engineering | 29 |
-| [`9`](9.md) | 9. Verification stack | 67 |
+| [`8`](8.md) | 8. Context engineering | 31 |
+| [`9`](9.md) | 9. Verification stack | 68 |
 | [`9.1`](9.1.md) | 9.1 From criterion to gate | 9 |
 | [`9.2`](9.2.md) | 9.2 Trust ladder | 20 |
-| [`9.3`](9.3.md) | 9.3 Rules that keep verification honest | 8 |
+| [`9.3`](9.3.md) | 9.3 Rules that keep verification honest | 9 |
 | [`9.4`](9.4.md) | 9.4 Receipt format | 11 |
 | [`9.5`](9.5.md) | 9.5 Hooks that enforce it (Claude Code) | 14 |
 | [`10`](10.md) | 10. Guardrails | 37 |
@@ -50,7 +50,7 @@ One file per playbook section, law, template and cheat-sheet section, so an agen
 | [`12.2`](12.2.md) | 12.2 GitHub as the gate | 22 |
 | [`12.3`](12.3.md) | 12.3 Reference pipeline | 12 |
 | [`12.4`](12.4.md) | 12.4 Guardrail checklist | 17 |
-| [`13`](13.md) | 13. Evals and learning | 24 |
+| [`13`](13.md) | 13. Evals and learning | 26 |
 | [`14`](14.md) | 14. Model failure modes and countermeasures | 24 |
 | [`15`](15.md) | 15. Anti-patterns | 17 |
 | [`16`](16.md) | 16. Templates | 382 |
@@ -69,13 +69,13 @@ One file per playbook section, law, template and cheat-sheet section, so an agen
 | [`M`](M.md) | M. PR review workflow with the Claude Code GitHub Action | 48 |
 | [`17`](17.md) | 17. Maturity roadmap | 31 |
 | [`17A`](17A.md) | 17A. Mapping onto an existing harness | 19 |
-| [`18`](18.md) | 18. Operating the harness: gaps to close | 21 |
+| [`18`](18.md) | 18. Operating the harness: gaps to close | 22 |
 | [`19`](19.md) | 19. Proven orchestration: what the evidence says | 45 |
 | [`19.1`](19.1.md) | 19.1 Findings that hold up | 14 |
 | [`19.2`](19.2.md) | 19.2 Where reputable sources disagree | 8 |
 | [`19.3`](19.3.md) | 19.3 What this changes in the playbook | 12 |
 | [`19.4`](19.4.md) | 19.4 Evidence gaps | 6 |
-| [`20`](20.md) | 20. Sources | 153 |
+| [`20`](20.md) | 20. Sources | 174 |
 | [`cs:1`](cs-1.md) | 1. Which surface | 11 |
 | [`cs:2`](cs-2.md) | 2. Commands | 20 |
 | [`cs:3`](cs-3.md) | 3. Stuck signs and fixes | 11 |

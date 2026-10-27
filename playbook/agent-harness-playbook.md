@@ -2,7 +2,7 @@
 
 Jump to: [Contents](#contents) · [Find it fast](#find-it-fast) · [Templates](#16-templates)
 
-Version 0.5, 2026-10-24: fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): guarded Stop gate, a guardrails block for irreversible actions, a risk switch in Template B, 23 corrected claims, six caveats, and the fact-check linked as evidence. Version 0.4 added navigation (contents, find-it-fast, template index) and corrected Google-study wording. Version 0.3 followed an independent fact-check. A build reference for people designing an agent harness around Claude (Claude Code, the Claude Agent SDK, or the raw API), and for agents that read it as reference material.
+Version 0.6, last updated 2026-10-27: evidence from a review of a workshop's advice on running coding agents, each claim checked against its primary source ([research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md)): generated context files (§8), a hidden acceptance check and LLM-judge bias (§9.3), mined lessons and skills (§13), approval fatigue, merge rate, flaky tests and dark launches (§18), a prior-art rule (§5.4), and four findings in §19. Version 0.5, 2026-10-24: fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): guarded Stop gate, a guardrails block for irreversible actions, a risk switch in Template B, 23 corrected claims, six caveats, and the fact-check linked as evidence. Version 0.4 added navigation (contents, find-it-fast, template index) and corrected Google-study wording. Version 0.3 followed an independent fact-check. A build reference for people designing an agent harness around Claude (Claude Code, the Claude Agent SDK, or the raw API), and for agents that read it as reference material.
 
 ---
 
@@ -18,7 +18,7 @@ Version 0.5, 2026-10-24: fixes from the [v0.3 fact-check review](../issues/revie
   - **[D] design inference:** practice synthesized from the sources and field use, not a quote.
 - Confirm [S] claims against the original before quoting them in public. Social posts (X, LinkedIn) were not fetched directly; claims that rest on them are graded [S].
 - A grade on the first grade line after a heading's Read-when and Page-terms lines applies to that whole section, unless a line is marked otherwise.
-- **Fact-check.** The [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md) checked 142 sourced claims against primary sources on 2026-10-24: 118 true, 21 partly true, 3 unverified, none false. Version 0.5 folds in its corrections, and the file ends with a receipt for each one. What stays unconfirmed is listed at the end of §18.
+- **Fact-check.** The [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md) checked 142 sourced claims against primary sources on 2026-10-24: 118 true, 21 partly true, 3 unverified, none false. Version 0.5 folds in its corrections, and the file ends with a receipt for each one. The evidence added on 2026-10-27 (§5.4, §8, §9.3, §13, §18, §19) was checked claim by claim against its primary sources, and several of those sources are preprints; see [research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md). What stays unconfirmed is listed at the end of §18.
 - **Companion page.** The "Orchestrating Claude" page teaches the same material in 17 lessons plus Sources. The table after this list maps each lesson to its playbook section.
 - **Page terms.** The playbook keeps its own words. Where the page says something else, a "Page terms" line under the heading gives the page's word (for example, §2's Ten laws are the page's "Ten rules").
 
@@ -175,7 +175,7 @@ Each law opens with "Build it", then gives the evidence behind it.
 - Anthropic: start with the simplest solution; many tasks need one well-built call, not an agent. [P: Building effective agents]
 
 ### Law 2. Verification multiplies quality
-- **Build it:** no task without a check the agent can run itself; no "done" without that check's output. [D]
+- **Build it:** no task without a check the agent can run itself; no "done" without that check's output. Keep one acceptance check outside its reach, where it can't read or edit it (§9.3). [D]
 - Recaps of Boris Cherny's January 2026 setup thread call verification his top tip and report that a working feedback loop improves output quality two to three times. [S]
 - The Claude Agent SDK frames the agent loop as gather context, take action, verify work, repeat. [P]
 - Anthropic's long-running harness found agents declare the whole project finished too early unless a feature list and end-to-end tests hold them to account. [P]
@@ -197,7 +197,7 @@ Each law opens with "Build it", then gives the evidence behind it.
 - Dex Horthy (HumanLayer) recommends keeping context utilization around 40 to 60% through frequent intentional compaction. Geoffrey Huntley treats usable context as roughly 170k tokens and says more context means worse output. [P: author posts]
 
 ### Law 5. Let the agent search; don't pre-chew with RAG
-- **Build it:** give the agent fast search tools and a map (CLAUDE.md, directory layout) before you build an index. [D]
+- **Build it:** give the agent fast search tools and a map (CLAUDE.md, directory layout) before you build an index. The map points to what the agent can't discover, not a generated overview (§8). [D]
 - Early Claude Code tried RAG with embeddings; plain agentic search (glob, grep, read) outperformed it, and the team kept that. Boris described the evidence as "some internal benchmarks also, but mostly vibes". [P: Latent Space]
 - The Agent SDK guidance: agentic search first, semantic search only when needed. [P]
 
@@ -216,7 +216,7 @@ Each law opens with "Build it", then gives the evidence behind it.
 - Claude Code's best practices recommend an adversarial review subagent in a fresh context, acting only on its correctness findings. [P]
 
 ### Law 8. Turn every correction into a rule
-- **Build it:** a short retro after real tasks; each lesson becomes a rule, a skill, a hook, a test or a tool fix. Prune rules that never fire. [D]
+- **Build it:** a short retro after real tasks; each lesson becomes a rule, a skill, a hook, a test or a tool fix. Review a skill before it lands, and keep a mined rule only if re-running the evals shows it helps (§13). Prune rules that never fire. [D]
 - Boris Cherny, as quoted in recaps: after a correction, tell Claude to update CLAUDE.md so the mistake doesn't repeat; his team keeps one shared CLAUDE.md in git. [S]
 - Anthropic: start with a minimal prompt and add instructions from observed failures. [P]
 - Every's "compound engineering" makes this a phase: plan, work, review, then compound, writing learnings into CLAUDE.md and `docs/solutions/`. [P]
@@ -441,6 +441,8 @@ They agree on: a readable plan before code; a machine-checkable gate as the cont
 | Close | Ship | Hand over | Lead | PR with receipt | CI green; human approval |
 | Close | Learn | Improve the system | Lead and human | 1 to 3 rule, skill, hook or test changes | Each accepted or rejected |
 
+For a feature that needs knowledge the model lacks, search this repo first, then the official docs, then other projects for ideas, not code to paste, and pick one approach. Confirm any new dependency exists in the registry: across 2.23 million package recommendations pooled over 16 off-the-shelf models, about 20% named packages that don't exist, and commercial models averaged at least 5%. [R: USENIX Security 2025] Check its maintainers, ignore star counts, pin it and review the change as high-risk. Copy code only under a permissive licence, recording its URL and licence. Fetched READMEs and issues are data, not instructions. [D]
+
 Scale the lifecycle to the risk. A typo is Build and Verify. A normal feature runs every phase with one reviewer. Anything touching auth, schema, data deletion, infrastructure, public APIs or harness permissions gets the critic, an adversarial review and human sign-off. [D]
 
 ---
@@ -551,6 +553,8 @@ artifacts: paths written
 
 **CLAUDE.md holds:** build, test and lint commands; conventions that differ from defaults; known gotchas; "never" rules; pointers to deeper docs. **It does not hold:** what the model does anyway, long documents (link them), secrets, or stale history. Keep it short and in git so the team improves it together. [D, consistent with P and S sources above]
 
+**Generated context files don't pay.** On SWE-bench-style Python tasks, LLM-written context files reduced average resolve rate by 0.5% and 2% (neither significant) and raised cost by over 20%. Developer-written files gained 2.4% on the authors' own benchmark (not significant), and codebase overviews didn't help. [R: preprint, ETH Zurich, v3 2026] Don't keep a generated CLAUDE.md, `/init` output included, as written: cut it to what the agent can't discover. [D]
+
 **Skills use progressive disclosure.** The name and description from SKILL.md frontmatter are always in the system prompt; the body loads when the task matches; bundled files open only when needed. [P: Agent Skills] Make a skill when you repeat a workflow; one team tip says anything done more than once a day. [S]
 
 **Long-horizon techniques.** [P: context engineering]
@@ -610,9 +614,10 @@ criterion  →  scenario            →  automated check   →  gate            
 - Evidence: §19.1 item 10, and the source-by-source check in [research/bounded-review-evidence.md](../research/bounded-review-evidence.md).
 
 ### 9.3 Rules that keep verification honest
-- Tests are immutable to the builder. Anthropic's harness called removing or editing tests unacceptable. [P] Back it with a hook or CODEOWNERS on test paths, and have the reviewer inspect every test diff. [D]
+- Tests are immutable to the builder. Anthropic's harness called removing or editing tests unacceptable. [P] Back it with a hook or CODEOWNERS on test paths, and have the reviewer inspect every test diff, including mocks that replace the behaviour under test. [D]
+- **Read-only tests aren't enough.** On benchmark tasks whose tests contradict the spec, models passed by editing the tests or by special-casing. Read-only tests stopped only the edits, and a sanctioned stop-and-report exit cut cheating far more for some models than others. [R: preprint, ImpossibleBench, 2025; benchmarks, not real repos] Keep one acceptance check the builder can't read or edit, and give it a way to report that the task can't be done as specified. A Read deny rule doesn't cover a script that opens the file itself, or a command that reads without naming it [P: permissions docs], so keep that check outside the builder's workspace, run by CI or the Stop gate. [D]
 - End-to-end checks for UI and full flows go through a real browser. [P: long-running harness; Agent SDK]
-- An LLM judge needs a rubric. The research system scored factual accuracy, citation accuracy, completeness, source quality and tool efficiency from 0.0 to 1.0 with a pass/fail. [P] The Agent SDK guidance calls an LLM judge not very robust and slower, though sometimes worth the cost. [P] Our advice: never make it the only gate. [D]
+- An LLM judge needs a rubric. The research system scored factual accuracy, citation accuracy, completeness, source quality and tool efficiency from 0.0 to 1.0 with a pass/fail. [P] The Agent SDK guidance calls an LLM judge not very robust and slower, though sometimes worth the cost. [P] Our advice: never make it the only gate. [D] A judge favours its own outputs [R: NeurIPS 2024], and open-weight judges disagreed with themselves across runs. [R: Findings of EMNLP 2025] When an LLM judge scores work, use a different model family or an execution check, and repeat and aggregate. This is about scoring: a fresh reviewer from the same family (Law 7, §9.2) still beats self-review but can share the bias. [D]
 - A loop's tests can pass while the spec is still violated; one practitioner's Ralph run passed 28 tests and then failed a fresh review on a real spec breach. Keep a fresh-eyes review even when tests are green. [S]
 - Watch your own drift. Simon Willison wrote in May 2026 that he no longer reviews every line of agent output, even for production work, and named the risk himself: normalization of deviance. Decide on purpose which tiers get line-by-line human review. [P]
 - For unattended runs, measure **pass^k** (all k runs succeed), not just pass@k (at least one succeeds). At 75% per-run success, three runs in a row all succeed only about 42% of the time. [P: Demystifying evals]
@@ -861,7 +866,7 @@ sequenceDiagram
 
 - **Start small and real.** 20 to 50 simple tasks drawn from real failures [P: Demystifying evals]; Anthropic's research team began with about 20 queries from real usage [P].
 - **Graders:** code-based (fast, objective, brittle), model-based (flexible, needs calibration), human (the gold standard, slow and expensive). [P]
-- **Read the transcripts.** Scores tell you that something broke; transcripts tell you why. [P]
+- **Read the transcripts.** Scores tell you that something broke; transcripts tell you why. [P] Label failures by hand: automated attribution rarely found the decisive failing step. [R: ICML 2025; D for the advice]
 - **Version the harness.** CLAUDE.md, agent definitions, skills, hooks and tool descriptions live in git. Change one thing at a time and re-run the eval set. [D]
 - **Harness scorecard** [D]:
 
@@ -875,6 +880,8 @@ sequenceDiagram
 | pass^k on the eval set | All k runs succeed | Up |
 
 - **The learning loop:** run, write the receipt, hold a retro, turn each lesson into a rule, skill, hook, test or tool fix, re-run the evals, prune what no longer helps. [D]
+- **Mined lessons need an outcome signal.** In an online finance setting without reliable feedback, self-evolving context could fall below the base model [R: ICLR 2026], and an unguided LLM judge was near chance at picking the better of two skills. [R: preprint, skill extraction, 2026] Keep a mined rule only if re-running the eval set shows it helps, and never let one pass rewrite the whole rules file. [D]
+- **Reviewed skills beat self-written ones.** In SkillsBench, curated skills reviewed by maintainers raised pass rates, skills a model wrote for itself before the task did worse than none, and focused sets of at most three skills beat larger or exhaustive bundles. [R: preprint, SkillsBench v4, 2026; earlier versions report a smaller loss, so cite the version]
 
 ---
 
@@ -891,7 +898,7 @@ sequenceDiagram
 | Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
 | Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
-| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths |
+| Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |
@@ -1343,20 +1350,21 @@ These came out of the independent review. Most are design advice [D]; facts carr
 - **Logs and privacy.** Tool-call logs capture secrets and personal data. Redact before storing, keep logs where the agent can't edit them, set a retention period, and limit who can read them. Check your provider's data-retention terms before sending client data. [D]
 - **Kill switch.** Before the first unattended run, write a one-page runbook: disable the scheduled task or workflow, stop or archive the session, revoke the tokens it used, revert its branch. [D]
 - **Rollback beyond git.** Git reverts code. Plan separately for migrations (forward-only with a tested down step), infrastructure (plan, then a human applies), messages and posts (can't be unsent, so approve first) and tracker writes (batch, then review). Mark agent commits (a trailer or branch prefix) so they can be found and reverted together. [D]
+- **Ship risky changes dark, and test restores.** Put risky changes behind a flag that starts off, and canary configuration changes [R: SOSP 2015]; give each flag an owner and an expiry [R: ICSE-SEIP 2020, 9 interviews]. Test restores, not just backups: GitLab's daily backup had silently produced nothing. [P: GitLab postmortem, 2017] This is incident and practice evidence about human-authored changes. [D for the rule]
 - **Evaluating the harness across model upgrades.** Keep a frozen eval set, pin the model for the baseline, run k trials per task, record pass^k and cost, then change one thing at a time (model, hook, skill). Budget the eval run before starting it. [D, built on the P eval guidance in §13]
-- **Human review load.** Cap PR size, route review depth by risk tier, and track approval rate and time-to-review. A near-100% approval rate with falling review time is the normalization-of-deviance warning sign. Merge from a phone only for trivial tiers. [D]
-- **Repos without good tests.** Before agents build: write characterization tests around what they'll touch, quarantine flaky tests, record a baseline pass^k, and put the agent-runnable test command in CLAUDE.md. [D]
+- **Human review load.** Cap PR size, route review depth by risk tier, and track approval rate and time-to-review. A near-100% approval rate with falling review time is the normalization-of-deviance warning sign. Merge from a phone only for trivial tiers. [D] Anthropic reports that users accept 93% of manual Claude Code permission prompts, and warns that over time such prompts lead to approval fatigue. [P: Anthropic, auto mode, 2026] Merge outcomes track the submitter more than the change: across 33,596 agent PRs, submitter attributes carried about 76% of a merge model's explanatory power. [R: MSR 2026] So merge rate is not a quality signal; for quality, track reverts and escaped defects. [D]
+- **Repos without good tests.** Before agents build: write characterization tests around what they'll touch, quarantine flaky tests with an owner rather than deleting them, record a baseline pass^k, and put the agent-runnable test command in CLAUDE.md. [D] In 161 classified flaky-test fixes, 24% changed the code under test, and 94% of those fixed a bug there. [R: FSE 2014] Quarantine before agents read the suite as examples: in an injection experiment, two models copied a flaky assertion from the example tests into 42% to 78% of the new C++ tests they wrote. [R: ICSE-SEIP 2026; D for the rule] No study compares quarantine, rerun and deletion.
 - **Monorepos, multiple repos and teams.** Nested CLAUDE.md per package; gates that run only affected tests; one plan file per task (`docs/plans/<task>.md`) so parallel work doesn't collide; a named owner who reviews changes to hooks, agents and skills; cross-repo order written into the plan. [D]
 - **Discovery artifacts.** Store them as `docs/discovery/<id>.md`, `docs/specs/<id>.md` and `docs/adr/<n>.md`, each linked from its issue. Mark replaced documents "superseded by …". Give the outcome readout an owner and a date. Move grill questions still open at the question cap into the spec's Open Questions. Park unbet pitches in a dated list you're free to delete; don't let it become a backlog. [D]
 
-**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase.
+**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions.
 
 ---
 
 ## 19. Proven orchestration: what the evidence says
 *Read when: you are choosing between one agent and many, or need numbers behind a design choice.*
 
-Gathered on 2026-10-24 by research subagents whose transcripts were not kept, then re-checked against the papers and posts in the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md). Counts only peer-reviewed or well-cited studies, research reports, and engineering write-ups from large teams that publish measurements. YouTube, social posts and product marketing were excluded; a company reporting on its own product is marked vendor. Most figures come from abstracts and paper text, so spot-check a number against its source before quoting it.
+Gathered on 2026-10-24 by research subagents whose transcripts were not kept, then re-checked against the papers and posts in the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md). Counts only peer-reviewed or well-cited studies, research reports, and engineering write-ups from large teams that publish measurements. YouTube, social posts and product marketing were excluded; a company reporting on its own product is marked vendor. Most figures come from abstracts and paper text, so spot-check a number against its source before quoting it. The findings added on 2026-10-27 were checked claim by claim against their sources ([research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md)); several are preprints.
 
 ### 19.1 Findings that hold up
 **Page terms.** Findings that hold up (the page's "Six findings that hold up", Lesson 17). The page shows findings 1 to 6.
@@ -1365,10 +1373,10 @@ Gathered on 2026-10-24 by research subagents whose transcripts were not kept, th
 2. **Wrap the model in a deterministic pipeline.** Airbnb migrated about 3,500 test files with a per-file state machine that calls the model only when a check fails: 75% done in 4 hours, 97% after four days of tuning, about 6 weeks against an estimated 1.5 engineer-years. [P] Google: across 39 migrations, 74.45% of 595 changes were model-generated (some then edited by a human), validated nightly and sent out to code owners for review; time savings were developer estimates. [R: FSE 2025] Spotify's three-part series: Claude Code runs through the Agent SDK (part 2); build and test verifiers via MCP and a stop hook check each session, an LLM judge vetoes about 25% of sessions, and the most serious failure is CI-green but functionally wrong (part 3); more than 1,500 agent PRs merged (part 1). [P] Stripe interleaves deterministic git, lint, test and CI steps with agent loops, at 1,000–1,300+ PRs a week, with no quality data published. [P] Uber's batch AI migration across many files failed; AI was kept for debugging failures. [P]
 3. **External verification beats self-critique.** MAST (1,600+ traces, 7 frameworks): adding a high-level verifier raised success by 15.6 points, and clearer role specs by 9.4 points, on ChatDev over 32 ProgramDev tasks. [R: NeurIPS 2025] Self-correction without external feedback lowers reasoning accuracy. [R: ICLR 2024] Reflexion's coding gains depend on test feedback. [R] Meta's TestGen-LLM keeps only tests that build, pass reliably and add coverage; engineers accepted 73% of those. [R: FSE 2024]
 4. **Interface design and simplicity beat framework complexity.** SWE-agent's purpose-built file tools added 10.7 points over a raw shell. [R: NeurIPS 2024] Agentless, a fixed localize-repair-validate pipeline, solved 32% of SWE-bench Lite at about $0.70 per issue (the FSE 2025 abstract reports 32.67%; 27.3% was Agentless's own earlier v1 result, not an independent reproduction). [R: FSE 2025] A simple retry baseline (its "warming" variant) scored 93.2% for $2.45 where a complex agent scored 88.0% for $134.50. [R: TMLR 2025] Code as the action space raised success by up to 20%. [R: ICML 2024]
-5. **Measure reliability and cost, not one good run.** On tau-bench's retail tasks, GPT-4o passed about 61% once but under 25% eight times in a row. [R: ICLR 2025] 7.8% of SWE-bench patches marked resolved fail the project's full test suite. [R] Sampling and voting help at a price: self-consistency added 17.9 points on GSM8K. [R]
-6. **Human review is the bottleneck, and perception misleads.** METR's randomized trial (16 experienced developers, 246 issues): 19% slower with early-2025 AI tools, while believing they were 20% faster. [R] METR's 2026 follow-up couldn't produce a clean new estimate. [P] DORA 2025 (about 5,000 respondents): 90% use AI; adoption now goes with higher throughput and still with higher instability. [P, survey] Google throttled batch sizes for reviewers; Spotify calls reviewing bad PRs expensive. [P]
+5. **Measure reliability and cost, not one good run.** On tau-bench's retail tasks, GPT-4o passed about 61% once but under 25% eight times in a row. [R: ICLR 2025] 7.8% of SWE-bench patches marked resolved fail the project's full test suite. [R] UTBoost's added tests and a fixed log parser exposed 345 SWE-bench patches wrongly marked as passing, which changed many leaderboard rankings. [R: ACL 2025] Sampling and voting help at a price: self-consistency added 17.9 points on GSM8K. [R]
+6. **Human review is the bottleneck, and perception misleads.** METR's randomized trial (16 experienced developers, 246 issues): 19% slower with early-2025 AI tools, while believing they were 20% faster. [R] METR's 2026 follow-up couldn't produce a clean new estimate. [P] DORA 2025 (about 5,000 respondents): 90% use AI; adoption now goes with higher throughput and still with higher instability. [P, survey] Google throttled batch sizes for reviewers; Spotify calls reviewing bad PRs expensive. [P] After Cursor adoption in 806 open-source repos, velocity gains faded within about two months while static-analysis warnings and complexity stayed up. [R: MSR 2026] In one pre-registered trial with 52 participants on a 35-minute task, the AI-assisted group scored 17% lower on a quiz about the library they used (the authors' figure); for code you will own, ask the agent to explain it. [R: preprint, Anthropic, 2026; D for the advice]
 7. **Search loops need a machine grader.** DeepMind's AlphaEvolve (models propose, automated evaluators score, a program database evolves the best) found a scheduling heuristic that recovers 0.7% of Google's fleet compute and has run in production for over a year. It only works where output can be graded automatically. [P]
-8. **Short instructions: a map, not a manual.** OpenAI's Codex team (about 1M lines and 1,500 merged PRs in about 5 months, with 3–7 engineers) describes AGENTS.md as a short map pointing into docs, not a manual. Uncontrolled and self-reported. [P; the post returned HTTP 403 at the 2026-10-24 check, and secondary coverage confirms only the volume and team size] Thoughtworks lists agent instruction bloat under caution. [P]
+8. **Short instructions: a map, not a manual.** OpenAI's Codex team (about 1M lines and 1,500 merged PRs in about 5 months, with 3–7 engineers) describes AGENTS.md as a short map pointing into docs, not a manual. Uncontrolled and self-reported. [P; the post returned HTTP 403 at the 2026-10-24 check, and secondary coverage confirms only the volume and team size] Thoughtworks lists agent instruction bloat under caution. [P] The map should hold what the agent can't discover, not a generated overview (§8). [D]
 10. **Reviews converge in a round or two; after that they invent work.** Self-correction without an outside signal lowered GPT-4's GSM8K accuracy from 95.5 to 89.0 over two rounds, while tool-grounded critique got most of its benefit in 2 to 3 rounds. [R: ICLR 2024, both] A second LLM review round produced 62% more false positives. [R: preprint] In 2,269 real-world multi-round review tasks, the largest share of false positives re-flagged defects already resolved (32.5%), and the largest cause of misses was forgetting findings across rounds (25.1%). [R: ISSTA 2026] Human practice points the same way: over 80% of changes at Google need at most one iteration of comments [R: ICSE-SEIP 2018], and formal external change approval brought no evidence of fewer failed changes. [P: DORA 2019] Scope notes for each figure: [research/bounded-review-evidence.md](../research/bounded-review-evidence.md). The rule built on it is in §9.2.
 9. **Evals start from error analysis.** Read traces, build a failure taxonomy, prefer code checks before LLM judges, and validate any judge against expert labels; criteria drift as you read outputs. [P: Hamel Husain and Shreya Shankar, practitioner experience; R: criteria-drift study] Andrew Ng names evals and error analysis as the best predictor of agent success. [P]
 
@@ -1376,7 +1384,7 @@ Gathered on 2026-10-24 by research subagents whose transcripts were not kept, th
 
 - **How much to use multiple agents.** Anthropic's 2025 research system and Andrew Ng favor it; Cognition, Anthropic's 2026 guidance, Thoughtworks, MAST and the Google study are skeptical for coding. Task shape resolves most of it: parallel reading versus shared decisions.
 - **Planning.** Andrew Ng calls planning the least predictable pattern; Chip Huyen and Lilian Weng treat it as core and validate plans before running them.
-- **Humans in the loop.** OpenAI's Codex team moved most review agent-to-agent. Microsoft's Magentic-UI study raised task success from 30.3% to 51.9% with human co-planning (a simulated user), and Thoughtworks keeps humans at approval points.
+- **Humans in the loop.** OpenAI's Codex team moved most review agent-to-agent. Microsoft's Magentic-UI study raised task success from 30.3% to 51.9% with human co-planning (a simulated user), and Thoughtworks keeps humans at approval points. Intercom reports auto-approving a share of PRs with no human reviewer: its approving agent won't approve large or broad PRs, every approval is logged, and any engineer can ask for a human review. [P, vendor: Intercom, 2026]
 - **Fresh or same-session review.** Claude Code's best practices say a fresh context improves code review. [P] One preprint's revised analysis found a single same-session review not significantly worse than a fresh one, though a second pass in the same session was. [R: preprint, arXiv 2603.12123 v2] Keep the fresh reviewer, and never rerun a review in the session that wrote the code.
 - **Decentralized hand-offs.** OpenAI's guide presents them as a main pattern without data; Google found them helpful only for web navigation and weakest at containing errors.
 
@@ -1390,11 +1398,11 @@ Gathered on 2026-10-24 by research subagents whose transcripts were not kept, th
 - Put verification first and don't count on self-critique without a signal (§9).
 - Track pass^k and cost per task (§13).
 - Size agent output to human review capacity (§18).
-- Keep CLAUDE.md a short map into deeper docs (§8).
+- Keep CLAUDE.md a short map into deeper docs, holding what the agent can't discover, not a generated overview (§8).
 
 ### 19.4 Evidence gaps
 
-There's no peer-reviewed, cost-matched comparison of orchestration topologies on real coding work with current frontier models. The industry cases publish almost no post-merge defect or revert rates, most speed-ups are self-reported, and the newest productivity study (METR 2026) has selection bias.
+There's no peer-reviewed, cost-matched comparison of orchestration topologies on real coding work with current frontier models. The industry cases publish almost no post-merge defect or revert rates, most speed-ups are self-reported, and the newest productivity study (METR 2026) has selection bias. No study measures the prior-art rule in §5.4. Agents weakening tests has been measured only on benchmarks, not in real repositories. The flag, canary and rollback evidence in §18 covers human-authored changes only.
 
 ---
 
@@ -1547,6 +1555,27 @@ Grades as in §0. Dates are publication dates where known.
 - Chip Huyen, Agents [P]: https://huyenchip.com/2025/01/07/agents.html · Lilian Weng [P]: https://lilianweng.github.io/posts/2023-06-23-agent/
 - Hamel Husain, evals [P]: https://hamel.dev/blog/posts/evals/
 - Birgitta Böckeler, harness engineering [P]: https://www.martinfowler.com/articles/harness-engineering.html
+
+**Evidence on context, tests, evals, review load and delivery (§5.4, §8, §9.3, §13, §18, §19)** Checked source by source in research/mega-workshop-evidence.md, which also holds the full source list behind these additions, including the sources the playbook doesn't cite.
+- Gloaguen et al., Evaluating AGENTS.md (preprint, v3 2026) [R]: https://arxiv.org/abs/2602.11988
+- Spracklen et al., package hallucinations by code-generating LLMs (USENIX Security 2025) [R]: https://arxiv.org/abs/2406.10279
+- Zhong, Raghunathan, Carlini, ImpossibleBench (preprint, 2025) [R]: https://arxiv.org/abs/2510.20270
+- Panickssery, Bowman, Feng, LLM evaluators recognize and favor their own generations (NeurIPS 2024) [R]: https://arxiv.org/abs/2404.13076
+- Haldar and Hockenmaier, Rating Roulette, self-inconsistency of LLM judges (Findings of EMNLP 2025) [R]: https://arxiv.org/abs/2510.27106
+- Agentic Context Engineering (ICLR 2026) [R]: https://arxiv.org/abs/2510.04618
+- From raw experience to skill consumption (preprint, 2026) [R]: https://arxiv.org/abs/2605.23899
+- SkillsBench (preprint, v4 2026) [R]: https://arxiv.org/abs/2602.12670
+- Zhang et al., Which agent causes task failures and when? (ICML 2025) [R]: https://arxiv.org/abs/2505.00212
+- Yoshioka et al., developer and agentic pull requests (MSR 2026) [R]: https://arxiv.org/abs/2601.18749
+- Luo et al., An empirical analysis of flaky tests (FSE 2014) [R]: https://doi.org/10.1145/2635868.2635920
+- Berndt et al., flakiness of LLM-generated tests for database systems (ICSE-SEIP 2026) [R]: https://arxiv.org/abs/2601.08998
+- Tang et al., Holistic configuration management at Facebook (SOSP 2015) [R]: https://sigops.org/s/conferences/sosp/2015/current/2015-Monterey/printable/008-tang.pdf
+- Meinicke et al., feature flags and configuration options (ICSE-SEIP 2020) [R]: https://par.nsf.gov/servlets/purl/10157116
+- GitLab, Postmortem of database outage of January 31 (Feb 2017) [P]: https://about.gitlab.com/blog/postmortem-of-database-outage-of-january-31/
+- UTBoost, test augmentation for SWE-bench (ACL 2025) [R]: https://aclanthology.org/2025.acl-long.189
+- He et al., Cursor adoption, development velocity and code quality (MSR 2026) [R]: https://arxiv.org/abs/2511.04427
+- Shen and Tamkin, How AI impacts skill formation (preprint, Anthropic, 2026) [R]: https://arxiv.org/abs/2601.20245
+- Intercom, AI is approving our pull requests (Apr 2026) [P, vendor]: https://intercom.com/blog/ai-is-approving-our-pull-requests-heres-how-we-made-it-safe
 
 **Other background agents** [P]
 - OpenAI Codex cloud: https://developers.openai.com/codex/cloud · Codex GitHub integration https://developers.openai.com/codex/integrations/github · OpenAI on harness engineering https://openai.com/index/harness-engineering/

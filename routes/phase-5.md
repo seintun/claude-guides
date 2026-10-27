@@ -31,6 +31,8 @@ while not done:
 
 **CLAUDE.md holds:** build, test and lint commands; conventions that differ from defaults; known gotchas; "never" rules; pointers to deeper docs. **It does not hold:** what the model does anyway, long documents (link them), secrets, or stale history. Keep it short and in git so the team improves it together. [D, consistent with P and S sources above]
 
+**Generated context files don't pay.** On SWE-bench-style Python tasks, LLM-written context files reduced average resolve rate by 0.5% and 2% (neither significant) and raised cost by over 20%. Developer-written files gained 2.4% on the authors' own benchmark (not significant), and codebase overviews didn't help. [R: preprint, ETH Zurich, v3 2026] Don't keep a generated CLAUDE.md, `/init` output included, as written: cut it to what the agent can't discover. [D]
+
 **Skills use progressive disclosure.** The name and description from SKILL.md frontmatter are always in the system prompt; the body loads when the task matches; bundled files open only when needed. [P: Agent Skills] Make a skill when you repeat a workflow; one team tip says anything done more than once a day. [S]
 
 **Long-horizon techniques.** [P: context engineering]

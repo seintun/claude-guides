@@ -25,11 +25,14 @@ agent hands back.
    Prettier and leaves gate and config files alone (D). A PostToolUse exit code 2 shows stderr, but the
    tool has already run (P).
 7. **Make tests immutable to the builder.** Back the rule with a hook or CODEOWNERS on test paths, and
-   have the reviewer inspect every test diff (D). Anthropic's long-running harness called removing or
-   editing tests unacceptable (P).
+   have the reviewer inspect every test diff, including mocks that replace the behaviour under test
+   (D). Anthropic's long-running harness called removing or editing tests unacceptable (P). Keep one
+   acceptance check outside the builder's workspace, run by CI or the Stop gate (D).
+   [§9.3](../playbook/agent-harness-playbook.md#93-rules-that-keep-verification-honest)
 8. **Check in order, cheapest first.** Use rules-based feedback (lint, types, tests), then visual
-   feedback through a browser for UI, then an LLM judge (P). Give any judge a rubric (P), and never
-   make it the only gate (D).
+   feedback through a browser for UI, then an LLM judge (P). Give any judge a rubric (P), use one from
+   a different model family than the work and repeat it (D), and never make it the only gate (D).
+   [§9.3](../playbook/agent-harness-playbook.md#93-rules-that-keep-verification-honest)
 9. **Get an independent review.** The maker is not the checker. A fresh reviewer gets the artifact
    and the criteria, never the author's reasoning or conclusion, and sources are anonymized when it
    compares candidates (D). Keep the fresh-eyes review even when tests are green (S). Bound it: only

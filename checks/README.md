@@ -55,11 +55,13 @@ Run `checks/run-dom.js` with Playwright's `browser_run_code_unsafe` tool, passin
 | dom-12 | Reading paths, levels and minutes, grouped rail, collapsed extras |
 | nav-1, nav-2 | Phone menu stays at the top; choosing Lesson 17 shows its heading below the menu |
 | quiz-1 | Quiz: arrow keys choose without scoring; Check answer scores |
+| dom-13 | The theme toggle is a 44px `<button>`; the page is dark or light; the sun shows in dark and the moon in light, each with the matching aria-label; two clicks restore the theme |
+| theme-1 to theme-5 | With empty storage the page loads dark even when the system prefers light; one click gives light; the choice survives a reload; a viewer's own `data-theme` gives way to it; a second click gives dark |
 | page-1, page-2 | Every id is unique; no script errors in any view |
 
-`run-dom.js` also covers 768 and 1024px, so eight views in all.
+`run-dom.js` also covers 768 and 1024px, so eight views in all. The page starts dark and remembers the reader's choice, so `run-dom.js` and `shots.js` set the page theme to match each view's emulated colour scheme; the theme scenario opts out with `?theme-test`.
 
-The v11 baseline is in `baseline-v11.txt`. Version 16 passes all 21 checks.
+The v11 baseline is in `baseline-v11.txt`. Version 17, last updated 2026-10-27, passes all 27 checks.
 
 ## 3. Compendium check
 

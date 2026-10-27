@@ -4,8 +4,12 @@ async (page) => {
   // Set ROOT to the absolute path of your clone of this repository.
   const ROOT = '/path/to/claude-guides'; // set to your clone
   const PAGE = 'file://' + encodeURI(ROOT + '/build/preview.html');
-  const views = [[1280, 900, 'light'], [1280, 900, 'dark'], [375, 812, 'light']];
+  const views = [[1280, 900, 'light'], [1280, 900, 'dark'], [375, 812, 'light'], [375, 812, 'dark']];
   const saved = [];
+  // The page starts dark and remembers the reader's choice: match the page theme to each view's colour scheme.
+  await page.addInitScript(() => {
+    try { localStorage.setItem('orchestrating-claude-theme', matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) {}
+  });
   for (const [w, h, scheme] of views) {
     await page.setViewportSize({ width: w, height: h });
     await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
