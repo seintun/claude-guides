@@ -19,7 +19,7 @@ repeating a bad habit.
 4. **Pick graders and read transcripts.** Code-based graders are fast, objective and brittle,
    model-based graders need calibration, and humans are the gold standard but slow (P). Prefer code
    checks before LLM judges, and validate any judge against expert labels (P). Scores say that
-   something broke; transcripts say why (P). Label failures by hand (R).
+   something broke; transcripts say why (P). Label failures by hand (D).
    [§13](../playbook/agent-harness-playbook.md#13-evals-and-learning)
 5. **Track the scorecard.** Count first-try pass rate, rework loops, human interventions, escaped
    defects, cost per task and pass^k on the eval set (D). Read the trend after ten tasks to see where

@@ -718,7 +718,7 @@
    "id": "8",
    "title": "8. Context engineering",
    "lines": 31,
-   "chars": 2783,
+   "chars": 2776,
    "path": "sections/8.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -894,7 +894,7 @@
    "id": "13",
    "title": "13. Evals and learning",
    "lines": 26,
-   "chars": 2374,
+   "chars": 2392,
    "path": "sections/13.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1046,7 +1046,7 @@
    "id": "18",
    "title": "18. Operating the harness: gaps to close",
    "lines": 22,
-   "chars": 5253,
+   "chars": 5269,
    "path": "sections/18.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1054,7 +1054,7 @@
    "id": "19",
    "title": "19. Proven orchestration: what the evidence says",
    "lines": 45,
-   "chars": 10674,
+   "chars": 10643,
    "path": "sections/19.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1062,7 +1062,7 @@
    "id": "19.1",
    "title": "19.1 Findings that hold up",
    "lines": 14,
-   "chars": 7096,
+   "chars": 7065,
    "path": "sections/19.1.md",
    "source": "playbook/agent-harness-playbook.md"
   },

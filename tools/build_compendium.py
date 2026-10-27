@@ -750,7 +750,7 @@ doc_html = f"""<!doctype html>
       <h1>Orchestrating Claude: what we built, checked and decided</h1>
       <p>A 17-lesson teaching page and an agent harness playbook, with the research behind them, three expert reviews,
       a 13-part rework, four more independent reviews, and the checks that gate every change. One file, offline, searchable.</p>
-      <div class="stats"><span><b>{len(sections)}</b> sections</span><span><b>{words:,}</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>{len(src_rows)}</b> sources</span><span>Page <b>v16</b></span><span>Playbook <b>v0.4</b></span></div>
+      <div class="stats"><span><b>{len(sections)}</b> sections</span><span><b>{words:,}</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>{len(src_rows)}</b> sources</span><span>Page <b>v{PAGE_VERSION}</b>, {PAGE_UPDATED}</span><span>Playbook <b>v{PB_VERSION}</b>, {PB_UPDATED}</span></div>
     </header>
     {main}
   </main>

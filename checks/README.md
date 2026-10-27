@@ -61,7 +61,7 @@ Run `checks/run-dom.js` with Playwright's `browser_run_code_unsafe` tool, passin
 
 `run-dom.js` also covers 768 and 1024px, so eight views in all. The page starts dark and remembers the reader's choice, so `run-dom.js` and `shots.js` set the page theme to match each view's emulated colour scheme; the theme scenario opts out with `?theme-test`.
 
-The v11 baseline is in `baseline-v11.txt`. Version 17 passes all 27 checks.
+The v11 baseline is in `baseline-v11.txt`. Version 17, last updated 2026-10-27, passes all 27 checks.
 
 ## 3. Compendium check
 
