@@ -19,7 +19,7 @@ One file per playbook section, law, template and cheat-sheet section, so an agen
 | [`law-9`](law-9.md) | Law 9. Enforce with code; request with words | 6 |
 | [`law-10`](law-10.md) | Law 10. Spend compute where it buys accuracy | 10 |
 | [`3`](3.md) | 3. Reference architecture | 54 |
-| [`3A`](3A.md) | 3A. Claude Code feature map | 42 |
+| [`3A`](3A.md) | 3A. Claude Code feature map | 43 |
 | [`4`](4.md) | 4. The core loop (one agent) | 21 |
 | [`5`](5.md) | 5. Lifecycle: from idea to production | 92 |
 | [`5.1`](5.1.md) | 5.1 Discovery: from pain point to issues | 20 |
