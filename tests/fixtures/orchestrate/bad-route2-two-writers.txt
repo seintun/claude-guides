@@ -1,0 +1,13 @@
+Route: 2. Inline plus helper subagents. Why: D yes and F yes
+Answers: A yes; B no; C no; D yes; E no; F yes; order no; read-only no; gate no; comparison no; items 1
+Reasoning: Rule 1: skipped, E no. Rule 2: skipped, not read-only. Rule 3: skipped, B no. Rule 4: fired, F yes (login) makes D yes. Cheaper routes: route 1 leaves no one who did not write the code to check it. Would change if: the change carried no auth risk (route 1).
+Runner-up: 1. Inline. It would win if: the change were low risk
+Parts:
+- Build | opus, medium | writes | auth/login/
+- Second builder | opus, medium | writes | auth/totp/
+- Critic | opus, high | reads | the plan
+- Adversarial review | opus, high | reads | the diff
+Order: plan, critic, build, adversarial review, human sign-off
+Checks: go test ./... passes; login with a valid TOTP code succeeds; a wrong code is refused
+Budget: 2 hours. Stop when: all checks pass and a human signs off, or after 2 failures with the same cause
+Not used: parallel builders (one writer for auth)

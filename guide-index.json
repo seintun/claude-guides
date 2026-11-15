@@ -403,6 +403,27 @@
    "template_note": "B, C, H",
    "output": "A saved prompt in `GUIDE/prompts/<project>/` with a goal, 2 to 5 checks, a budget, stop-and-ask cases and a receipt. Run `/prompt`, or follow its steps",
    "bundle": "routes/row-19.md"
+  },
+  {
+   "row": 20,
+   "scenario": "Choose how to run a task: inline, subagents, parallel builders, sessions or a hub",
+   "thin": false,
+   "read": [
+    "6",
+    "7",
+    "19.1",
+    "3A"
+   ],
+   "runbooks": [
+    "skills/orchestrate/README.md",
+    "wiki/orchestrate.md"
+   ],
+   "templates": [
+    "C"
+   ],
+   "template_note": "C",
+   "output": "A routing card: the route and its runner-up, each part's model and effort, the order, 2 to 5 checks, a budget and what was not used. Nothing starts before a yes. Run `/orchestrate`, or follow its steps",
+   "bundle": "routes/row-20.md"
   }
  ],
  "phases": [
@@ -645,8 +666,8 @@
   {
    "id": "3A",
    "title": "3A. Claude Code feature map",
-   "lines": 42,
-   "chars": 6718,
+   "lines": 43,
+   "chars": 8046,
    "path": "sections/3A.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1094,7 +1115,7 @@
    "id": "20",
    "title": "20. Sources",
    "lines": 174,
-   "chars": 19817,
+   "chars": 19884,
    "path": "sections/20.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1224,6 +1245,12 @@
    "description": "Route an agent-orchestration request to the claude-guides playbook and load only the sections it needs. Use for starting from a vague idea, a new feature, bug fix, refactor or migration, setting up a harness or hooks, code review by an agent, an overnight loop, a stuck or looping agent, a cost blowup, multi-repo or parallel work, onboarding a repo, writing an agent-ready issue, or a retro.",
    "path": "skills/guide/SKILL.md",
    "install": "npx skills add seintun/claude-guides --skill guide"
+  },
+  {
+   "name": "orchestrate",
+   "description": "Decide how to run a task before starting it, inline in one agent, with read-only helper subagents, as parallel builders in worktrees, as one session per task, as a hub over a backlog, or as a workflow script, and which model and effort each part gets. Use when work spans many files, tickets or independent parts, or the user asks how to split, delegate, parallelise, coordinate or orchestrate work. Skip single-file or one-step tasks. It recommends a route and starts nothing until the user says yes.",
+   "path": "skills/orchestrate/SKILL.md",
+   "install": "npx skills add seintun/claude-guides --skill orchestrate"
   },
   {
    "name": "prompt",

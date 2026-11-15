@@ -302,6 +302,23 @@
    "also": [
     2
    ]
+  },
+  {
+   "id": "choose-how-to-run",
+   "request": "Should I do this refactor myself in one session, or split it across subagents or parallel sessions?",
+   "row": 20,
+   "ids": [
+    "6",
+    "7",
+    "19.1"
+   ],
+   "templates": [
+    "C"
+   ],
+   "runbook": "skills/orchestrate/README.md",
+   "also": [
+    18
+   ]
   }
  ]
 }

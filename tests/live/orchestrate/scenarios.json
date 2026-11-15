@@ -1,0 +1,201 @@
+{
+ "about": "Labelled cases for /orchestrate. facts feed skills/orchestrate/route.py (unit tests); request and readme feed the live run (tests/live/orchestrate/run.py). expect is the route; accept lists other routes that also pass; risk high adds check k-9. stubs are placeholder files the live run creates, as path pattern ({n} = 1..count) to count. stub_bytes, when set, pads each placeholder file to that size, so a case about bulky reading has bulk to read (round 8: 17-byte placeholders made 60 services fit in one context).",
+ "scenarios": [
+  {
+   "id": "flaky-test",
+   "request": "Fix the flaky date test in tests/date.test.js; it fails about one run in ten.",
+   "readme": "# Notes API\n\nNode 20 service. 30 source files.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": true,
+    "items": 1
+   },
+   "expect": 1,
+   "accept": [],
+   "risk": null,
+   "stubs": {
+    "tests/date.test.js": 1,
+    "src/date.js": 1
+   }
+  },
+  {
+   "id": "rename-helper",
+   "request": "Rename the getUsr helper to getUser in the 6 files that call it.",
+   "readme": "# Notes API\n\nNode 20 service. 30 source files.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": true,
+    "items": 6
+   },
+   "expect": 1,
+   "accept": [],
+   "risk": null,
+   "stubs": {
+    "src/file{n}.js": 6
+   }
+  },
+  {
+   "id": "migrate-handlers",
+   "request": "Migrate all 40 API handlers in src/handlers/ to the new AppError type. Each handler has its own test file and no handler imports another.",
+   "readme": "# Orders API\n\nNode 20 service. src/handlers/ holds 40 independent handlers, one test file each.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": false,
+    "independent": true,
+    "items": 40
+   },
+   "expect": 3,
+   "accept": [],
+   "risk": null,
+   "stubs": {
+    "src/handlers/handler{n}.js": 40,
+    "tests/handlers/handler{n}.test.js": 40
+   }
+  },
+  {
+   "id": "compare-libraries",
+   "request": "Compare three charting libraries (Chart.js, ECharts, Recharts) for our React dashboard and recommend one. Do not change any code yet.",
+   "readme": "# Dashboard\n\nReact 18 app.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": true,
+    "read_only": true,
+    "bulky_output": true,
+    "comparison": true,
+    "items": 3
+   },
+   "expect": 2,
+   "accept": [],
+   "risk": null,
+   "stubs": {}
+  },
+  {
+   "id": "ordered-backlog",
+   "request": "Work the 12 open tickets in this cycle through to PRs over the next few days. Several tickets are blocked by others.",
+   "readme": "# Billing service\n\nPython 3.12 service. Tickets live in the issue tracker; some are blocked by others.\nRun the tests with `pytest`.\n",
+   "facts": {
+    "fits_one_context": false,
+    "outlives_session": true,
+    "ordered": true,
+    "items": 12
+   },
+   "expect": 5,
+   "accept": [],
+   "risk": null,
+   "stubs": {}
+  },
+  {
+   "id": "independent-tickets",
+   "request": "Take these 4 unrelated tickets (dark mode toggle, CSV export, footer links, 404 page) to separate PRs over the next few days. None depends on another.",
+   "readme": "# Web app\n\nNext.js app.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": false,
+    "outlives_session": true,
+    "independent": true,
+    "items": 4
+   },
+   "expect": 4,
+   "accept": [
+    3
+   ],
+   "risk": null,
+   "stubs": {}
+  },
+  {
+   "id": "readme-audit",
+   "request": "For each of our 60 services under services/, read its README and its code and judge whether the README's setup steps still match the code. Report a table. Change nothing.",
+   "readme": "# Platform monorepo\n\nservices/ holds 60 service folders, each with a README and its code.\nRun the tests with `make test`.\n",
+   "facts": {
+    "fits_one_context": false,
+    "read_only": true,
+    "bulky_output": true,
+    "items": 60
+   },
+   "expect": 6,
+   "accept": [
+    2
+   ],
+   "risk": null,
+   "stubs": {
+    "services/svc{n}/README.md": 60,
+    "services/svc{n}/main.js": 60
+   },
+   "stub_bytes": 6000
+  },
+  {
+   "id": "add-mfa",
+   "request": "Add TOTP multi-factor authentication to the login flow.",
+   "readme": "# Accounts service\n\nGo service that owns login and sessions.\nRun the tests with `go test ./...`.\n",
+   "facts": {
+    "fits_one_context": true,
+    "needs_judgment": true,
+    "high_risk": true,
+    "items": 1
+   },
+   "expect": 2,
+   "accept": [],
+   "risk": "high",
+   "stubs": {}
+  },
+  {
+   "id": "slow-checkout",
+   "request": "Find out why checkout got slow last week. The request logs are in logs/ (about 2 GB).",
+   "readme": "# Shop backend\n\nPython service. logs/ holds about 2 GB of request logs.\nRun the tests with `pytest`.\n",
+   "facts": {
+    "fits_one_context": true,
+    "bulky_output": true,
+    "items": 1
+   },
+   "expect": 2,
+   "accept": [],
+   "risk": null,
+   "stubs": {
+    "logs/requests-{n}.log": 3
+   },
+   "stub_bytes": 200000
+  },
+  {
+   "id": "async-refactor",
+   "request": "Refactor the payments module from callbacks to async/await. Its 15 files call each other, so the order matters.",
+   "readme": "# Payments\n\nNode 20. src/payments/ has 15 tightly coupled files.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": false,
+    "items": 15
+   },
+   "expect": 2,
+   "accept": [
+    1
+   ],
+   "risk": null,
+   "stubs": {
+    "src/payments/part{n}.js": 15
+   }
+  },
+  {
+   "id": "readme-typo",
+   "request": "Fix the typo 'recieve' in README.md.",
+   "readme": "# Notes API\n\nNode 20 service.\nRun the tests with `npm test`.\n",
+   "facts": {
+    "fits_one_context": true,
+    "items": 1
+   },
+   "expect": 1,
+   "accept": [],
+   "risk": null,
+   "stubs": {}
+  },
+  {
+   "id": "tenant-column",
+   "request": "Add a tenant_id column to 8 tables and update every query that reads them, with a migration.",
+   "readme": "# SaaS core\n\nPostgreSQL 16 with 8 tenant tables; queries live in src/db/.\nRun the tests with `pytest`.\n",
+   "facts": {
+    "fits_one_context": false,
+    "high_risk": true,
+    "needs_judgment": true,
+    "items": 8
+   },
+   "expect": 2,
+   "accept": [],
+   "risk": "high",
+   "stubs": {
+    "src/db/queries{n}.sql": 8
+   }
+  }
+ ]
+}

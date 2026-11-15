@@ -1,0 +1,17 @@
+Route 3 fits, but the repo has no `AppError` yet and the handlers here are one-line placeholders.
+
+```text
+Route: 3. Parallel builders in worktrees. Why: B yes. 40 handlers, each with its own test file, none imports another, so no ordering and no shared writes. A no (40 files, too many for one writer's context). E no, F no.
+Runner-up: 4. One session per task. It would win if you want to open and steer each handler's branch or PR yourself, or the migration must outlive this session. Below 5 handlers, plain worktree subagents. Route 1 would win if the handlers are really the placeholders I saw (`// placeholder N`): one scripted edit then, not 40 agents.
+Parts:
+- AppError definition, shared type and a sample migration | sonnet, medium | writes | new src/errors/AppError.js (path to confirm) plus handler1.js and its test; main thread, before any fan-out
+- /batch run 1: handlers 2-31, one worktree subagent per handler | sonnet, medium | writes | src/handlers/handlerN.js and its own test only
+- /batch run 2: handlers 32-40, one worktree subagent per handler | sonnet, medium | writes | src/handlers/handlerN.js and its own test only
+Order: First the AppError type, merged or committed so the worktrees see it (a worktree branches from the base, not from unpushed work). Then run 1 and run 2 in sequence (run 2 only after run 1's PRs look sane). Within a run the handlers go in parallel. Handlers 1-31 plus 32-40 give 2 runs, 40 parts, cap 30 per run.
+Checks: `npm test` on each PR branch (PASS or FAIL per handler); `grep -rn "new Error\|throw " src/handlers` finds no leftover raw errors; `npm test` on the merged result; diff review of the shared AppError file
+Budget: 41 agent runs (40 builders plus the inline AppError step), about 90 minutes. Stop when: all 40 PRs have PASS receipts, or after 2 failures with the same cause. A same-cause failure points to a flaw in the AppError contract, so fix that once rather than retrying 40 times.
+Not used: Route 6 workflow script (it writes, so it needs more than a read-only fan-out). Route 5 hub (no blocked-by links). Agent teams (7x tokens, no worktree isolation). Critic and adversarial review (not high risk, as long as AppError does not change a public API response shape; tell me if it does and I'll add an Opus-high critic and a human sign-off).
+Notes: There is no CLAUDE.md or AGENTS.md here, and the README gives only `npm test`. The handler bodies look like placeholders, so please confirm what "migrate" means (for example, throw `new AppError(code, message)` in place of `new Error`) and where `AppError` should live before I brief the builders.
+```
+
+Go, or change the route?

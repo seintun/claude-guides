@@ -1,4 +1,4 @@
-"""Regression tests for the /guide and /grill skills (/prompt has its own file, test_prompt_skill.py).
+"""Regression tests for the /guide, /grill and /orchestrate skills (/prompt has its own file, test_prompt_skill.py).
 
 Run all tests:  python3 -I -m unittest discover -s tests -p 'test_*.py'
 Run this file:  python3 -I tests/test_skills.py
@@ -22,6 +22,7 @@ FIXTURES = ROOT / "tests" / "fixtures" / "grill"
 SKILLS = {  # command name -> SKILL.md
     "guide": GUIDE_DIR / "SKILL.md",
     "grill": GRILL_DIR / "SKILL.md",
+    "orchestrate": ROOT / "skills" / "orchestrate" / "SKILL.md",
 }
 
 
@@ -408,6 +409,34 @@ class GrillColdTestScript(unittest.TestCase):
         allowed = args[args.index("--allowedTools") + 1]
         for tool in ("Write", "Edit", "NotebookEdit"):
             self.assertNotIn(tool, allowed, f"the grill test session was allowed {tool}; a grill session may only read.")
+
+
+class OrchestrateSkill(unittest.TestCase):
+    def setUp(self):
+        _, self.body = frontmatter(SKILLS["orchestrate"])
+
+    def test_recommends_before_starting_anything(self):
+        """/orchestrate is model-invocable, so it must only recommend: nothing starts before the user says yes."""
+        self.assertRegex(self.body, re.compile(r"start\w* nothing\b.{0,40}\byes", re.I | re.S),
+                         "skills/orchestrate/SKILL.md must say it starts nothing until the user says yes.")
+        fields, _ = frontmatter(SKILLS["orchestrate"])
+        self.assertNotEqual(fields.get("disable-model-invocation"), "true",
+                            "skills/orchestrate/SKILL.md is meant to be model-invocable; it only recommends.")
+
+    def test_lists_every_route_and_the_one_writer_rule(self):
+        """The routing table keeps all six routes, the one-writer rule and the no-nesting rule."""
+        for route in ("1. Inline", "2. Inline plus helper subagents", "3. Parallel builders",
+                      "4. One session per task", "5. Hub plus builder sessions", "6. Workflow script"):
+            with self.subTest(route=route):
+                self.assertIn(route, self.body, f"skills/orchestrate/SKILL.md lost route '{route}'. Restore the routing table row.")
+        self.assertIn("One writer per set of files", self.body, "skills/orchestrate/SKILL.md must keep the one-writer rule.")
+        self.assertIn("Do not nest coordinators", self.body, "skills/orchestrate/SKILL.md must keep the no-nesting rule.")
+
+    def test_routing_card_has_budget_and_stop(self):
+        """Every route ends in a card with checks, a budget and a stop condition (§11.3)."""
+        for field in ("Route:", "Runner-up:", "Checks:", "Budget:", "Stop when:"):
+            with self.subTest(field=field):
+                self.assertIn(field, self.body, f"skills/orchestrate/SKILL.md routing card lost '{field}'.")
 
 
 if __name__ == "__main__":

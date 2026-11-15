@@ -1,0 +1,251 @@
+# Raw result lines from each live round of /orchestrate, as run.py printed them at the time.
+# Later checker fixes changed how some of these would score today; results.md explains each round.
+
+## Round 1, Sonnet k=2
+PASS flaky-test-1             route 1 (want 1) tools 2 $0.118
+PASS flaky-test-2             route 1 (want 1) tools 4 $0.117
+PASS rename-helper-1          route 1 (want 1) tools 2 $0.106
+PASS rename-helper-2          route 1 (want 1) tools 2 $0.107
+PASS migrate-handlers-1       route 3 (want 3) tools 3 $0.128
+PASS migrate-handlers-2       route 3 (want 3) tools 3 $0.130
+FAIL compare-libraries-1      route 2 (want 2) tools 2 $0.122  k-5 0 writer(s), 4 part(s)
+PASS compare-libraries-2      route 2 (want 2) tools 4 $0.133
+PASS ordered-backlog-1        route 5 (want 5) tools 0 $0.106
+PASS ordered-backlog-2        route 5 (want 5) tools 2 $0.081
+PASS independent-tickets-1    route 4 (want 4) tools 2 $0.118
+PASS independent-tickets-2    route 4 (want 4) tools 2 $0.117
+FAIL readme-audit-1           route 1 (want 6) tools 3 $0.134  k-5 0 writer(s), 1 part(s); k-10 route 1, expected 6 (accepts [2])
+FAIL readme-audit-2           route 6 (want 6) tools 2 $0.084  k-4 unreadable part line(s): ['Table assembly | the main thread, no agent | reads the agent JSON | builds the final table and spot-checks 3 "missing" rows against the file with grep.']
+PASS add-mfa-1                route 2 (want 2) tools 2 $0.121
+PASS add-mfa-2                route 2 (want 2) tools 2 $0.083
+PASS slow-checkout-1          route 2 (want 2) tools 3 $0.126
+PASS slow-checkout-2          route 2 (want 2) tools 3 $0.091
+PASS async-refactor-1         route 2 (want 2) tools 3 $0.128
+PASS async-refactor-2         route 1 (want 2) tools 3 $0.089
+PASS readme-typo-1            route 1 (want 1) tools 4 $0.124
+PASS readme-typo-2            route 1 (want 1) tools 3 $0.078
+PASS tenant-column-1          route 2 (want 2) tools 4 $0.135
+FAIL tenant-column-2          route 2 (want 2) tools 4 $0.094  k-4 unreadable part line(s): ['backfill of existing rows', 'NOT NULL and default handling', 'index and unique-key changes', 'lock time on big tables', 'foreign keys between the 8 tables', 'a query that still reads without a tenant filter']
+SUMMARY 20/24 runs pass; 9/12 cases pass every run (pass^2); $2.67; work dir (local)
+
+## Round 2, Sonnet k=2
+PASS flaky-test-1             route 1 (want 1) tools 3 $0.120
+FAIL flaky-test-2             route 1 (want 1) tools 5 $0.126  k-7 6 check(s)
+PASS rename-helper-1          route 1 (want 1) tools 4 $0.126
+PASS rename-helper-2          route 1 (want 1) tools 2 $0.106
+FAIL migrate-handlers-1       route 3 (want 3) tools 3 $0.130  k-8 budget lacks a figure or the 2-failure stop: ~42 Sonnet contexts (1 + 40 + review), roughly 1.5 hrs wall-clock. Stop when: all 40 PRs show PASS r
+PASS migrate-handlers-2       route 3 (want 3) tools 3 $0.127
+PASS compare-libraries-1      route 2 (want 2) tools 4 $0.131
+FAIL compare-libraries-2      route 2 (want 2) tools 3 $0.090  k-4 unreadable part line(s): ['Claim check | doc-checker (Sonnet) | reads | the 3 to 5 claims the recommendation depends on (bundle size, large-dataset rendering, maintenance status)']
+PASS ordered-backlog-1        route 5 (want 5) tools 2 $0.120
+PASS ordered-backlog-2        route 5 (want 5) tools 3 $0.086
+FAIL independent-tickets-1    route 4 (want 4) tools 2 $0.118  k-7 6 check(s)
+PASS independent-tickets-2    route 4 (want 4) tools 2 $0.078
+FAIL readme-audit-1           route 6 (want 6) tools 4 $0.123  k-4 unreadable part line(s): ['Merge into the table | the script itself, no model | reads | the 60 JSON rows. Sort DRIFT first and print one markdown table.']
+PASS readme-audit-2           route 6 (want 6) tools 4 $0.094
+PASS add-mfa-1                route 2 (want 2) tools 3 $0.126
+FAIL add-mfa-2                route 2 (want 2) tools 3 $0.129  k-7 6 check(s)
+PASS slow-checkout-1          route 2 (want 2) tools 3 $0.129
+PASS slow-checkout-2          route 2 (want 2) tools 3 $0.091
+PASS async-refactor-1         route 1 (want 2) tools 3 $0.130
+PASS async-refactor-2         route 1 (want 2) tools 3 $0.090
+PASS readme-typo-1            route 1 (want 1) tools 5 $0.129
+PASS readme-typo-2            route 1 (want 1) tools 3 $0.077
+PASS tenant-column-1          route 2 (want 2) tools 4 $0.085
+PASS tenant-column-2          route 2 (want 2) tools 3 $0.129
+SUMMARY 18/24 runs pass; 6/12 cases pass every run (pass^2); $2.69; work dir (local)
+
+## Round 2, Haiku k=1
+FAIL flaky-test-1             route 1 (want 1) tools 7 $0.014  s-2 7 tool call(s); s-3 no closing question
+FAIL rename-helper-1          route 1 (want 1) tools 5 $0.015  s-3 no closing question; k-8 budget lacks a figure or the 2-failure stop: one turn, about 5 tool calls. Stop when: getUsr is absent and getUser is present in the edited calle
+FAIL migrate-handlers-1       route 3 (want 3) tools 4 $0.017  s-3 no closing question; k-8 budget lacks a figure or the 2-failure stop: one batch run, 8 subagents, 8 PRs. Stop when all 40 handler tests pass, or after 2 failures with the
+FAIL compare-libraries-1      route 2 (want 2) tools 2 $0.017  s-3 no closing question
+FAIL ordered-backlog-1        route 5 (want 5) tools 5 $0.010  s-3 no closing question; k-4 unreadable part line(s): ["Builder, one per ticket (Sonnet, medium; Opus, medium for multi-file or unclear tickets; Opus, high for T2) | writes | that ticket's files only, own worktree", 'Adversary, T2 tickets only (adversarial-reviewer, Opus, high) | reads diff | none']
+FAIL independent-tickets-1    route 4 (want 4) tools 3 $0.010  s-3 no closing question
+FAIL readme-audit-1           route 1 (want 6) tools 4 $0.010  s-3 no closing question; k-4 unreadable part line(s): ['**']; k-5 0 writer(s), 2 part(s); k-10 route 1, expected 6 (accepts [2])
+FAIL add-mfa-1                route 2 (want 2) tools 4 $0.011  s-3 no closing question; k-7 8 check(s); k-8 budget lacks a figure or the 2-failure stop: 40 writer turns, 2 reviewer runs. Stop when checks pass and no adversary blocker is open, or after 2
+FAIL slow-checkout-1          route 1 (want 2) tools 4 $0.010  k-4 unreadable part line(s): ['Escalate to Opus, medium, only if the cause spans code and logs or stays unclear after the first pass | reads | checkout code (not in this checkout)']; k-5 0 writer(s), 2 part(s); k-8 budget lacks a figure or the 2-failure stop: 15 tool calls. Stop when: a p95 jump is tied to an endpoint and a time window, or after 2 failed agg; k-10 route 1, expected 2
+PASS async-refactor-1         route 2 (want 2) tools 3 $0.009
+FAIL readme-typo-1            route 1 (want 1) tools 6 $0.008  s-2 6 tool call(s)
+FAIL tenant-column-1          route 2 (want 2) tools 3 $0.010  s-3 no closing question; k-5 2 writer(s), 4 part(s); k-7 6 check(s)
+SUMMARY 1/12 runs pass; 1/12 cases pass every run (pass^1); $0.14; work dir (local)
+
+## Round 3, Sonnet k=2
+PASS flaky-test-1             route 1 (want 1) tools 2 $0.119
+PASS flaky-test-2             route 1 (want 1) tools 4 $0.125
+PASS rename-helper-1          route 1 (want 1) tools 5 $0.129
+PASS rename-helper-2          route 1 (want 1) tools 4 $0.121
+PASS migrate-handlers-1       route 3 (want 3) tools 3 $0.131
+PASS migrate-handlers-2       route 3 (want 3) tools 3 $0.129
+PASS compare-libraries-1      route 2 (want 2) tools 2 $0.122
+PASS compare-libraries-2      route 2 (want 2) tools 3 $0.091
+PASS ordered-backlog-1        route 5 (want 5) tools 2 $0.117
+PASS ordered-backlog-2        route 5 (want 5) tools 3 $0.125
+PASS independent-tickets-1    route 4 (want 4) tools 2 $0.118
+PASS independent-tickets-2    route 4 (want 4) tools 3 $0.088
+FAIL readme-audit-1           route 6 (want 6) tools 2 $0.117  k-4 unreadable part line(s): ['Aggregator (the script itself, no agent) | none | reads | merges the 60 JSON results into one table']
+PASS readme-audit-2           route 6 (want 6) tools 2 $0.124
+FAIL add-mfa-1                route 2 (want 2) tools 3 $0.123  k-4 unreadable part line(s): ["Docs check: confirm RFC 6238 parameters and the chosen Go TOTP library's behaviour | doc-checker (Sonnet) | reads | primary sources only"]
+PASS add-mfa-2                route 2 (want 2) tools 2 $0.123
+PASS slow-checkout-1          route 2 (want 2) tools 3 $0.125
+PASS slow-checkout-2          route 2 (want 2) tools 3 $0.090
+PASS async-refactor-1         route 1 (want 2) tools 3 $0.118
+FAIL async-refactor-2         route 1 (want 2) tools 3 $0.093  k-7 6 check(s)
+PASS readme-typo-1            route 1 (want 1) tools 2 $0.113
+PASS readme-typo-2            route 1 (want 1) tools 1 $0.107
+FAIL tenant-column-1          route 2 (want 2) tools 4 $0.129  k-7 6 check(s)
+PASS tenant-column-2          route 2 (want 2) tools 4 $0.093
+SUMMARY 20/24 runs pass; 8/12 cases pass every run (pass^2); $2.77; work dir (local)
+
+## Round 3, Haiku k=1
+PASS flaky-test-1             route 1 (want 1) tools 3 $0.009
+PASS rename-helper-1          route 1 (want 1) tools 5 $0.009
+FAIL migrate-handlers-1       route 1 (want 3) tools 4 $0.010  k-10 route 1, expected 3
+PASS compare-libraries-1      route 2 (want 2) tools 3 $0.010
+FAIL ordered-backlog-1        route 5 (want 5) tools 4 $0.010  k-6 writers share a scope: ["that ticket's files only, own branch and worktree"]
+FAIL independent-tickets-1    route 4 (want 4) tools 3 $0.011  k-7 7 check(s)
+FAIL readme-audit-1           route 1 (want 6) tools 6 $0.011  s-2 6 tool call(s); k-10 route 1, expected 6 (accepts [2])
+PASS add-mfa-1                route 2 (want 2) tools 4 $0.010
+FAIL slow-checkout-1          route 1 (want 2) tools 4 $0.009  k-10 route 1, expected 2
+PASS async-refactor-1         route 2 (want 2) tools 4 $0.010
+PASS readme-typo-1            route 1 (want 1) tools 5 $0.009
+PASS tenant-column-1          route 2 (want 2) tools 5 $0.011
+SUMMARY 7/12 runs pass; 7/12 cases pass every run (pass^1); $0.12; work dir (local)
+
+## Round 5 (final), Sonnet k=2, scored before the last checker fixes
+PASS flaky-test-1             route 1 (want 1) tools 3 $0.240
+PASS flaky-test-2             route 1 (want 1) tools 3 $0.240
+PASS rename-helper-1          route 1 (want 1) tools 2 $0.229
+PASS rename-helper-2          route 1 (want 1) tools 2 $0.229
+PASS migrate-handlers-1       route 3 (want 3) tools 1 $0.235
+FAIL migrate-handlers-2       route 3 (want 3) tools 3 $0.254  k-6 writers overlap: [('src/handlers/handlern.js and its own test only', 'src/handlers/handlern.js and its own test only')]; k-11 missing: ['2 /batch run(s) of at most 30 parts']
+PASS compare-libraries-1      route 2 (want 2) tools 3 $0.099
+FAIL compare-libraries-2      route 2 (want 2) tools 0 $0.086  k-11 missing: ['2 to 4 read-only helpers (card has 5)']
+FAIL ordered-backlog-1        route 5 (want 5) tools 3 $0.103  k-8 budget lacks a figure above zero or the 2-failure stop: 12 builder sessions plus 1 hub, about 3 to 4 days. Stop when: every ticket has a PR with a PASS rece
+PASS ordered-backlog-2        route 5 (want 5) tools 3 $0.101
+PASS independent-tickets-1    route 4 (want 4) tools 3 $0.099
+PASS independent-tickets-2    route 4 (want 4) tools 2 $0.058
+PASS readme-audit-1           route 6 (want 6) tools 2 $0.097
+PASS readme-audit-2           route 6 (want 6) tools 2 $0.056
+PASS add-mfa-1                route 2 (want 2) tools 3 $0.108
+PASS add-mfa-2                route 2 (want 2) tools 3 $0.108
+FAIL slow-checkout-1          route 2 (want 2) tools 3 $0.104  k-8 budget lacks a figure above zero or the 2-failure stop: 2 helper agents plus about 15 main-thread turns. Stop when: a single cause is backed by log evidence
+PASS slow-checkout-2          route 2 (want 2) tools 2 $0.058
+PASS async-refactor-1         route 1 (want 2) tools 3 $0.102
+PASS async-refactor-2         route 1 (want 2) tools 4 $0.105
+PASS readme-typo-1            route 1 (want 1) tools 2 $0.091
+PASS readme-typo-2            route 1 (want 1) tools 4 $0.104
+FAIL tenant-column-1          route 2 (want 2) tools 4 $0.105  k-7 4 check(s); too thin to run: ['`pytest`']
+FAIL tenant-column-2          route 2 (want 2) tools 4 $0.071  k-7 4 check(s); too thin to run: ['`pytest`']
+SUMMARY 18/24 runs pass; 7/12 cases pass every run (pass^2); $3.08; work dir (local)
+
+## Round 4, Sonnet k=2
+Not saved to a file. Its summary line, as printed: SUMMARY 23/24 runs pass; 11/12 cases pass every run (pass^2); $2.79. The one failure: add-mfa-1 k-7 (6 checks).
+
+## Round 6, Sonnet k=2, first run with Answers and Reasoning
+PASS flaky-test-1             route 1 (want 1) tools 3 $0.106
+FAIL flaky-test-2             route 1 (want 1) tools 2 $0.100  k-13 7 sentence(s), cites rule 5, 1, 2, 3, 4 (rule 5 fired)
+PASS rename-helper-1          route 1 (want 1) tools 2 $0.092
+PASS rename-helper-2          route 1 (want 1) tools 4 $0.107
+FAIL migrate-handlers-1       route 3 (want 3) tools 4 $0.114  k-13 7 sentence(s), cites rule 3 (rule 3 fired)
+PASS migrate-handlers-2       route 3 (want 3) tools 3 $0.109
+FAIL compare-libraries-1      route 2 (want 2) tools 0 $0.091  k-13 7 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+FAIL compare-libraries-2      route 2 (want 2) tools 3 $0.108  k-13 7 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+FAIL ordered-backlog-1        route 5 (want 5) tools 2 $0.102  k-13 7 sentence(s), cites rule 1 (rule 1 fired)
+PASS ordered-backlog-2        route 5 (want 5) tools 3 $0.065
+PASS independent-tickets-1    route 4 (want 4) tools 2 $0.101
+PASS independent-tickets-2    route 4 (want 4) tools 2 $0.064
+PASS readme-audit-1           route 6 (want 6) tools 2 $0.101
+PASS readme-audit-2           route 6 (want 6) tools 2 $0.059
+FAIL add-mfa-1                route 2 (want 2) tools 3 $0.111  k-13 7 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+FAIL add-mfa-2                route 2 (want 2) tools 3 $0.067  k-11 missing: ['human sign-off']
+PASS slow-checkout-1          route 2 (want 2) tools 2 $0.106
+FAIL slow-checkout-2          route 2 (want 2) tools 2 $0.060  k-13 7 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+PASS async-refactor-1         route 1 (want 2) tools 2 $0.101
+FAIL async-refactor-2         route 1 (want 2) tools 3 $0.067  k-13 7 sentence(s), cites rule 5, 3, 4 (rule 5 fired)
+PASS readme-typo-1            route 1 (want 1) tools 3 $0.096
+PASS readme-typo-2            route 1 (want 1) tools 3 $0.096
+FAIL tenant-column-1          route 2 (want 2) tools 3 $0.117  k-7 4 check(s); too thin to run: ['pytest']
+FAIL tenant-column-2          route 2 (want 2) tools 4 $0.081  k-7 5 check(s); too thin to run: ['pytest']
+SUMMARY 13/24 runs pass; 4/12 cases pass every run (pass^2); $2.22; work dir (local)
+
+## Round 7, Sonnet k=2, Reasoning capped at 8 sentences
+PASS flaky-test-1             route 1 (want 1) tools 2 $0.101
+PASS flaky-test-2             route 1 (want 1) tools 3 $0.105
+FAIL rename-helper-1          route 1 (want 1) tools 7 $0.122  s-2 7 tool call(s); k-13 10 sentence(s), cites rule 1, 2, 3, 4, 5 (rule 5 fired)
+PASS rename-helper-2          route 1 (want 1) tools 5 $0.117
+PASS migrate-handlers-1       route 3 (want 3) tools 3 $0.117
+PASS migrate-handlers-2       route 3 (want 3) tools 3 $0.117
+FAIL compare-libraries-1      route 2 (want 2) tools 2 $0.110  k-13 9 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+PASS compare-libraries-2      route 2 (want 2) tools 0 $0.047
+FAIL ordered-backlog-1        route 5 (want 5) tools 2 $0.105  k-13 9 sentence(s), cites rule 1 (rule 1 fired)
+FAIL ordered-backlog-2        route 5 (want 5) tools 3 $0.069  k-13 10 sentence(s), cites rule 1 (rule 1 fired)
+PASS independent-tickets-1    route 4 (want 4) tools 2 $0.101
+PASS independent-tickets-2    route 4 (want 4) tools 2 $0.100
+PASS readme-audit-1           route 6 (want 6) tools 2 $0.103
+PASS readme-audit-2           route 6 (want 6) tools 2 $0.058
+PASS add-mfa-1                route 2 (want 2) tools 3 $0.111
+PASS add-mfa-2                route 2 (want 2) tools 3 $0.072
+PASS slow-checkout-1          route 2 (want 2) tools 2 $0.103
+PASS slow-checkout-2          route 2 (want 2) tools 2 $0.061
+PASS async-refactor-1         route 1 (want 2) tools 3 $0.111
+FAIL async-refactor-2         route 1 (want 2) tools 3 $0.066  k-13 9 sentence(s), cites rule 1, 2, 3, 4, 5 (rule 5 fired)
+FAIL readme-typo-1            route 1 (want 1) tools 4 $0.110  k-13 9 sentence(s), cites rule 3, 4, 5 (rule 5 fired)
+PASS readme-typo-2            route 1 (want 1) tools 0 $0.040
+FAIL tenant-column-1          route 2 (want 2) tools 3 $0.113  k-11 missing: ['human sign-off']; k-13 10 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+FAIL tenant-column-2          route 2 (want 2) tools 3 $0.074  k-13 9 sentence(s), cites rule 1, 2, 3, 4 (rule 4 fired)
+SUMMARY 16/24 runs pass; 6/12 cases pass every run (pass^2); $2.23; work dir (local)
+
+## Round 8, Sonnet k=2, Reasoning given a fixed shape
+PASS flaky-test-1             route 1 (want 1) tools 2 $0.099
+PASS flaky-test-2             route 1 (want 1) tools 2 $0.101
+PASS rename-helper-1          route 1 (want 1) tools 2 $0.092
+PASS rename-helper-2          route 1 (want 1) tools 2 $0.090
+PASS migrate-handlers-1       route 3 (want 3) tools 4 $0.117
+PASS migrate-handlers-2       route 3 (want 3) tools 3 $0.121
+PASS compare-libraries-1      route 2 (want 2) tools 2 $0.103
+PASS compare-libraries-2      route 2 (want 2) tools 0 $0.046
+PASS ordered-backlog-1        route 5 (want 5) tools 3 $0.110
+PASS ordered-backlog-2        route 5 (want 5) tools 2 $0.059
+PASS independent-tickets-1    route 4 (want 4) tools 3 $0.105
+PASS independent-tickets-2    route 4 (want 4) tools 0 $0.045
+PASS readme-audit-1           route 6 (want 6) tools 3 $0.111
+FAIL readme-audit-2           route 1 (want 6) tools 3 $0.067  k-10 route 1, expected 6 (accepts [2])
+PASS add-mfa-1                route 2 (want 2) tools 3 $0.110
+PASS add-mfa-2                route 2 (want 2) tools 2 $0.101
+PASS slow-checkout-1          route 2 (want 2) tools 2 $0.110
+PASS slow-checkout-2          route 2 (want 2) tools 2 $0.062
+PASS async-refactor-1         route 1 (want 2) tools 2 $0.101
+PASS async-refactor-2         route 1 (want 2) tools 3 $0.068
+PASS readme-typo-1            route 1 (want 1) tools 3 $0.105
+PASS readme-typo-2            route 1 (want 1) tools 0 $0.083
+PASS tenant-column-1          route 2 (want 2) tools 4 $0.118
+PASS tenant-column-2          route 2 (want 2) tools 4 $0.122
+SUMMARY 23/24 runs pass; 11/12 cases pass every run (pass^2); $2.24; work dir (local)
+
+## Round 9 (final), Sonnet k=2, padded placeholders, as first scored
+PASS flaky-test-1             route 1 (want 1) tools 2 $0.101
+PASS flaky-test-2             route 1 (want 1) tools 2 $0.099
+PASS rename-helper-1          route 1 (want 1) tools 2 $0.092
+PASS rename-helper-2          route 1 (want 1) tools 2 $0.091
+FAIL migrate-handlers-1       route 3 (want 3) tools 2 $0.103  k-12 answers give route 3, runner-up 4; the card says route 3, runner-up 2
+PASS migrate-handlers-2       route 3 (want 3) tools 0 $0.088
+PASS compare-libraries-1      route 2 (want 2) tools 0 $0.088
+PASS compare-libraries-2      route 2 (want 2) tools 0 $0.090
+PASS ordered-backlog-1        route 5 (want 5) tools 3 $0.111
+PASS ordered-backlog-2        route 5 (want 5) tools 1 $0.050
+PASS independent-tickets-1    route 4 (want 4) tools 0 $0.088
+PASS independent-tickets-2    route 4 (want 4) tools 2 $0.100
+FAIL readme-audit-1           route 6 (want 6) tools 3 $0.103  k-5 1 writer(s); a workflow script is read-only
+PASS readme-audit-2           route 6 (want 6) tools 2 $0.058
+PASS add-mfa-1                route 2 (want 2) tools 3 $0.109
+PASS add-mfa-2                route 2 (want 2) tools 3 $0.107
+PASS slow-checkout-1          route 2 (want 2) tools 2 $0.101
+PASS slow-checkout-2          route 2 (want 2) tools 3 $0.067
+PASS async-refactor-1         route 1 (want 2) tools 3 $0.109
+PASS async-refactor-2         route 1 (want 2) tools 2 $0.058
+PASS readme-typo-1            route 1 (want 1) tools 0 $0.082
+PASS readme-typo-2            route 1 (want 1) tools 5 $0.078
+PASS tenant-column-1          route 2 (want 2) tools 4 $0.119
+PASS tenant-column-2          route 2 (want 2) tools 3 $0.068
+SUMMARY 22/24 runs pass; 10/12 cases pass every run (pass^2); $2.16; work dir (local)

@@ -1,0 +1,18 @@
+Some lead-in text.
+
+```text
+Route: 3. Parallel builders in worktrees. Why: B yes, 40 handlers that each write and have their own test
+Answers: A no; B yes; C no; D no; E no; F no; order no; read-only no; gate no; comparison no; items 40
+Reasoning: Rule 1: skipped, E no. Rule 2: skipped, the handlers are written. Rule 3: fired, B yes: 40 handlers touch different files, none imports another, and each has its own test. Cheaper routes: route 1 or 2 would leave one writer making 40 edits in sequence. Would change if: each handler needed its own reviewed PR over several days (route 4).
+Runner-up: 4. One session per task. It would win if: each handler needed review as its own PR
+Parts:
+- Scout | haiku, low | reads | src/handlers/ (list handlers and tests)
+- Batch A | sonnet, medium | writes | src/handlers/a-m
+- Batch B | sonnet, medium | writes | src/handlers/n-z
+Order: scout first, then two /batch runs in parallel, 30 parts at most each
+Checks: npm test passes; grep finds no old error type; each PR lists its test result
+Budget: reasonable. Stop when: done
+Not used: route 6 (it writes code); agent teams (no worktree isolation)
+```
+
+Go, or change the route?
