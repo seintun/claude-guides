@@ -58,6 +58,20 @@ ln -s "$(pwd)/skills/orchestrate" ~/.claude/skills/orchestrate
 4. After a yes it writes every prompt itself (helper briefs, builder briefs, the hub prompt or the workflow script) and shows them as it sends them.
 5. When the work ends it records one outcome line (budget against spent, checks, "route again: yes or no, because ...") in `docs/decisions.md`.
 
+## With ultracode
+
+Ultracode is a Claude Code setting that turns on automatic workflow orchestration [P]. A workflow is route 6 in this skill, but a session with ultracode on can reach the other routes too.
+
+- **One prompt.** Putting `ultracode` in a typed prompt opts that prompt into a workflow, and so does asking for one in your own words [P]. The keyword does not trigger with `-p`, scheduled tasks or relayed comments [P]. Route 6 does not need it: the skill counts your yes to a route 6 card as the opt-in [D].
+- **One session.** `/effort ultracode` (or `claude --effort ultracode`) turns it on for the session and also sets `xhigh` effort. `/effort ultracode off` turns it off. The `ultracode` setting turns it on for every session [P].
+- **What changes.** With ultracode on, Claude decides when a task warrants a workflow. Each such request uses more tokens and takes longer, and on a subscription it reaches a usage limit sooner [P]. This skill aims for a quality result for the fewest tokens, so a session with ultracode on may run a workflow where the card picked route 1 to 5 [D]. Read the card and hold Claude to its route, or turn ultracode off.
+- **Requirements.** Workflows are on all paid plans, and Pro turns them on in `/config` [P]. Turning workflows off also turns ultracode off [P].
+- **Untested.** The live eval ran without ultracode, so how the two interact has not been measured.
+
+Start with `/orchestrate <task>` in a session without ultracode. The skill runs on Sonnet at medium effort whatever the session's model, and the card sets a model and effort for each part [D]. Add ultracode only when the card picks route 6 and you want a larger run, and say yes to the card first.
+
+Sources: [Workflows](https://code.claude.com/docs/en/workflows), [Model configuration](https://code.claude.com/docs/en/model-config).
+
 ## Try it
 
 ```text
