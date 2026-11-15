@@ -53,6 +53,8 @@ of it to helper agents.
 
 ## Templates
 
+- [/orchestrate skill](../skills/orchestrate/README.md): runs these steps on a task and writes a routing card with the route, each part's model and effort, the checks and a budget. It starts nothing before a yes.
+
 - [Template C. Subagent brief](../playbook/agent-harness-playbook.md#c-subagent-brief): read-only work for a helper. For a builder, use the brief schema in [§7](../playbook/agent-harness-playbook.md#7-delegation-protocol) and set the scope to what it may touch.
 - [Template D. Plan file](../playbook/agent-harness-playbook.md#d-plan-file): slices, each with its test and rollback.
 - [Template B. Task contract (goal prompt)](../playbook/agent-harness-playbook.md#b-task-contract-goal-prompt): sets the helper budget and the second-opinion rule.

@@ -1,0 +1,9 @@
+Route: 1. Inline. Why: A yes, C no
+Runner-up: 2. Inline plus helper subagents. It would win if: the test output were huge
+Parts:
+- Fix | sonnet, medium | writes | tests/date.test.js
+- Second writer | sonnet, medium | writes | src/date.js
+Order: one step
+Checks: run the test 20 times; npm test passes
+Budget: 20 turns. Stop when: 20 green runs, or after 2 failures with the same cause
+Not used: subagents (nothing bulky to read)

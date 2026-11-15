@@ -1,0 +1,16 @@
+Some lead-in text.
+
+```text
+Route: 3. Parallel builders in worktrees. Why: B yes, 40 handlers that each write and have their own test
+Runner-up: 4. One session per task. It would win if: each handler needed review as its own PR
+Parts:
+- Scout | haiku, low | reads | src/handlers/ (list handlers and tests)
+- Batch A | sonnet, medium | writes | src/handlers/a-m
+- Batch B | sonnet, medium | writes | src/handlers/n-z
+Order: scout first, then two /batch runs in parallel, 30 parts at most each
+Checks: npm test passes
+Budget: 90 minutes or $15. Stop when: all 40 handlers merge-ready, or after 2 failures with the same cause
+Not used: route 6 (it writes code); agent teams (no worktree isolation)
+```
+
+Go, or change the route?

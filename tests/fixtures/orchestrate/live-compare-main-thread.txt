@@ -1,0 +1,18 @@
+Route 2 fits. Reading three libraries' docs is bulky and I only need the conclusions. Nothing is high risk, and there is no code to write, so one main thread synthesizes.
+
+```text
+Route: 2. Inline plus helper subagents. Why: A no (three doc sets would crowd one context), C yes (bulky docs, only the conclusions matter), B no (read-only), E no, F no.
+Runner-up: 1. Inline. It would win if: you accept a recommendation from my existing knowledge with no fresh doc check, or the dashboard's needs are already fixed (e.g. only line and bar charts under 5k points).
+Parts:
+- Main thread: read package.json and the dashboard's chart needs, set the criteria, synthesize and recommend | Sonnet, medium | reads | package.json, existing chart code (no writes)
+- Reader: Chart.js | Sonnet, medium | reads | official docs, React wrapper (react-chartjs-2) docs, bundle size, canvas performance, TypeScript support, maintenance activity
+- Reader: ECharts | Sonnet, medium | reads | official docs, echarts-for-react or direct use, tree-shaking and bundle size, large-data and chart-type range, maintenance activity
+- Reader: Recharts | Sonnet, medium | reads | official docs, SVG rendering limits at large data, bundle size, customization, maintenance activity
+- doc-checker | sonnet, medium | reads | the 3 to 5 claims that decide the recommendation (bundle size, large-data performance, React fit)
+Order: main thread sets criteria first (the same list goes to every reader). The three readers then run in parallel. doc-checker runs after, on the decisive claims. Main thread writes the recommendation last. Cap: 4 agents, 1 round.
+Checks: every claim in the comparison cites a URL, graded P (primary) or R (research); doc-checker returns a per-claim verdict on the decisive claims; the comparison table scores all three libraries on the same criteria; `git status --short` shows no change from this work (read-only); the recommendation names what would change the pick.
+Budget: 4 agents, about 20 minutes. Stop when: the table is complete and the decisive claims are verified, or after 2 failures with the same cause.
+Not used: /batch and worktrees (no writes); a workflow script (only 3 items, under the 20 threshold); agent teams (experimental, about 7x the tokens); an adversarial reviewer (low risk, reversible, no code change); Haiku readers (doc claims drive the decision, and Haiku missed hard doc claims in earlier trials).
+```
+
+Go, or change the route?

@@ -79,7 +79,17 @@ MUTATIONS = [
     ("GitHub Pages stops publishing the agent files", ".github/workflows/pages.yml", sub_once(r"^\s+git ls-files -z .*\n", "")),
     (".privacy-public gains a bare name", ".privacy-public", sub_once(r"^([\w-]+)\.github\.io/claude-guides$", r"\1")),
     ("ENTRY.md names no real address, only a placeholder", "ENTRY.md", sub_once(r"https://raw\.githubusercontent\.com/[\w-]+/claude-guides/main", "https://raw.githubusercontent.com/<owner>/<repo>/main")),
-    ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 19 scenarios", "a router from 18 scenarios")),
+    ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 20 scenarios", "a router from 19 scenarios")),
+    ("/orchestrate's router sends ordered backlogs to one session per task", "skills/orchestrate/route.py", sub_once(r"r, why = 5, \"E yes and the items have an order\"", "r, why = 4, \"E yes and the items have an order\"")),
+    ("/orchestrate's runner-ups drift from SKILL.md", "skills/orchestrate/route.py", sub_once(r"RUNNER_UP = \{1: 2, 2: 1, 3: 4,", "RUNNER_UP = {1: 2, 2: 1, 3: 2,")),
+    ("/orchestrate's router stops treating high risk as needing judgment", "skills/orchestrate/route.py", sub_once(r"judgment = get\(\"needs_judgment\"\) or get\(\"high_risk\"\)", "judgment = get(\"needs_judgment\")")),
+    ("check_card.py stops checking the /batch run count", "skills/orchestrate/check_card.py", sub_once(r"if m and not \(mentions_number", "if False and not (mentions_number")),
+    ("check_card.py lets any part with critic in it pass high risk", "skills/orchestrate/check_card.py", sub_once(r"and not p\.get\(\"writes\"\)\n", "\n")),
+    ("/orchestrate's workflow threshold drifts from SKILL.md", "skills/orchestrate/route.py", sub_once(r"WORKFLOW_MIN_ITEMS = 20", "WORKFLOW_MIN_ITEMS = 10")),
+    ("/orchestrate's SKILL.md swaps two routing rules", "skills/orchestrate/SKILL.md", sub_once(r"^3\. B is yes and the parts write: route 3", "3. C or D is yes, or A is no: route 2. Then: B is yes and the parts write: route 3")),
+    ("/orchestrate starts work without a yes", "skills/orchestrate/SKILL.md", sub_once(r"and start nothing before a yes", "and then begin the work")),
+    ("check_card.py allows two writers on route 1", "skills/orchestrate/check_card.py", sub_once(r"ok = len\(writers\) <= 1 and", "ok = len(writers) <= 2 and")),
+    ("check_card.py stops capping failures", "skills/orchestrate/check_card.py", sub_once(r" and re\.search\(r\"\\b\(\?:2\|two\)", " or re.search(r\"\\b(?:2|two)")),
 ]
 
 

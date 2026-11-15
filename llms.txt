@@ -6,7 +6,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 ## Start here
 
-- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 19 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
+- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 20 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
 - [guide-index.json](guide-index.json): the router, phases, section ids, runbooks and skills as JSON, with a path for each, plus the playbook's version and last-updated date (generated)
 - [routes/README.md](routes/README.md): one file per router row and phase, bundling the sections and templates it names (generated)
 - [sections/README.md](sections/README.md): one file per playbook section, law, template and cheat-sheet section, the text tools/section.py prints (generated)
@@ -51,6 +51,12 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 - [skills/grill/test.sh](skills/grill/test.sh): cold test of `/grill` in a throwaway project; `check_transcript.py` checks 8 rules
 - [prompts/README.md](prompts/README.md): where `/prompt` saves prompts (git-ignored, one folder per project)
 - [private/README.md](private/README.md): git-ignored folder for notes, plans and research that are not part of the guide
+- [skills/orchestrate/README.md](skills/orchestrate/README.md): `/orchestrate`: install, where each rule comes from, example requests
+- [skills/orchestrate/SKILL.md](skills/orchestrate/SKILL.md): `/orchestrate` picks inline, subagents, parallel builders, sessions, a hub or a workflow for a task, with model and effort per part, and recommends before starting anything
+- [skills/orchestrate/route.py](skills/orchestrate/route.py): the /orchestrate routing rules as code; prints the route, runner-up and requirements for a set of task facts
+- [skills/orchestrate/check_card.py](skills/orchestrate/check_card.py): deterministic check of a routing card (fields, route name, one writer, scopes, check count, budget, high-risk review, expected route)
+- [skills/orchestrate/EXAMPLE.md](skills/orchestrate/EXAMPLE.md): worked example, four requests on one codebase and why each gets its route
+- [tests/live/orchestrate/run.py](tests/live/orchestrate/run.py): live eval of /orchestrate on 12 labelled cases, scored by code
 - [skills/prompt/README.md](skills/prompt/README.md): `/prompt`: install, how it was tested, results
 - [skills/prompt/SKILL.md](skills/prompt/SKILL.md): `/prompt` turns a description into a ready-to-run agent prompt (Templates B, C, H) saved in the guide's git-ignored prompts/ folder
 - [skills/prompt/check_prompt.py](skills/prompt/check_prompt.py): deterministic check `/prompt` runs on a draft: missing parts for its risk size, a missing risk line, DONE WHEN count, merged UNKNOWN lines, "not ready", relative terms, untraced figures
@@ -78,7 +84,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 - [tools/section.py](tools/section.py): prints one playbook section, template, law or cheat-sheet section by id (`python3 -I tools/section.py 9.5`; `--list` shows every id)
 - [tests/README.md](tests/README.md): how every feature and skill is tested: the offline suite (tests/run.sh), the mutation suite, live routing and grill sessions, browser checks; what each test guards
 - [tests/run.sh](tests/run.sh): runs every offline check and test; must end with SUMMARY all PASS before a commit
-- [tests/scenarios/routing.json](tests/scenarios/routing.json): 19 routing scenarios, one per ENTRY.md row
+- [tests/scenarios/routing.json](tests/scenarios/routing.json): 20 routing scenarios, one per ENTRY.md row
 - [tests/mutation/mutate.py](tests/mutation/mutate.py): makes catastrophic edits to a throwaway copy and checks the suite catches each
 - [tests/live/route_scenarios.py](tests/live/route_scenarios.py): live routing sessions through /guide, the snippet and the prompt; records results
 - [docs/metrics.md](docs/metrics.md): success, speed, token, reading-time and growth metrics (tools/metrics.py)

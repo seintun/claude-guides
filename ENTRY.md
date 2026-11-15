@@ -36,6 +36,7 @@ Rows marked **thin** have no full recipe in the playbook. They route to the near
 | 17 | Security review of an agent setup | `10.1 10.3 12.2 12.4` | [guardrails](wiki/guardrails.md) | F (guardrails block), M | Findings grouped as prevent, detect, recover, against §10.3 and §12.4 |
 | 18 | Several writers on one codebase (thin) | `7 3A` | [orchestrate](wiki/orchestrate.md) | D, C | One writer per file set, a worktree per builder, one plan file per task. Gap: no merge or integration step |
 | 19 | Write a prompt for an agent | `cs:6 cs:7 law-3 9.1` | [/prompt skill](skills/prompt/README.md) | B, C, H | A saved prompt in `GUIDE/prompts/<project>/` with a goal, 2 to 5 checks, a budget, stop-and-ask cases and a receipt. Run `/prompt`, or follow its steps |
+| 20 | Choose how to run a task: inline, subagents, parallel builders, sessions or a hub | `6 7 19.1 3A` | [/orchestrate skill](skills/orchestrate/README.md), [orchestrate](wiki/orchestrate.md) | C | A routing card: the route and its runner-up, each part's model and effort, the order, 2 to 5 checks, a budget and what was not used. Nothing starts before a yes. Run `/orchestrate`, or follow its steps |
 
 ## Phase table
 

@@ -1,0 +1,10 @@
+Route: 2. Inline plus helper subagents. Why: D yes and F yes
+Runner-up: 1. Inline. It would win if: the change were low risk
+Parts:
+- Build | opus, medium | writes | auth/login/
+- Second look | sonnet, medium | reads | the plan
+- Final look | sonnet, medium | reads | the diff
+Order: plan, check, build, look, human sign-off
+Checks: go test ./... passes; login with a valid TOTP code succeeds; a wrong code is refused
+Budget: 2 hours. Stop when: all checks pass and a human signs off, or after 2 failures with the same cause
+Not used: parallel builders (one writer for auth)
