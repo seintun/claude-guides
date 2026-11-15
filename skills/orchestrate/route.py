@@ -40,7 +40,7 @@ DEFAULTS = {"fits_one_context": True, "items": 1}
 
 
 def route(facts):
-    """Return a dict: route, name, runner_up, why, requires (a list of strings)."""
+    """Return a dict: route, name, runner_up, rule (the step 3 rule that fired, 1 to 5), why, requires."""
     f = dict(DEFAULTS, **facts)
     get = lambda k: bool(f.get(k, False))
     items = int(f.get("items") or 1)
@@ -50,29 +50,33 @@ def route(facts):
         requires += ["fresh critic on the plan", "adversarial review of the diff", "human sign-off"]
 
     if get("outlives_session") and items > 1:
+        rule = 1
         if get("ordered"):
             r, why = 5, "E yes and the items have an order"
             requires.append(f"at most {MAX_BUILDERS} builders at once")
         else:
             r, why = 4, "E yes and the items have no order"
     elif get("read_only") and items >= WORKFLOW_MIN_ITEMS and get("bulky_output") and not get("gate_mid_run"):
+        rule = 2
         r, why = 6, f"read-only fan-out over {items} items that each need reading, no gate mid-run"
     elif get("independent") and items > 1 and not get("read_only"):
+        rule = 3
         r, why = 3, "B yes: independent parts that each write"
         if items >= BATCH_MIN:
             requires.append(f"{math.ceil(items / BATCH_MAX)} /batch run(s) of at most {BATCH_MAX} parts")
         else:
             requires.append(f"{items} worktree subagents (below the {BATCH_MIN} parts /batch needs)")
     elif get("bulky_output") or judgment or not get("fits_one_context"):
+        rule = 4
         r, why = 2, "C or D yes, or too big for one context; one writer keeps the edits"
         if get("comparison"):
             requires.append("2 to 4 read-only helpers")
     else:
-        r, why = 1, "A yes and C no"
+        rule, r, why = 5, 1, "A yes and C no"
     ru = RUNNER_UP[r]
     if r == 3 and items < BATCH_MIN:
         ru = 2
-    return {"route": r, "name": NAMES[r], "runner_up": ru, "why": why, "requires": requires}
+    return {"route": r, "name": NAMES[r], "runner_up": ru, "rule": rule, "why": why, "requires": requires}
 
 
 def main(argv):
@@ -83,7 +87,7 @@ def main(argv):
         return 2
     out = route(json.loads(args[0]))
     if explain:
-        print(f"Route {out['route']}. {out['name']}. Why: {out['why']}")
+        print(f"Route {out['route']}. {out['name']}. Why: rule {out['rule']}: {out['why']}")
         print(f"Runner-up: {out['runner_up']}. {NAMES[out['runner_up']]}")
         for r in out["requires"]:
             print(f"Requires: {r}")

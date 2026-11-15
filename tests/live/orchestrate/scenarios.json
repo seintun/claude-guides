@@ -1,5 +1,5 @@
 {
- "about": "Labelled cases for /orchestrate. facts feed skills/orchestrate/route.py (unit tests); request and readme feed the live run (tests/live/orchestrate/run.py). expect is the route; accept lists other routes that also pass; risk high adds check k-9. stubs are placeholder files the live run creates, as path pattern ({n} = 1..count) to count.",
+ "about": "Labelled cases for /orchestrate. facts feed skills/orchestrate/route.py (unit tests); request and readme feed the live run (tests/live/orchestrate/run.py). expect is the route; accept lists other routes that also pass; risk high adds check k-9. stubs are placeholder files the live run creates, as path pattern ({n} = 1..count) to count. stub_bytes, when set, pads each placeholder file to that size, so a case about bulky reading has bulk to read (round 8: 17-byte placeholders made 60 services fit in one context).",
  "scenarios": [
   {
    "id": "flaky-test",
@@ -115,7 +115,8 @@
    "stubs": {
     "services/svc{n}/README.md": 60,
     "services/svc{n}/main.js": 60
-   }
+   },
+   "stub_bytes": 6000
   },
   {
    "id": "add-mfa",
@@ -146,7 +147,8 @@
    "risk": null,
    "stubs": {
     "logs/requests-{n}.log": 3
-   }
+   },
+   "stub_bytes": 200000
   },
   {
    "id": "async-refactor",

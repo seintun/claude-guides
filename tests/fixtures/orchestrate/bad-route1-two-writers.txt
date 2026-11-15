@@ -1,4 +1,6 @@
 Route: 1. Inline. Why: A yes, C no
+Answers: A yes; B no; C no; D no; E no; F no; order no; read-only no; gate no; comparison no; items 1
+Reasoning: Rule 1: skipped, E no. Rule 2: skipped, not read-only. Rule 3: skipped, B no. Rule 4: skipped, C and D no. Rule 5: fired, one test and one writer fit in one context. Cheaper routes: none. Would change if: the test output ran to thousands of lines (route 2).
 Runner-up: 2. Inline plus helper subagents. It would win if: the test output were huge
 Parts:
 - Fix | sonnet, medium | writes | tests/date.test.js

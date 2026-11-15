@@ -27,7 +27,7 @@ SKILL.md is self-contained, so an installed copy works without this repository. 
 |---|---|
 | [SKILL.md](SKILL.md) | The skill the model reads |
 | [route.py](route.py) | The routing rules as code. `python3 -I route.py --explain '<facts>'` prints the route, runner-up and requirements |
-| [check_card.py](check_card.py) | Checks a routing card with code: fields, route name, part lines, one writer, scopes, check count, budget, high-risk review, expected route |
+| [check_card.py](check_card.py) | Checks a routing card with code: fields, route name, part lines, one writer, scopes, check count, budget, high-risk review, expected route, what the route requires, that the route follows from the card's own Answers line, and that Reasoning names the rule that fired. With `--outcome`, checks the outcome lines in a decisions file |
 | [EXAMPLE.md](EXAMPLE.md) | A worked example: four requests on one codebase and the route each gets |
 
 ## How it is tested
@@ -48,6 +48,14 @@ From a clone, link it so updates arrive with `git pull`:
 ```bash
 ln -s "$(pwd)/skills/orchestrate" ~/.claude/skills/orchestrate
 ```
+
+## How to use it
+
+1. Ask: `/orchestrate <task>`, or just describe a big task and let Claude load the skill.
+2. Read the card. `Answers` shows how it judged each question, and `Reasoning` says in plain words which rule fired, why the cheaper routes do not fit, and what would change the route.
+3. Answer the closing question. Say go, or correct an answer ("C is yes") or the route. Nothing starts before a yes.
+4. After a yes it writes every prompt itself (helper briefs, builder briefs, the hub prompt or the workflow script) and shows them as it sends them.
+5. When the work ends it records one outcome line (budget against spent, checks, "route again: yes or no, because ...") in `docs/decisions.md`.
 
 ## Try it
 

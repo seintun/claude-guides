@@ -5,6 +5,7 @@ The live layer (fresh claude -p sessions scored by the same checker) is tests/li
 """
 import importlib.util
 import json
+import sys
 import pathlib
 import re
 import unittest
@@ -163,6 +164,9 @@ class CardChecker(unittest.TestCase):
         def failed(text):
             return sorted(c for c, ok, _ in check_card.check(text) if not ok)
         self.assertEqual(failed(good.replace("Checks: npm test passes;", "Checks: `pytest`;")), [])
+        # Round 6: the same command without backticks is still a runnable check; "yes" is not.
+        self.assertEqual(failed(good.replace("Checks: npm test passes;", "Checks: pytest;")), [])
+        self.assertIn("k-7", failed(good.replace("Checks: npm test passes;", "Checks: yes;")))
         for budget in ("12 builder sessions plus 1 hub, about 3 to 4 days.", "2 helper agents plus about 15 main-thread turns."):
             with self.subTest(budget=budget):
                 self.assertEqual(failed(good.replace("90 minutes or $15.", budget)), [])
@@ -182,6 +186,11 @@ class CardChecker(unittest.TestCase):
     def test_reads_that_say_no_writing_are_reads(self):
         card = (FIXTURES / "good-high-risk.txt").read_text(encoding="utf-8").replace("| reads | the plan", "| reads (does not write anything) | the plan")
         self.assertEqual(sorted(c for c, ok, _ in check_card.check(card, risk="high") if not ok), [])
+        # Round 9: a workflow's merge step said "writes nothing to the repo".
+        self.assertFalse(check_card.writes("writes nothing to the repo"))
+        self.assertTrue(check_card.writes("writes"))
+        merge = (FIXTURES / "good-route3.txt").read_text(encoding="utf-8").replace("- Scout | haiku, low | reads |", "- Scout | no model | writes nothing to the repo |")
+        self.assertNotIn("k-4", sorted(c for c, ok, _ in check_card.check(merge) if not ok))
 
     def test_good_cards_carry_their_requirements(self):
         self.assertTrue(dict((c, ok) for c, ok, _ in check_card.check((FIXTURES / "good-route3.txt").read_text(encoding="utf-8"), facts={"independent": True, "items": 40}))["k-11"])
@@ -190,7 +199,7 @@ class CardChecker(unittest.TestCase):
     def test_each_bad_card_fails_only_its_own_check(self):
         """Every broken fixture trips exactly the check it was built to trip, and no other."""
         cases = {
-            "bad-missing-field.txt": "k-1", "bad-route-name.txt": "k-2", "bad-runner-same.txt": "k-3",
+            "bad-missing-field.txt": "k-1", "bad-route-name.txt": "k-2", "bad-runner-same.txt": ["k-12", "k-3"],
             "bad-part-line.txt": "k-4", "bad-route1-two-writers.txt": "k-5", "bad-shared-scope.txt": "k-6",
             "bad-checks-count.txt": "k-7", "bad-budget.txt": "k-8",
             "bad-route2-two-writers.txt": "k-5", "bad-no-failure-cap.txt": "k-8",
@@ -198,7 +207,8 @@ class CardChecker(unittest.TestCase):
         for name, target in cases.items():
             with self.subTest(fixture=name):
                 failed = sorted(cid for cid, ok in self.run_check(name).items() if not ok)
-                self.assertEqual(failed, [target], f"{name} should fail only {target}, failed {failed}.")
+                want = target if isinstance(target, list) else [target]
+                self.assertEqual(failed, want, f"{name} should fail only {want}, failed {failed}.")
         failed = sorted(cid for cid, ok in self.run_check("bad-high-risk.txt", risk="high").items() if not ok)
         self.assertEqual(failed, ["k-9"])
 
@@ -243,6 +253,85 @@ class CardChecker(unittest.TestCase):
         fields = [m for m in re.findall(r"^([A-Z][\w-]*(?: used)?):", block, re.M)]
         self.assertEqual(fields, check_card.FIELDS, f"SKILL.md card template fields {fields} differ from check_card.FIELDS.")
 
+
+
+class AnswersReasoningOutcome(unittest.TestCase):
+    """The card shows its working (Answers, Reasoning), and the code checks the working adds up."""
+
+    def setUp(self):
+        self.good = (FIXTURES / "good-route3.txt").read_text(encoding="utf-8")
+
+    def failed(self, text, **kw):
+        return sorted(c for c, ok, _ in check_card.check(text, **kw) if not ok)
+
+    def test_route_must_follow_from_the_cards_own_answers(self):
+        # Flip B to no: the answers now give route 2, but the card still says route 3.
+        self.assertIn("k-12", self.failed(self.good.replace("B yes;", "B no;")))
+        # Leave out an answer: the card cannot be checked, so it fails.
+        self.assertIn("k-12", self.failed(self.good.replace(" order no;", "")))
+        # Wrong runner-up for these answers.
+        wrong = self.good.replace("Runner-up: 4. One session per task.", "Runner-up: 2. Inline plus helper subagents.")
+        self.assertIn("k-12", self.failed(wrong))
+
+    def test_reasoning_is_judged_by_shape_not_sentence_count(self):
+        """Rounds 6 and 7: a sentence cap made cards grow to fill it. The shape (rules walked, the one that fired,
+        cheaper routes, what would change it) is what the user needs, and a word cap keeps it short."""
+        self.assertNotIn("k-13", self.failed(self.good))
+        self.assertIn("Rule <n>: fired", SKILL)
+        self.assertIn("Keep it under 150 words", SKILL)
+
+    def test_reasoning_cites_the_rule_that_fired(self):
+        self.assertIn("k-13", self.failed(self.good.replace("Rule 3: fired", "Rule 4: fired")))
+        bare = self.good.split("Reasoning:")[0] + "Reasoning: Rule 3: fired.\n" + "Runner-up:" + self.good.split("Runner-up:", 1)[1]
+        self.assertIn("k-13", self.failed(bare))
+        essay = self.good.replace("Would change if:", "Would change if: " + "and so on " * 60 + ".")
+        self.assertIn("k-13", self.failed(essay))
+
+    def test_rule_numbers_match_skill_step_three(self):
+        """route.py's rule number points at the step 3 rule whose text names that route."""
+        step3 = SKILL.split("## 3. Pick the route", 1)[1].split("| Route |", 1)[0]
+        rules = {int(n): [int(x) for x in re.findall(r"route (\d)", text)] for n, text in re.findall(r"^(\d)\. (.+)$", step3, re.M)}
+        for s in SCENARIOS:
+            got = route.route(s["facts"])
+            with self.subTest(case=s["id"]):
+                self.assertIn(got["route"], rules[got["rule"]], f"{s['id']}: rule {got['rule']} in SKILL.md does not name route {got['route']}.")
+
+    def test_skill_card_and_router_explain_agree_on_rules(self):
+        self.assertIn("Why: rule 3:", subprocess_explain('{"independent":true,"items":40}'))
+
+    def test_skill_writes_every_prompt_for_every_route(self):
+        """Step 6 says how to start each route and gives the helper, builder and hub prompts, so the user writes none."""
+        step6 = SKILL.split("## 6. After a yes", 1)[1].split("## 7.", 1)[0]
+        for n in range(1, 7):
+            with self.subTest(route=n):
+                self.assertRegex(step6, re.compile(rf"^\| {n} \|", re.M), f"SKILL.md step 6 has no row for route {n}.")
+        for prompt in ("Helper: Objective:", "Builder: Item <id>:", "Hub: /goal"):
+            self.assertIn(prompt, step6, f"SKILL.md step 6 lost the '{prompt}' prompt.")
+        self.assertIn("you write every brief and prompt the route needs", step6)
+
+    def test_outcome_lines(self):
+        good = "- 2026-11-14 /orchestrate outcome: migrate handlers | route 3 (Parallel builders in worktrees) | budget 90 minutes | spent 75 minutes | checks PASS 3, FAIL 0, NOT RUN 0 | route again: yes, because no handler shared a file"
+        self.assertTrue(all(ok for _, ok, _ in check_card.check_outcomes(good)))
+        for bad in (good.replace(", because no handler shared a file", ""),
+                    good.replace("(Parallel builders in worktrees)", "(Workflow script)"),
+                    good.replace("checks PASS 3, FAIL 0, NOT RUN 0", "checks all good"),
+                    "no outcome here"):
+            with self.subTest(line=bad[:60]):
+                self.assertFalse(all(ok for _, ok, _ in check_card.check_outcomes(bad)))
+
+    def test_skill_outcome_template_matches_the_checker(self):
+        """Fill SKILL.md's outcome template with sample values; the checker must accept it."""
+        line = next(l for l in SKILL.splitlines() if "/orchestrate outcome:" in l)
+        filled = (line.replace("<YYYY-MM-DD>", "2026-11-14").replace("<task in a few words>", "fix flaky test")
+                  .replace("<number>", "1").replace("<name>", "Inline").replace("<figure>", "20 turns")
+                  .replace("<n>", "1").replace("<yes|no>", "yes").replace("<reason>", "one writer was enough"))
+        self.assertTrue(all(ok for _, ok, _ in check_card.check_outcomes(filled)), filled)
+
+
+def subprocess_explain(facts):
+    import subprocess
+    return subprocess.run([sys.executable, "-I", str(SKILL_DIR / "route.py"), "--explain", facts],
+                          capture_output=True, text=True, check=True).stdout
 
 if __name__ == "__main__":
     unittest.main()

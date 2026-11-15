@@ -64,7 +64,9 @@ def build_project(case, folder):
         for n in range(1, count + 1):
             path = folder / "project" / pattern.format(n=n)
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(f"// placeholder {n}\n", encoding="utf-8")
+            filler = f"// placeholder {n}: line of sample content for the eval\n"
+            size = case.get("stub_bytes", 0)
+            path.write_text(filler * max(1, size // len(filler)), encoding="utf-8")
 
 
 def run_one(case, model, folder):

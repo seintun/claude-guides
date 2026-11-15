@@ -15,7 +15,7 @@ python3 -I skills/orchestrate/route.py --explain '{"fits_one_context":true,"item
 ```
 
 ```text
-Route 1. Inline. Why: A yes and C no
+Route 1. Inline. Why: rule 5: A yes and C no
 Runner-up: 2. Inline plus helper subagents
 ```
 
@@ -30,7 +30,7 @@ python3 -I skills/orchestrate/route.py --explain '{"independent":true,"items":40
 ```
 
 ```text
-Route 3. Parallel builders in worktrees. Why: B yes: independent parts that each write
+Route 3. Parallel builders in worktrees. Why: rule 3: B yes: independent parts that each write
 Runner-up: 4. One session per task
 Requires: 2 /batch run(s) of at most 30 parts
 ```
@@ -46,7 +46,7 @@ python3 -I skills/orchestrate/route.py --explain '{"outlives_session":true,"orde
 ```
 
 ```text
-Route 5. Hub plus builder sessions. Why: E yes and the items have an order
+Route 5. Hub plus builder sessions. Why: rule 1: E yes and the items have an order
 Runner-up: 4. One session per task
 Requires: at most 3 builders at once
 ```
@@ -62,7 +62,7 @@ python3 -I skills/orchestrate/route.py --explain '{"fits_one_context":true,"need
 ```
 
 ```text
-Route 2. Inline plus helper subagents. Why: C or D yes, or too big for one context; one writer keeps the edits
+Route 2. Inline plus helper subagents. Why: rule 4: C or D yes, or too big for one context; one writer keeps the edits
 Runner-up: 1. Inline
 Requires: fresh critic on the plan
 Requires: adversarial review of the diff
@@ -70,6 +70,31 @@ Requires: human sign-off
 ```
 
 Lesson: high risk does not mean more builders. It means one writer plus independent readers on a higher model rung, and a human at the end.
+
+## What the skill shows you before anything starts
+
+For request 2, the card opens with its working. Answers is every question from step 2 in one line, and Reasoning says the same thing in plain words:
+
+```text
+Route: 3. Parallel builders in worktrees. Why: B yes, 40 handlers that each write and have their own test
+Answers: A no; B yes; C no; D no; E no; F no; order no; read-only no; gate no; comparison no; items 40
+Reasoning: Rule 1: skipped, E no. Rule 2: skipped, the handlers are written. Rule 3: fired, B yes: 40 handlers touch different files, none imports another, and each has its own test. Cheaper routes: route 1 or 2 would leave one writer making 40 edits in sequence. Would change if: each handler needed its own reviewed PR over several days (route 4).
+Runner-up: 4. One session per task. It would win if: each handler needed review as its own PR
+```
+
+You decide from Reasoning. If you disagree with one answer ("C is yes, the test output is huge"), say so, and the route follows from the corrected answers. The code makes that hold: `check_card.py` feeds the Answers line to `route.py` and fails the card (check k-12) if its route or runner-up does not follow, and fails it (k-13) if Reasoning names the wrong rule as fired, leaves out "Cheaper routes:" or "Would change if:", or runs past 150 words.
+
+## After you say go
+
+You do not write any prompts. The skill writes every brief the route needs (helper briefs for route 2, builder briefs for routes 3 and 4, the hub prompt for route 5, the script for route 6) and shows them as it sends them, so you can stop it there.
+
+When the work finishes, it writes one outcome line to `docs/decisions.md`:
+
+```text
+- 2026-11-14 /orchestrate outcome: migrate handlers | route 3 (Parallel builders in worktrees) | budget 90 minutes | spent 75 minutes | checks PASS 3, FAIL 0, NOT RUN 0 | route again: yes, because no handler shared a file
+```
+
+`python3 -I skills/orchestrate/check_card.py --outcome docs/decisions.md` checks every such line. A "route again: no" names a task the rules got wrong; add it to `tests/live/orchestrate/scenarios.json` as a new case.
 
 ## Checking a card with code
 

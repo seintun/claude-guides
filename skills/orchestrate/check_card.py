@@ -1,11 +1,12 @@
 """Check a routing card written by /orchestrate. Code, not prose, decides whether a card is usable.
 
 Usage: python3 -I skills/orchestrate/check_card.py <card.txt> [--expect N] [--accept N,M] [--risk high] [--facts '<json>']
+       python3 -I skills/orchestrate/check_card.py --outcome <file>   check the outcome lines in a decisions file
 Reads the whole file and checks the card inside it (a fenced block or plain lines both work). When the
-text holds more than one "Route:" line, the last block that has all seven fields is the card.
+text holds more than one "Route:" line, the last block that has all nine fields is the card.
 Prints one PASS or FAIL line per check and exits 1 on any FAIL.
 
-  k-1  all seven fields are there, in order: Route, Runner-up, Parts, Order, Checks, Budget, Not used
+  k-1  all nine fields are there, in order: Route, Answers, Reasoning, Runner-up, Parts, Order, Checks, Budget, Not used
   k-2  Route starts with a number 1 to 6 followed by exactly that route's name
   k-3  Runner-up starts with a different route number, 1 to 6
   k-4  every part line reads "<part> | <model>, <effort> | reads or writes | <scope>" with a known model and effort
@@ -20,6 +21,13 @@ Prints one PASS or FAIL line per check and exits 1 on any FAIL.
   k-10 with --expect: the route is the expected one (or one listed in --accept)
   k-11 with --facts: the card carries what route.py says the route requires (/batch runs, builder cap,
        helper count, human sign-off)
+  k-12 Answers covers A to F, order, read-only and items, and route.py, given those answers, picks the
+       card's route and runner-up: the route follows from the card's own answers
+  k-13 Reasoning says "Rule N: fired" for exactly the rule route.py computes from the Answers, has "Cheaper routes:"
+       and "Would change if:", and stays under 150 words
+
+Outcome lines (--outcome), one per finished route, in the form SKILL.md step 7 gives:
+  o-1  date, task, route number and name, budget, spent, PASS/FAIL/NOT RUN counts, and "route again: yes|no, because ..."
 """
 import importlib.util
 import json
@@ -27,7 +35,12 @@ import pathlib
 import re
 import sys
 
-FIELDS = ["Route", "Runner-up", "Parts", "Order", "Checks", "Budget", "Not used"]
+FIELDS = ["Route", "Answers", "Reasoning", "Runner-up", "Parts", "Order", "Checks", "Budget", "Not used"]
+# The Answers line, mapped to route.py's facts. A to F, order, read-only and items are required.
+ANSWER_KEYS = {"a": "fits_one_context", "b": "independent", "c": "bulky_output", "d": "needs_judgment",
+               "e": "outlives_session", "f": "high_risk", "order": "ordered", "read-only": "read_only",
+               "gate": "gate_mid_run", "comparison": "comparison"}
+REQUIRED_ANSWERS = ("a", "b", "c", "d", "e", "f", "order", "read-only")
 NAMES = {
     1: "inline",
     2: "inline plus helper subagents",
@@ -42,6 +55,7 @@ EFFORTS = ("low", "medium", "high", "xhigh", "max")
 STRONG = ("high", "xhigh", "max")
 FIELD_RE = re.compile(r"^\s*(?:[-*]\s*)?(?:\*\*)?(" + "|".join(re.escape(f) for f in FIELDS) + r")(?:\*\*)?\s*:\s*(.*)$", re.I)
 BULLET = re.compile(r"^\s*(?:[-*]|\d+[.)])\s+")
+COMMAND = re.compile(r"(?:npm|npx|pnpm|yarn|bun|deno|pytest|python3?|go|cargo|make|mvn|gradle|ruff|mypy|tox|grep|git|bash|sh)\b")
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
 
 
@@ -110,7 +124,7 @@ def named_route(lines):
 
 def writes(cell):
     cell = cell.lower()
-    if re.search(r"\b(?:not|no|never|nothing)\b[^|]{0,20}\bwrit", cell):
+    if re.search(r"\b(?:not|no|never|nothing)\b[^|]{0,20}\bwrit", cell) or re.search(r"\bwrit\w*\s+nothing\b", cell):
         return False
     return bool(re.search(r"\bwrit", cell))
 
@@ -128,7 +142,7 @@ def parts(card):
         if model in NO_EFFORT:
             effort = effort or "n/a"
         w = writes(cells[2])
-        reads = "read" in cells[2].lower()
+        reads = "read" in cells[2].lower() or (not w and "writ" in cells[2].lower())  # "writes nothing" is a reader
         out.append({"line": line, "ok": bool(model and effort and (w or reads)), "name": cells[0].lower(),
                     "model": model, "effort": effort, "writes": w, "scope": cells[3].lower()})
     return out
@@ -159,6 +173,39 @@ def mentions_number(text, n, after):
     words = [w for w, v in NUMBER_WORDS.items() if v == n]
     num = "|".join([str(n)] + words)
     return bool(re.search(rf"\b(?:{num})\b[^.;\n]{{0,25}}{after}", text, re.I))
+
+
+def parse_answers(lines):
+    """Turn an Answers line into route.py facts. Returns (facts, missing keys)."""
+    text = " ".join(lines).lower()
+    facts, seen = {}, set()
+    for key, value in re.findall(r"(?<![\w-])(a|b|c|d|e|f|order|read-only|gate|comparison)\s*[:=]?\s*(yes|no)\b", text):
+        facts[ANSWER_KEYS[key]] = value == "yes"
+        seen.add(key)
+    m = re.search(r"\bitems\s*[:=]?\s*(\d+)", text)
+    if m:
+        facts["items"] = int(m.group(1))
+    missing = [k for k in REQUIRED_ANSWERS if k not in seen] + ([] if m else ["items"])
+    return facts, missing
+
+
+OUTCOME_RE = re.compile(
+    r"^-?\s*(\d{4}-\d{2}-\d{2}) /orchestrate outcome: (.+?) \| route ([1-6]) \(([^)]+)\) \| budget (.+?) \| spent (.+?) \| "
+    r"checks PASS (\d+), FAIL (\d+), NOT RUN (\d+) \| route again: (yes|no), because (.{4,})$", re.I)
+
+
+def check_outcomes(text):
+    """Return (id, ok, message) for every line that says '/orchestrate outcome'."""
+    res = []
+    for n, line in enumerate(text.splitlines(), 1):
+        if "/orchestrate outcome" not in line:
+            continue
+        m = OUTCOME_RE.match(line.strip())
+        ok = bool(m) and NAMES[int(m.group(3))] == m.group(4).strip().lower()
+        res.append(("o-1", ok, f"line {n}: " + ("outcome line complete" if ok else "needs date, task, route N (its name), budget, spent, PASS/FAIL/NOT RUN counts, route again: yes|no, because ...")))
+    if not res:
+        res.append(("o-1", False, "no '/orchestrate outcome' line found"))
+    return res
 
 
 def check(text, expect=None, accept=(), risk=None, facts=None):
@@ -199,7 +246,8 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
 
     checks = card.get("Checks", [])
     items = checks if len(checks) > 1 else sum((split_checks(line) for line in checks), [])
-    thin = [c for c in items if len(c.split()) < 3 and "`" not in c]  # a bare `command` is a runnable check
+    # A check of one or two words is too thin to run, unless it is a command (`npm test`, pytest, go test).
+    thin = [c for c in items if len(c.split()) < 3 and "`" not in c and not COMMAND.match(c.strip())]
     res.append(("k-7", 2 <= len(items) <= 5 and not thin,
                 f"{len(items)} check(s)" + (f"; too thin to run: {thin}" if thin else "")))
 
@@ -242,10 +290,43 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
                 if req == "human sign-off" and not re.search(r"human", whole, re.I):
                     missing_req.append(req)
         res.append(("k-11", not missing_req, "carries what the route requires" if not missing_req else f"missing: {missing_req}"))
+
+    answers, gaps = parse_answers(card.get("Answers", []))
+    if gaps:
+        res.append(("k-12", False, f"Answers lacks: {', '.join(gaps)}"))
+        derived = None
+    else:
+        derived = load_route().route(answers)
+        ok = derived["route"] == r and derived["runner_up"] == ru
+        res.append(("k-12", ok, f"answers give route {derived['route']}, runner-up {derived['runner_up']}" +
+                    ("" if ok else f"; the card says route {r}, runner-up {ru}")))
+
+    reasoning = " ".join(card.get("Reasoning", []))
+    fired = re.findall(r"\brule\s+([1-5])\s*[:,-]?\s*fired\b", reasoning, re.I)
+    want_rule = derived["rule"] if derived else None
+    parts_ok = re.search(r"cheaper routes?\s*:", reasoning, re.I) and re.search(r"would change if\s*:", reasoning, re.I)
+    words = len(reasoning.split())
+    ok = bool(fired) and (want_rule is None or fired == [str(want_rule)]) and bool(parts_ok) and words <= 150
+    problems = []
+    if not fired:
+        problems.append('no "Rule N: fired"')
+    elif want_rule and fired != [str(want_rule)]:
+        problems.append(f"says rule {', '.join(fired)} fired; the answers fire rule {want_rule}")
+    if not parts_ok:
+        problems.append('needs "Cheaper routes:" and "Would change if:"')
+    if words > 150:
+        problems.append(f"{words} words, over 150")
+    res.append(("k-13", ok, f"rule {fired[0]} fired, {words} words" if ok else "; ".join(problems)))
     return res
 
 
 def main(argv):
+    if len(argv) == 2 and argv[0] == "--outcome":
+        with open(argv[1], encoding="utf-8") as fh:
+            results = check_outcomes(fh.read())
+        for cid, ok, msg in results:
+            print(f"{'PASS' if ok else 'FAIL'} {cid} {msg}")
+        return 0 if all(ok for _, ok, _ in results) else 1
     if not argv or argv[0].startswith("-"):
         print(__doc__)
         return 2

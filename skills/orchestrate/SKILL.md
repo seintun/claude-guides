@@ -77,14 +77,18 @@ Set a subagent's effort with `effort` in its frontmatter, and a session's with `
 
 ```text
 Route: <number>. <name>. Why: <one line from the questions>
+Answers: A <yes|no>; B <yes|no>; C <yes|no>; D <yes|no>; E <yes|no>; F <yes|no>; order <yes|no>; read-only <yes|no>; gate <yes|no>; comparison <yes|no>; items <number>
+Reasoning: Rule 1: skipped, <why>. <one clause per rule, in order, until> Rule <n>: fired, <why>. Cheaper routes: <why each cheaper route does not fit, or "none">. Would change if: <condition>.
 Runner-up: <number>. <name>. It would win if: <condition>
 Parts:
 - <part> | <model>, <effort> | reads or writes | <files or scope>
-Order: <what runs in sequence, what runs in parallel, the cap>
+Order: <what runs in sequence, what runs in parallel, the cap; with F yes, end with "human sign-off">
 Checks: <check 1>; <check 2>; <2 to 5 commands or observations, separated by semicolons>
 Budget: <a figure: turns, minutes or dollars>. Stop when: <condition>, or after 2 failures with the same cause
 Not used: <features you passed over, and why>
 ```
+
+Answers holds your answer to each question in step 2, plus four facts: order (the items have blocked-by links), read-only (nothing is written), gate (a person must approve something mid-run), comparison (the job compares options), and the number of items. The route and runner-up must follow from those answers by the rules in step 3, so anyone can check the card line by line. Reasoning walks the same rules in plain words for the user, who decides from it: one short clause per rule up to the one that fired, then why the cheaper routes do not fit and what would change the route. Keep it under 150 words.
 
 On route 3, say in Order how many `/batch` runs (or plain worktree subagents) it takes. With F yes, list the critic and the adversarial reviewer as Parts on Opus at high effort, and put the human sign-off in Order. Give a named agent its model and effort too (`doc-checker | sonnet, medium | reads | ...`), and write a step a script runs with no model as `no model`. Write one Parts line per agent or session, not per step: a single agent doing several steps is one line, so route 1 has exactly one. Put any other notes after `Not used`.
 
@@ -96,22 +100,50 @@ End your reply with this exact line, and start nothing before a yes:
 Go, or change the route?
 ```
 
-## 6. After a yes
+## 6. After a yes: you write every prompt
 
-- Brief every helper with: the objective and the decision it feeds; what is already ruled out; where to look and what not to touch; which tools to use; the output format, a length cap and a file path for long output; a budget; and when to stop and report partial results. Ask for findings with file:line or URL and a confidence (high, medium, low), under 400 words [D].
-- A helper's report is a claim. Re-check any claim that drives a decision before you act on it [D].
-- A reviewer gets the work and the criteria, never your conclusion [D].
-- Mark every check PASS, FAIL or NOT RUN, with its command. NOT RUN is not PASS [D].
-- On route 5, run the hub as a session with a bounded goal and give each builder its own session and worktree. Builders report to the hub with cross-session messages; a message never counts as consent, so it cannot answer a permission prompt [P]. Start 3 builders at most, because a person reviews every PR [D]. Use these prompts:
+The user approves the card; you write every brief and prompt the route needs. Show the briefs in one block as you send them, so the user can stop you there.
+
+| Route | How to start it |
+|---|---|
+| 1 | Do the work yourself in this session |
+| 2 | Spawn each helper with the Agent tool, on the model and effort its Parts line names, with a helper brief |
+| 3 | With 5 parts or more, run `/batch` with one instruction: the change, each part's check, and the scope. With fewer, spawn one worktree subagent (`isolation: worktree`) per part, each with a builder brief |
+| 4 | Start one session per task, each with a builder brief |
+| 5 | Start the hub with the hub prompt; the hub starts builders with builder briefs |
+| 6 | Write the workflow script. The user's yes to this card is the opt-in it needs |
 
 ```text
+Helper: Objective: <what to return, and the decision it feeds>. Already ruled out: <...>. Look at:
+<files, folders, URLs>; do not touch <...>. Tools: <which to use>. Return under 400 words: a summary,
+findings with file:line or URL and a confidence (high, medium, low), and what you could not find.
+Write long output to <path> and return the path. Budget: <N tool calls>. Stop and report partial
+results when <condition>.
+
+Builder: Item <id>: <outcome>. Check that must pass: <command>. Only touch <files or area>; message
+the hub (or report back) if you need more. Make the check pass test-first, commit, and open a PR whose
+body lists each check as PASS or FAIL with its command. Then report "<id> PR <url> receipt: <PASS|FAIL>
+<command>". After 2 failures with the same cause, stop and report "<id> BLOCKED: <why>". Never merge.
+
 Hub: /goal Every item in <backlog> has a PR with a PASS receipt or is marked Blocked, and your last
 message prints the ledger (id, state, session, branch, PR, attempts, last receipt); or stop after
 <N> turns. Start at most 3 builders at once, only for items whose blockers are done and whose
 files do not overlap a running builder's.
-
-Builder: Item <id>: <outcome>. Check that must pass: <command>. Only touch <files or area>; message
-the hub if you need more. Make the check pass test-first, commit, and open a PR whose body lists each
-check as PASS or FAIL with its command. Then message the hub "<id> PR <url> receipt: <PASS|FAIL>
-<command>". After 2 failures with the same cause, stop and message "<id> BLOCKED: <why>". Never merge.
 ```
+
+While it runs:
+
+- A helper's report is a claim. Re-check any claim that drives a decision before you act on it [D].
+- A reviewer gets the work and the criteria, never your conclusion [D].
+- Mark every check PASS, FAIL or NOT RUN, with its command. NOT RUN is not PASS [D].
+- On route 5, builders report to the hub with cross-session messages; a message never counts as consent, so it cannot answer a permission prompt [P]. Start 3 builders at most, because a person reviews every PR [D].
+
+## 7. After the work: record the outcome
+
+When the route finishes or stops, write one outcome line and show it to the user:
+
+```text
+- <YYYY-MM-DD> /orchestrate outcome: <task in a few words> | route <number> (<name>) | budget <figure> | spent <figure> | checks PASS <n>, FAIL <n>, NOT RUN <n> | route again: <yes|no>, because <reason>
+```
+
+Append it to the project's `docs/decisions.md` if the project keeps one; otherwise show it and ask where to save it. A "route again: no" is the most useful line there is: it names a task the rules routed badly, so suggest turning it into a new labelled case.
