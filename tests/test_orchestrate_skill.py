@@ -328,6 +328,69 @@ class AnswersReasoningOutcome(unittest.TestCase):
         self.assertTrue(all(ok for _, ok, _ in check_card.check_outcomes(filled)), filled)
 
 
+
+class ReviewFindingsPR8(unittest.TestCase):
+    """Findings from the PR #8 review. Each test fails on the checker as it was before the fix."""
+
+    def setUp(self):
+        self.good = (FIXTURES / "good-route3.txt").read_text(encoding="utf-8")
+        self.hi = (FIXTURES / "good-high-risk.txt").read_text(encoding="utf-8")
+
+    def failed(self, text, **kw):
+        return sorted(c for c, ok, _ in check_card.check(text, **kw) if not ok)
+
+    def test_gate_and_comparison_are_required_answers(self):
+        for key in (" gate no;", " comparison no;"):
+            with self.subTest(dropped=key):
+                self.assertIn("k-12", self.failed(self.good.replace(key, "")))
+
+    def test_read_only_sessions_and_hubs_need_no_writer(self):
+        """A read-only task on route 4 or 5 is valid with only reading parts, and invalid with a writer."""
+        for route, name, runner, ordered in ((4, "One session per task", "3. Parallel builders in worktrees", "no"),
+                                             (5, "Hub plus builder sessions", "4. One session per task", "yes")):
+            card = (self.good
+                    .replace("Route: 3. Parallel builders in worktrees.", f"Route: {route}. {name}.")
+                    .replace("Runner-up: 4. One session per task.", f"Runner-up: {runner}.")
+                    .replace("A no; B yes; C no; D no; E no; F no; order no; read-only no;",
+                             f"A no; B no; C yes; D no; E yes; F no; order {ordered}; read-only yes;")
+                    .replace("items 40", "items 3")
+                    .replace("Rule 1: skipped, E no. Rule 2: skipped, the handlers are written. Rule 3: fired, B yes: 40 handlers touch different files, none imports another, and each has its own test.",
+                             "Rule 1: fired, E yes across 3 audits over several days.")
+                    .replace("| writes |", "| reads |"))
+            with self.subTest(route=route):
+                self.assertNotIn("k-5", self.failed(card))
+                self.assertIn("k-5", self.failed(card.replace("- Batch A | sonnet, medium | reads |", "- Batch A | sonnet, medium | writes |")))
+
+    def test_high_risk_is_read_from_the_cards_answers(self):
+        """F yes in Answers turns on k-9 without --risk high."""
+        stripped = self.hi.replace("- Critic | opus, high | reads | the plan\n", "")
+        self.assertIn("k-9", self.failed(stripped))
+
+    def test_both_review_roles_and_the_sign_off_are_required(self):
+        no_adversary = self.hi.replace("- Adversarial review | opus, high | reads | the diff\n", "")
+        no_critic = self.hi.replace("- Critic | opus, high | reads | the plan\n", "")
+        no_signoff = self.hi.replace(", human sign-off", "").replace("and a human signs off", "and the reviewer agrees")
+        for name, card in (("adversary", no_adversary), ("critic", no_critic), ("sign-off", no_signoff)):
+            with self.subTest(missing=name):
+                self.assertIn("k-9", self.failed(card))
+        self.assertNotIn("k-9", self.failed(self.hi))
+        # A reviewer that also writes is not independent, even with both roles named.
+        self.assertIn("k-9", self.failed(self.hi.replace("- Adversarial review | opus, high | reads | the diff", "- Adversarial review | opus, high | writes | the diff")))
+
+    def test_walking_the_rules_is_not_enough_if_the_wrong_one_fires(self):
+        """Rules 1 to 3 walked in order, but rule 4 named as fired: the answers fire rule 3, so k-13 fails."""
+        wrong = self.good.replace("Rule 3: fired, B yes:", "Rule 3: skipped, maybe. Rule 4: fired, B yes:")
+        self.assertIn("k-13", self.failed(wrong))
+
+    def test_reasoning_must_walk_the_rules_before_the_one_that_fired(self):
+        short = self.good.replace("Rule 1: skipped, E no. Rule 2: skipped, the handlers are written. ", "")
+        self.assertIn("k-13", self.failed(short))
+
+    def test_live_runner_treats_missing_records_as_errors(self):
+        run_py = (ROOT / "tests" / "live" / "orchestrate" / "run.py").read_text(encoding="utf-8")
+        self.assertIn('else "missing"', run_py, "a missing exit.txt must not count as exit 0")
+        self.assertIn("have no transcript", run_py, "--rescore must fail when a requested transcript is missing")
+
 def subprocess_explain(facts):
     import subprocess
     return subprocess.run([sys.executable, "-I", str(SKILL_DIR / "route.py"), "--explain", facts],

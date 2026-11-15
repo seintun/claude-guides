@@ -12,10 +12,10 @@ This repository is a guide that other sessions call. A bad edit here misleads ev
 | Layer | Command | Cost | When |
 |---|---|---|---|
 | Offline suite | `tests/run.sh` (add `-v` for every test) | under 10 seconds, no network | Before every commit. The pre-commit hook runs it, and GitHub Actions runs it on every pull request and every push to `main` ([.github/workflows/tests.yml](../.github/workflows/tests.yml)). CI has no `.privacy-terms`, so it checks only the built-in privacy rules |
-| Mutation suites | `python3 -I tests/mutation/mutate.py --record` (49 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
+| Mutation suites | `python3 -I tests/mutation/mutate.py --record` (51 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
 | Live routing | `python3 -I tests/live/route_scenarios.py --record` | about $0.20 a run (3 runs by default) | After changing ENTRY.md, a skill, the snippet or the prompt |
 | Live grill | `skills/grill/test.sh` | one short session | After changing `/grill` |
-| Live orchestrate | `python3 -I tests/live/orchestrate/run.py --k 2 --record` | about $0.20 a run with Sonnet (12 cases) | After changing `/orchestrate`, `route.py` or `check_card.py` |
+| Live orchestrate | `python3 -I tests/live/orchestrate/run.py --k 2 --record` | about $2 to $3 for the command as shown (12 cases twice, 24 sessions on Sonnet) | After changing `/orchestrate`, `route.py` or `check_card.py` |
 | Grill-then-prompt dry run | Agent-run: see [live/grill-prompt/README.md](live/grill-prompt/README.md) | 6 runner agents and 1 judge | After changing the rules in `/grill` or `/prompt` |
 | Browser checks | `checks/run-dom.js` and `checks/compendium-check.js` through Playwright; see [checks/README.md](../checks/README.md) | a headless browser | After changing the page or the compendium builder |
 | Metrics | `python3 -I tools/metrics.py --write --record` | about 3 seconds | When you want the numbers in [docs/metrics.md](../docs/metrics.md) refreshed |

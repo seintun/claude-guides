@@ -20,6 +20,14 @@ The one remaining failure is real. In `migrate-handlers-1` the model named route
 
 `async-refactor` chose route 1 in both runs, which the case accepts. Its 15 coupled files are one writer's job either way.
 
+The PR #8 review then tightened the checker:
+- k-12 requires `gate` and `comparison`.
+- k-5 allows read-only routes 4 and 5 with no writer.
+- k-9 is switched on by `F yes` in the card itself, and needs both a plan critic and an adversarial reviewer, plus the human sign-off.
+- k-13 requires Reasoning to walk rules 1 to N in order.
+
+Rescored on the same round 9 transcripts, the result is unchanged: 23 of 24, with the same single miss.
+
 ## Round 5, the last round before Answers and Reasoning
 
 18 of 24 as first scored, and 24 of 24 after five checker fixes, rescored on the same transcripts. All 6 first-scored failures were the checker misreading a valid card:

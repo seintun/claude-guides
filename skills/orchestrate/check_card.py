@@ -12,19 +12,21 @@ Prints one PASS or FAIL line per check and exits 1 on any FAIL.
   k-4  every part line reads "<part> | <model>, <effort> | reads or writes | <scope>" with a known model and effort
        ("main thread", "human" or "no model" (a script step) may leave out the effort; an indented sub-bullet
        belongs to the part above it; "does not write" counts as reading)
-  k-5  writers per route: 1 and 2 at most one (route 1 has exactly one part); 3, 4 and 5 at least one; 6 none
+  k-5  writers: none when Answers say read-only yes; otherwise routes 1 and 2 at most one (route 1 has exactly
+       one part), routes 3, 4 and 5 at least one, route 6 none
   k-6  no two writers share a scope, and no writer's scope sits inside another's (src/ and src/handlers/ overlap)
   k-7  Checks lists 2 to 5 items, each a `command` or at least 3 words
   k-8  Budget has a figure above zero with a unit (up to two words between, as in "12 builder sessions"),
        and Stop when caps failures ("2 failures")
-  k-9  with --risk high: a reading part on Opus at high effort or above is named as a critic or reviewer
+  k-9  high risk (F yes in Answers, --risk high or high_risk in --facts): reading parts on Opus at high effort
+       or above for both a plan critic and an adversarial reviewer of the diff, and "human" in Order
   k-10 with --expect: the route is the expected one (or one listed in --accept)
   k-11 with --facts: the card carries what route.py says the route requires (/batch runs, builder cap,
        helper count, human sign-off)
-  k-12 Answers covers A to F, order, read-only and items, and route.py, given those answers, picks the
+  k-12 Answers covers A to F, order, read-only, gate, comparison and items, and route.py, given those answers, picks the
        card's route and runner-up: the route follows from the card's own answers
-  k-13 Reasoning says "Rule N: fired" for exactly the rule route.py computes from the Answers, has "Cheaper routes:"
-       and "Would change if:", and stays under 150 words
+  k-13 Reasoning walks rules 1 to N in order and says "Rule N: fired" for exactly the rule route.py computes from
+       the Answers, has "Cheaper routes:" and "Would change if:", and stays under 150 words
 
 Outcome lines (--outcome), one per finished route, in the form SKILL.md step 7 gives:
   o-1  date, task, route number and name, budget, spent, PASS/FAIL/NOT RUN counts, and "route again: yes|no, because ..."
@@ -36,11 +38,11 @@ import re
 import sys
 
 FIELDS = ["Route", "Answers", "Reasoning", "Runner-up", "Parts", "Order", "Checks", "Budget", "Not used"]
-# The Answers line, mapped to route.py's facts. A to F, order, read-only and items are required.
+# The Answers line, mapped to route.py's facts. Every key and items are required, as the card template lists them.
 ANSWER_KEYS = {"a": "fits_one_context", "b": "independent", "c": "bulky_output", "d": "needs_judgment",
                "e": "outlives_session", "f": "high_risk", "order": "ordered", "read-only": "read_only",
                "gate": "gate_mid_run", "comparison": "comparison"}
-REQUIRED_ANSWERS = ("a", "b", "c", "d", "e", "f", "order", "read-only")
+REQUIRED_ANSWERS = ("a", "b", "c", "d", "e", "f", "order", "read-only", "gate", "comparison")
 NAMES = {
     1: "inline",
     2: "inline plus helper subagents",
@@ -232,8 +234,14 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
     bad = [p["line"] for p in ps if not p["ok"]]
     res.append(("k-4", bool(ps) and not bad, f"{len(ps)} part(s)" if ps and not bad else f"unreadable part line(s): {bad or 'none listed'}"))
 
+    answers, gaps = parse_answers(card.get("Answers", []))
+    read_only = answers.get("read_only") is True or bool(facts and facts.get("read_only"))
+    high = risk == "high" or answers.get("high_risk") is True or bool(facts and facts.get("high_risk"))
+
     writers = [p for p in ps if p.get("writes")]
-    if r in (1, 2):
+    if read_only:
+        ok, msg = not writers and (r != 1 or len(ps) == 1), f"{len(writers)} writer(s); the task is read-only"
+    elif r in (1, 2):
         ok = len(writers) <= 1 and (r != 1 or len(ps) == 1)
         msg = f"{len(writers)} writer(s), {len(ps)} part(s)"
     elif r == 6:
@@ -258,10 +266,15 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
     caps = re.search(r"stop when", budget, re.I) and re.search(r"\b(?:2|two) (?:failures|fails|attempts)", budget, re.I)
     res.append(("k-8", bool(positive and caps), "budget and failure cap" if positive and caps else f"budget lacks a figure above zero or the 2-failure stop: {budget[:100]}"))
 
-    if risk == "high":
-        reviewer = [p for p in ps if p.get("model") == "opus" and p.get("effort") in STRONG and not p.get("writes")
-                    and re.search(r"critic|adversar|review", p.get("name", ""))]
-        res.append(("k-9", bool(reviewer), "Opus-high reviewer part" if reviewer else "high risk needs a reading part on Opus at high effort named as a critic or reviewer"))
+    if high:
+        strong = [p for p in ps if p.get("model") == "opus" and p.get("effort") in STRONG and not p.get("writes")]
+        critic = [p for p in strong if re.search(r"critic|plan", p.get("name", ""))]
+        adversary = [p for p in strong if re.search(r"adversar|diff|review", p.get("name", "")) and p not in critic]
+        signoff = re.search(r"human", " ".join(card.get("Order", [])), re.I)
+        missing_roles = ([] if critic else ["a plan critic"]) + ([] if adversary else ["an adversarial reviewer of the diff"]) + \
+                        ([] if signoff else ['"human sign-off" in Order'])
+        res.append(("k-9", not missing_roles, "critic, adversarial reviewer and human sign-off" if not missing_roles
+                    else f"high risk needs, on Opus at high effort and reading: {', '.join(missing_roles)}"))
 
     if expect is not None:
         ok = r == expect or r in accept
@@ -291,7 +304,6 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
                     missing_req.append(req)
         res.append(("k-11", not missing_req, "carries what the route requires" if not missing_req else f"missing: {missing_req}"))
 
-    answers, gaps = parse_answers(card.get("Answers", []))
     if gaps:
         res.append(("k-12", False, f"Answers lacks: {', '.join(gaps)}"))
         derived = None
@@ -306,8 +318,15 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
     want_rule = derived["rule"] if derived else None
     parts_ok = re.search(r"cheaper routes?\s*:", reasoning, re.I) and re.search(r"would change if\s*:", reasoning, re.I)
     words = len(reasoning.split())
-    ok = bool(fired) and (want_rule is None or fired == [str(want_rule)]) and bool(parts_ok) and words <= 150
+    seen = []
+    for n in re.findall(r"\brule\s+([1-5])\b", reasoning, re.I):
+        if int(n) not in seen:
+            seen.append(int(n))
+    walked = want_rule is None or seen[:want_rule] == list(range(1, want_rule + 1))
+    ok = bool(fired) and (want_rule is None or fired == [str(want_rule)]) and bool(parts_ok) and words <= 150 and walked
     problems = []
+    if not walked:
+        problems.append(f"walks rules {seen}; it must take rules 1 to {want_rule} in order")
     if not fired:
         problems.append('no "Rule N: fired"')
     elif want_rule and fired != [str(want_rule)]:

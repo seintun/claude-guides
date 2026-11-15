@@ -103,7 +103,7 @@ def score(case, folder):
             cost, turns, got_result = ev.get("total_cost_usd"), ev.get("num_turns"), True
     (folder / "card.txt").write_text(final, encoding="utf-8")
     exit_file = folder / "exit.txt"
-    code = exit_file.read_text().strip() if exit_file.exists() else "0"
+    code = exit_file.read_text().strip() if exit_file.exists() else "missing"  # no record is not proof of success
     writing_bash = [c for c in bash if WRITES.search(re.sub(r"\d?>\s*/dev/null|\d?>&\d", "", c))]
     lines = [l.strip().strip("`*_ ") for l in final.strip().splitlines() if l.strip().strip("`*_ ")]
     last = lines[-1] if lines else ""
@@ -134,7 +134,12 @@ def main():
     if not a.rescore:
         with cf.ThreadPoolExecutor(a.jobs) as pool:
             list(pool.map(lambda j: run_one(j[0], a.model, j[1]), jobs))
-    rows = [dict(score(c, f), run=f.name, model=a.model) for c, f in jobs if (f / "transcript.jsonl").exists()]
+    missing = [f.name for _, f in jobs if not (f / "transcript.jsonl").exists()]
+    if not jobs or missing:
+        print(f"RUN ERRORS: {len(missing)} of {len(jobs)} requested run(s) have no transcript: {missing[:6]}" if jobs
+              else "RUN ERRORS: no cases selected")
+        return 2
+    rows = [dict(score(c, f), run=f.name, model=a.model) for c, f in jobs]
     for r in rows:
         print(f"{'PASS' if r['pass'] else 'FAIL'} {r['run']:<24} route {r['route']} (want {r['expect']}) tools {r['tools']} "
               f"${(r['cost_usd'] or 0):.3f}" + ("" if r["pass"] else f"  {'; '.join(r['failed'])}"))

@@ -46,6 +46,7 @@ npx skills add seintun/claude-guides --skill orchestrate
 From a clone, link it so updates arrive with `git pull`:
 
 ```bash
+mkdir -p ~/.claude/skills
 ln -s "$(pwd)/skills/orchestrate" ~/.claude/skills/orchestrate
 ```
 
