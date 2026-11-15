@@ -82,6 +82,7 @@ def run_one(case, model, folder):
             code, err = "timeout", "timed out after 600 s"
     (folder / "stderr.txt").write_text(err, encoding="utf-8")
     (folder / "exit.txt").write_text(str(code), encoding="utf-8")
+    (folder / "model.txt").write_text(model, encoding="utf-8")
     return time.time() - start
 
 
@@ -139,7 +140,10 @@ def main():
         print(f"RUN ERRORS: {len(missing)} of {len(jobs)} requested run(s) have no transcript: {missing[:6]}" if jobs
               else "RUN ERRORS: no cases selected")
         return 2
-    rows = [dict(score(c, f), run=f.name, model=a.model) for c, f in jobs]
+    def model_of(folder):  # the model that produced the transcript, not the --model flag of a rescore
+        m = folder / "model.txt"
+        return m.read_text().strip() if m.exists() else (a.model if not a.rescore else "unknown")
+    rows = [dict(score(c, f), run=f.name, model=model_of(f)) for c, f in jobs]
     for r in rows:
         print(f"{'PASS' if r['pass'] else 'FAIL'} {r['run']:<24} route {r['route']} (want {r['expect']}) tools {r['tools']} "
               f"${(r['cost_usd'] or 0):.3f}" + ("" if r["pass"] else f"  {'; '.join(r['failed'])}"))

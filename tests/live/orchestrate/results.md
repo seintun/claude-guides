@@ -28,6 +28,14 @@ The PR #8 review then tightened the checker:
 
 Rescored on the same round 9 transcripts, the result is unchanged: 23 of 24, with the same single miss.
 
+A second review pass tightened it further:
+- k-9 needs a part named as a critic and one named as an adversary (by name or by agent), so a generic "Plan" or "Review" part no longer counts.
+- k-13 needs "Rule k: skipped, <reason>" for each rule before the one that fired.
+- k-11 runs on the card's own Answers when no `--facts` are given.
+- A rescore records the model each transcript was produced with.
+
+One round 9 card named its adversary "Diff reviewer", running the `adversarial-reviewer` agent, and was briefly failed by the narrower name rule. The rule now reads the agent too. With that fix, round 9 still scores 23 of 24.
+
 ## Round 5, the last round before Answers and Reasoning
 
 18 of 24 as first scored, and 24 of 24 after five checker fixes, rescored on the same transcripts. All 6 first-scored failures were the checker misreading a valid card:

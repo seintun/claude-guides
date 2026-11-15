@@ -199,7 +199,7 @@ class CardChecker(unittest.TestCase):
     def test_each_bad_card_fails_only_its_own_check(self):
         """Every broken fixture trips exactly the check it was built to trip, and no other."""
         cases = {
-            "bad-missing-field.txt": "k-1", "bad-route-name.txt": "k-2", "bad-runner-same.txt": ["k-12", "k-3"],
+            "bad-missing-field.txt": ["k-1", "k-11"], "bad-route-name.txt": "k-2", "bad-runner-same.txt": ["k-12", "k-3"],
             "bad-part-line.txt": "k-4", "bad-route1-two-writers.txt": "k-5", "bad-shared-scope.txt": "k-6",
             "bad-checks-count.txt": "k-7", "bad-budget.txt": "k-8",
             "bad-route2-two-writers.txt": "k-5", "bad-no-failure-cap.txt": "k-8",
@@ -385,6 +385,33 @@ class ReviewFindingsPR8(unittest.TestCase):
     def test_reasoning_must_walk_the_rules_before_the_one_that_fired(self):
         short = self.good.replace("Rule 1: skipped, E no. Rule 2: skipped, the handlers are written. ", "")
         self.assertIn("k-13", self.failed(short))
+
+    def test_generic_part_names_do_not_fill_review_roles(self):
+        """Second review: a "Plan" part is not a critic, and a "Review" part is not an adversarial reviewer."""
+        generic = self.hi.replace("- Critic | opus, high | reads | the plan", "- Plan | opus, high | reads | the plan").replace(
+            "- Adversarial review | opus, high | reads | the diff", "- Review | opus, high | reads | the diff")
+        self.assertIn("k-9", self.failed(generic))
+        # One role at a time, so neither check hides the other.
+        self.assertIn("k-9", self.failed(self.hi.replace("- Critic | opus, high | reads | the plan", "- Plan | opus, high | reads | the plan")))
+        self.assertIn("k-9", self.failed(self.hi.replace("- Adversarial review | opus, high | reads | the diff", "- Review | opus, high | reads | the diff")))
+        # A live card (round 9) named its adversary "Diff reviewer" and ran the adversarial-reviewer agent: valid.
+        live = self.hi.replace("- Adversarial review | opus, high | reads | the diff", "- Diff reviewer | adversarial-reviewer, opus, high | reads | the diff")
+        self.assertNotIn("k-9", self.failed(live))
+
+    def test_rule_numbers_without_clauses_do_not_pass(self):
+        """Second review: "Rule 1. Rule 2. Rule 3: fired" lists the rules but gives no reason for skipping them."""
+        bare = self.good.replace("Rule 1: skipped, E no. Rule 2: skipped, the handlers are written. ", "Rule 1. Rule 2. ")
+        self.assertIn("k-13", self.failed(bare))
+
+    def test_requirements_come_from_answers_without_facts(self):
+        """Second review: k-11 runs on the card's own Answers when no --facts are given."""
+        no_count = self.good.replace("two /batch runs", "one big run")
+        self.assertIn("k-11", self.failed(no_count))
+        self.assertNotIn("k-11", self.failed(self.good))
+
+    def test_rescore_records_the_transcripts_model(self):
+        run_py = (ROOT / "tests" / "live" / "orchestrate" / "run.py").read_text(encoding="utf-8")
+        self.assertIn('"model.txt"', run_py, "run.py must record each run's model and read it back on rescore")
 
     def test_live_runner_treats_missing_records_as_errors(self):
         run_py = (ROOT / "tests" / "live" / "orchestrate" / "run.py").read_text(encoding="utf-8")

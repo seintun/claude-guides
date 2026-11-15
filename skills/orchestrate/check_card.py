@@ -19,13 +19,14 @@ Prints one PASS or FAIL line per check and exits 1 on any FAIL.
   k-8  Budget has a figure above zero with a unit (up to two words between, as in "12 builder sessions"),
        and Stop when caps failures ("2 failures")
   k-9  high risk (F yes in Answers, --risk high or high_risk in --facts): reading parts on Opus at high effort
-       or above for both a plan critic and an adversarial reviewer of the diff, and "human" in Order
+       or above named as a critic and as an adversarial reviewer, and "human" in Order
   k-10 with --expect: the route is the expected one (or one listed in --accept)
-  k-11 with --facts: the card carries what route.py says the route requires (/batch runs, builder cap,
-       helper count, human sign-off)
+  k-11 the card carries what route.py says the route requires (/batch runs, builder cap, helper count, human
+       sign-off), from --facts or, without them, from the card's own Answers
   k-12 Answers covers A to F, order, read-only, gate, comparison and items, and route.py, given those answers, picks the
        card's route and runner-up: the route follows from the card's own answers
-  k-13 Reasoning walks rules 1 to N in order and says "Rule N: fired" for exactly the rule route.py computes from
+  k-13 Reasoning walks rules 1 to N in order, each earlier one as "Rule k: skipped, <reason>", and says
+       "Rule N: fired" for exactly the rule route.py computes from
        the Answers, has "Cheaper routes:" and "Would change if:", and stays under 150 words
 
 Outcome lines (--outcome), one per finished route, in the form SKILL.md step 7 gives:
@@ -145,7 +146,7 @@ def parts(card):
             effort = effort or "n/a"
         w = writes(cells[2])
         reads = "read" in cells[2].lower() or (not w and "writ" in cells[2].lower())  # "writes nothing" is a reader
-        out.append({"line": line, "ok": bool(model and effort and (w or reads)), "name": cells[0].lower(),
+        out.append({"line": line, "ok": bool(model and effort and (w or reads)), "name": cells[0].lower(), "agent": model_effort,
                     "model": model, "effort": effort, "writes": w, "scope": cells[3].lower()})
     return out
 
@@ -268,8 +269,9 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
 
     if high:
         strong = [p for p in ps if p.get("model") == "opus" and p.get("effort") in STRONG and not p.get("writes")]
-        critic = [p for p in strong if re.search(r"critic|plan", p.get("name", ""))]
-        adversary = [p for p in strong if re.search(r"adversar|diff|review", p.get("name", "")) and p not in critic]
+        critic = [p for p in strong if re.search(r"\bcritic", p.get("name", ""))]
+        adversary = [p for p in strong if p not in critic and (re.search(r"\badversar|\bdiff\s+review", p.get("name", ""))
+                                                               or re.search(r"\badversar", p.get("agent", "")))]
         signoff = re.search(r"human", " ".join(card.get("Order", [])), re.I)
         missing_roles = ([] if critic else ["a plan critic"]) + ([] if adversary else ["an adversarial reviewer of the diff"]) + \
                         ([] if signoff else ['"human sign-off" in Order'])
@@ -280,8 +282,9 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
         ok = r == expect or r in accept
         res.append(("k-10", ok, f"route {r}, expected {expect}" + (f" (accepts {list(accept)})" if accept else "")))
 
-    if facts is not None:
-        want = load_route().route(facts)
+    req_facts = facts if facts is not None else (answers if not gaps else None)
+    if req_facts is not None:
+        want = load_route().route(req_facts)
         whole = " ".join(sum((v for k, v in card.items() if k != "_order"), []))
         missing_req = []
         if r == want["route"]:
@@ -322,11 +325,13 @@ def check(text, expect=None, accept=(), risk=None, facts=None):
     for n in re.findall(r"\brule\s+([1-5])\b", reasoning, re.I):
         if int(n) not in seen:
             seen.append(int(n))
-    walked = want_rule is None or seen[:want_rule] == list(range(1, want_rule + 1))
+    skipped_ok = want_rule is None or all(
+        re.search(rf"\brule\s+{k}\s*[:,-]?\s*skipped\b[\s,:;(-]*\w+", reasoning, re.I) for k in range(1, want_rule))
+    walked = want_rule is None or (seen[:want_rule] == list(range(1, want_rule + 1)) and skipped_ok)
     ok = bool(fired) and (want_rule is None or fired == [str(want_rule)]) and bool(parts_ok) and words <= 150 and walked
     problems = []
     if not walked:
-        problems.append(f"walks rules {seen}; it must take rules 1 to {want_rule} in order")
+        problems.append(f"walks rules {seen}; it must take rules 1 to {want_rule} in order, each earlier one as \"Rule k: skipped, <reason>\"")
     if not fired:
         problems.append('no "Rule N: fired"')
     elif want_rule and fired != [str(want_rule)]:

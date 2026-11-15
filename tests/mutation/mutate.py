@@ -89,6 +89,8 @@ MUTATIONS = [
     ("check_card.py accepts an outcome line with no reason", "skills/orchestrate/check_card.py", sub_once(r"route again: \(yes\|no\), because \(\.\{4,\}\)\$", "route again: (yes|no)(.*)$")),
     ("/orchestrate's router reports the wrong rule for route 3", "skills/orchestrate/route.py", sub_once(r"rule = 3\n", "rule = 4\n")),
     ("check_card.py accepts reasoning that skips the earlier rules", "skills/orchestrate/check_card.py", sub_once(r"and words <= 150 and walked", "and words <= 150")),
+    ("check_card.py accepts rule numbers with no skipped clause", "skills/orchestrate/check_card.py", sub_once(r"and skipped_ok\)", ")")),
+    ("check_card.py accepts a generic Plan part as the critic", "skills/orchestrate/check_card.py", sub_once(r're\.search\(r"\\bcritic", p\.get\("name", ""\)\)', 're.search(r"critic|plan", p.get("name", ""))')),
     ("check_card.py accepts high risk without an adversarial reviewer", "skills/orchestrate/check_card.py", sub_once(r'\(\[\] if adversary else \["an adversarial reviewer of the diff"\]\)', "[]")),
     ("check_card.py lets any part with critic in it pass high risk", "skills/orchestrate/check_card.py", sub_once(r'and not p\.get\("writes"\)\]', "]")),
     ("/orchestrate's workflow threshold drifts from SKILL.md", "skills/orchestrate/route.py", sub_once(r"WORKFLOW_MIN_ITEMS = 20", "WORKFLOW_MIN_ITEMS = 10")),
