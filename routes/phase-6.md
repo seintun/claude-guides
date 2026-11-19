@@ -9,6 +9,15 @@ Sections and templates this route names, in order: 9, law-2, F, G, M. Runbook, i
 
 **Page terms.** Verification stack (the page's "Make Claude prove its own work", Lesson 9, "Self-checks").
 
+**Check order, cheapest and most deterministic first.** [D, built on the P sources named; checked 2026-11-18]
+1. Deterministic checks: types, lint, tests, build.
+2. A Stop hook that reruns them. It is overridden after 8 consecutive blocks (§9.5).
+3. Runtime verification: run the app and look at the result. Tan: runtime verification is "giving your agent a way to run the code for itself" and use the debugging tools human developers use, such as the Chrome DevTools protocol (talk, 10:02); she adds a feature map of user-facing features and CLIs inside skills (9:48 to 10:45). [P: transcript; her results are self-reported] OpenAI's team puts the Chrome DevTools Protocol in the agent's runtime. [P, vendor]
+4. `/goal` with a turn bound in the condition. Its evaluator "doesn't run commands or read files", so the condition must name output the session shows. [P: goal docs]
+5. A fresh reviewer (§7, reviewer rule).
+
+Keep the done check where the agent can't edit it (§9.3). Review the verification artifacts (screenshots, videos, diagrams, command output), not only the diff. Karpathy: "we as humans are doing the verification". [P: talk transcript, 22:16] Formal methods (TLA+, Lean) are optional: Tan uses them and calls them "not a silver bullet". [P: 10:50]
+
 ### 9.1 From criterion to gate
 
 ```text
@@ -45,6 +54,8 @@ criterion  →  scenario            →  automated check   →  gate            
 - An LLM judge needs a rubric. The research system scored factual accuracy, citation accuracy, completeness, source quality and tool efficiency from 0.0 to 1.0 with a pass/fail. [P] The Agent SDK guidance calls an LLM judge not very robust and slower, though sometimes worth the cost. [P] Our advice: never make it the only gate. [D] A judge favours its own outputs [R: NeurIPS 2024], and open-weight judges disagreed with themselves across runs. [R: Findings of EMNLP 2025] When an LLM judge scores work, use a different model family or an execution check, and repeat and aggregate. This is about scoring: a fresh reviewer from the same family (Law 7, §9.2) still beats self-review but can share the bias. [D]
 - A loop's tests can pass while the spec is still violated; one practitioner's Ralph run passed 28 tests and then failed a fresh review on a real spec breach. Keep a fresh-eyes review even when tests are green. [S]
 - Watch your own drift. Simon Willison wrote in May 2026 that he no longer reviews every line of agent output, even for production work, and named the risk himself: normalization of deviance. Decide on purpose which tiers get line-by-line human review. [P]
+- Instructions don't stop reward hacking. METR found 30.4% of RE-Bench runs (39 of 128) hacked the task and 0.7% of HCAST runs, and that telling the model not to cheat had a "nearly negligible effect". [R: METR report, 2025-06-05] Back the rule with a check. [D]
+- Ground self-correction in an external signal. Self-correction without one lowered reasoning accuracy [R: ICLR 2024], and Reflexion's coding gain (91% against 80% pass@1 on HumanEval) rests on test results. [R: NeurIPS 2023, per search]
 - For unattended runs, measure **pass^k** (all k runs succeed), not just pass@k (at least one succeeds). At 75% per-run success, three runs in a row all succeed only about 42% of the time. [P: Demystifying evals]
 
 ### 9.4 Receipt format
@@ -57,6 +68,8 @@ criterion 3: NOT RUN  needs Excel; checked CSV opens in Numbers instead
 not done:   header row bug; Excel check
 next step:  fix header writer, rerun criterion 2
 ```
+
+**Write the report in plain English.** Ask the agent to report in short, active sentences with one meaning per word, close to ASD-STE100, the controlled-English standard for aircraft maintenance documents (Issue 9, January 2025, made it an international standard). [P: ASD-STE100 news page] Karpathy (2 Oct 2026) suggests asking a model for an explanation in that style, then for diagrams or an HTML page; for a large change, add a diagram or an HTML page as the review artifact. [P, opinion: X post] Older studies found Simplified English improved comprehension of a complex procedure, most for non-native speakers. [R: 1995 and 1996, human readers; none tested LLM output] This is one person's practice, not a measured result, and his video tip is not a default. [D]
 
 ### 9.5 Hooks that enforce it (Claude Code)
 
@@ -75,10 +88,10 @@ See templates F and G in §16.
 <!-- id: law-2 -->
 ### Law 2. Verification multiplies quality
 - **Build it:** no task without a check the agent can run itself; no "done" without that check's output. Keep one acceptance check outside its reach, where it can't read or edit it (§9.3). [D]
-- Recaps of Boris Cherny's January 2026 setup thread call verification his top tip and report that a working feedback loop improves output quality two to three times. [S]
+- Boris Cherny, 2 Jan 2026: "give Claude a way to verify its work", which he estimates at 2-3x the quality. That is his own estimate, not a measurement. [P: X thread, post 13/]
 - The Claude Agent SDK frames the agent loop as gather context, take action, verify work, repeat. [P]
 - Anthropic's long-running harness found agents declare the whole project finished too early unless a feature list and end-to-end tests hold them to account. [P]
-- Karpathy's "Software 3.0" talk stresses fast generate-and-verify cycles with a human auditing. [S: talk summary]
+- Karpathy's "Software Is Changing (Again)" talk, 18 Jun 2025: "we as humans are doing the verification"; he recommends small incremental chunks and concrete prompts. [P: talk transcript, auto-captions, 22:16, 23:55 and 24:32]
 - Claude Code's best-practices page puts this first: give Claude a pass/fail check (tests, a build, a screenshot) so it can iterate without you. [P]
 
 <!-- id: F -->

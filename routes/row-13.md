@@ -22,7 +22,7 @@ These came out of the independent review. Most are design advice [D]; facts carr
 - **Monorepos, multiple repos and teams.** Nested CLAUDE.md per package; gates that run only affected tests; one plan file per task (`docs/plans/<task>.md`) so parallel work doesn't collide; a named owner who reviews changes to hooks, agents and skills; cross-repo order written into the plan. [D]
 - **Discovery artifacts.** Store them as `docs/discovery/<id>.md`, `docs/specs/<id>.md` and `docs/adr/<n>.md`, each linked from its issue. Mark replaced documents "superseded by …". Give the outcome readout an owner and a date. Move grill questions still open at the question cap into the spec's Open Questions. Park unbet pitches in a dated list you're free to delete; don't let it become a backlog. [D]
 
-**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions.
+**Still unconfirmed after the fact-check:** Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions. Unconfirmed in 0.7: the `-p` default for a logged-in, telemetry-on user; the Mods status; `--max-turns` semantics (the headless page does not document them); the $9 against $200 and 20 minutes against 6 hours figures in Anthropic's harness-design post; and every figure Tan reports about her own team, which is self-reported.
 
 ---
 
@@ -76,6 +76,8 @@ artifacts: paths written
 - Reviewers get the artifact and the criteria only.
 - A helper's report is a claim, not proof. The lead re-checks any claim that drives a decision.
 - Never forward raw transcripts between agents; forward summaries and file paths.
+- **Reviewer rule.** A reviewer is read-only (for example `tools: Read, Grep, Glob`), starts in a clean context, is anchored to the spec, and runs once per artifact version (§9.2). Tell it to skip style: a reviewer asked to find problems "will always find something". [P: best practices, checked 2026-11-18] When every reviewer is an agent, add one independent final check: a gate that reruns the checks, or a human. Agent-to-agent review loops are one team's report (§11.5). [D]
+- Briefs carry the objective, the output format, the tools and the boundaries; helpers return summaries or file references, not transcripts. [P: Anthropic research system]
 
 ---
 

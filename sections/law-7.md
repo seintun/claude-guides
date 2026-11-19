@@ -2,7 +2,8 @@
 ### Law 7. Separate the maker from the checker
 - **Build it:** reviewers get the artifact and the criteria, never the author's reasoning. Anonymize sources when comparing candidates. [D]
 - Claude Code's best practices describe a writer/reviewer split across separate sessions. [P]
-- Team tips report having a second Claude review a plan the way a staff engineer would. [S]
+- Boris Cherny's team tips, 31 Jan 2026: one Claude writes the plan and a second reviews it "as a staff engineer". [P: X thread, tip 2, read from X search results; quoted wording checked 2026-11-18]
 - Karpathy's llm-council: several models answer independently, review each other's answers anonymously, then a chair model synthesizes. [P: repo]
-- Reports of Karpathy's notes list sycophancy and failure to push back among current model weaknesses. [S]
+- Karpathy, 26 Jan 2026: models run along with wrong assumptions, don't push back and are "a little too sycophantic". [P: X post]
+- A reviewer asked to find problems "will always find something", so tell it to skip style and run it once per artifact version (§7, §9.2). [P: best practices, checked 2026-11-18]
 - Claude Code's best practices recommend an adversarial review subagent in a fresh context, acting only on its correctness findings. [P]

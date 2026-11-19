@@ -27,7 +27,7 @@ Where each stage comes from:
 <!-- id: law-3 -->
 ### Law 3. Specify outcomes, not steps
 - **Build it:** every task carries a "done when" list a command or a person can check. [D]
-- Reports of Karpathy's January 2026 notes on coding with Claude Code: the leverage comes from giving the agent success criteria and letting it loop, rather than step-by-step instructions. [S]
+- Karpathy, 26 Jan 2026: don't tell the agent what to do; "give it success criteria and watch it go". He also lists tests first, a browser MCP and declarative over imperative. [P: X post]
 - Anthropic: write prompts at the "right altitude", neither brittle if-else rules nor vague guidance; start minimal and add instructions for failures you actually observe. [P: context engineering]
 
 <!-- id: L -->

@@ -23,20 +23,26 @@ Sections and templates this route names, in order: cs:3, 14, 4, 8, 11.3, B. Runb
 
 | Behaviour | Evidence | Countermeasure |
 |---|---|---|
-| Acts on wrong assumptions without checking | [S] Karpathy notes | A discovery interview up front; "state your assumptions" in the plan; plan approval |
+| Acts on wrong assumptions without checking | [P] Karpathy, 26 Jan 2026 | A discovery interview up front; "state your assumptions" in the plan; plan approval |
 | Doesn't ask when confused | [S] | An explicit stop-and-ask list; a confidence field in receipts |
 | Hides trade-offs and inconsistencies | [S] | Plans must list options and trade-offs; a critic pass |
-| Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
-| Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
+| Sycophancy, no pushback | [P] Karpathy, 26 Jan 2026 | Independent reviewers without the author's reasoning; anonymized councils |
+| Overbuilds, bloats, leaves dead code, and makes edits orthogonal to the task | [P] Karpathy, 26 Jan 2026 (it persisted despite CLAUDE.md instructions) | A diff-size budget; a lint rule or test, not another prose line (Law 8); a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
 | Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |
 | Forgets between sessions | [P] Karpathy (no continual learning) | CLAUDE.md, memory, progress files |
-| Context rot | [P] Anthropic | Subagents, compaction, notes on disk |
+| Context rot | [P] Anthropic; [R] Lost in the Middle (TACL 2024); vendor report: Chroma | Fresh sessions, state in files, compaction, subagents for noisy reading (§8) |
 | Weak on genuinely novel code (Karpathy's October 2025 view, softened by December) | [P] Dwarkesh; [S] later reports | More human design, smaller steps, closer collaboration |
 | Upfront specs miss edge cases | [P] Matt Pocock | A QA loop whose findings become new issues |
+| Copies anti-patterns and old workarounds, because they look like the established pattern | [P] Tan, Nov 2026 (self-reported) | Keep the codebase clean; ban the pattern with a lint rule |
+| Writes Markdown justifications for not doing the right thing | [P] Tan, Nov 2026 (6:56, 8:20; self-reported) | Limit comments by lint; make the lint error say to fix the root cause |
+| Games the check, and instructions don't stop it | [R] METR report, 2025-06-05 (30.4% of RE-Bench runs) | Put the check out of its reach (§9.3) |
+| Code erodes over a long run | [R, preprint] SlopCodeBench v2 (erosion in 77% of trajectories; no agent solved a problem end to end) | Scheduled cleanup PRs; a lint rule that stops new instances |
+| Flat multi-agent coordination collapses | [P, vendor] Cursor, Jan 2026 | Planner and worker with written handoffs (§6) |
+| Multi-agent runs fail in system design, misalignment between agents or missing verification | [R, NeurIPS 2025 poster] MAST | A verifier step; clearer role specs (§19.1 item 3) |
 
 ---
 
@@ -90,7 +96,17 @@ while not done:
 
 **Large tool sets.** Expose MCP servers as code the agent imports on demand rather than loading every definition up front. [P]
 
-**Build for agents.** Karpathy argues docs should be machine-readable (Markdown, `llms.txt`), since agents are now a primary reader. [S: talk summary]
+**Build for agents.** Karpathy argues docs should be machine-readable: a Markdown file for agents (the auto-captions spell it "lm.txt"; read it as an llms.txt-style file) and Markdown docs, since agents are now a primary reader. [P: talk transcript, 34:18 and 35:01]
+
+**Keep context small through structure, not vigilance.** [D, built on the P and R sources named in each line]
+- State lives in files and git (the spec, the plan, a progress file, commits as checkpoints), so a session can end at any point.
+- The entry file is a map of about 100 lines into a docs tree. OpenAI's team found that one big AGENTS.md "failed in predictable ways", and moved to a roughly 100-line map. The line count is theirs, not a measured threshold. [P, vendor: Lopopolo, 2026-02-11]
+- Give each unit of work a fresh session or worktree. Use `/clear` between unrelated tasks and after repeated failed corrections. [P: best practices]
+- Isolation, strongest first: workflow script variables (the parent sees only the final answer), then a fresh background subagent (a summary returns), then a fork (it inherits the parent's context, so it isolates only new work), then working in-session. The ranking is our reading of the sub-agents and workflows pages. [D]
+- On a long run, lower `autoCompactWindow` (as of v2.1.296, 100K minimum). The default auto-compaction point is about 967K tokens, and the right lower value is a judgment call, not documented advice. [P for the setting; D for the value]
+- Know what compaction keeps (§3A, Memory row), and keep anything the run needs afterwards in the repo.
+- Retired as the headline: "Use subagents to protect your context window" is now in the docs' old-advice table. [P: best practices, 2026-11-18] Boris Cherny's tip 8 of 31 Jan 2026 still offloads tasks "to keep your main agent's context window clean". [P, dated; read from X search results; quoted wording checked 2026-11-18] Keep subagents for parallel, noisy or independent-review work.
+- Why not rely on a big window: Chroma evaluated 18 LLMs and found "significantly higher performance on focused prompts": about 300 tokens beat the full LongMemEval input of about 113,000. [vendor report: Chroma, Context Rot] Accuracy is highest when the relevant text sits at the start or end of the input. [R: Lost in the Middle, TACL 2024] Neither study is about coding agents.
 
 ---
 

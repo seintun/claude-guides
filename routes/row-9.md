@@ -32,15 +32,18 @@ Sections and templates this route names, in order: 9.2, 9.3, law-7, 12.3, C, M. 
 - An LLM judge needs a rubric. The research system scored factual accuracy, citation accuracy, completeness, source quality and tool efficiency from 0.0 to 1.0 with a pass/fail. [P] The Agent SDK guidance calls an LLM judge not very robust and slower, though sometimes worth the cost. [P] Our advice: never make it the only gate. [D] A judge favours its own outputs [R: NeurIPS 2024], and open-weight judges disagreed with themselves across runs. [R: Findings of EMNLP 2025] When an LLM judge scores work, use a different model family or an execution check, and repeat and aggregate. This is about scoring: a fresh reviewer from the same family (Law 7, §9.2) still beats self-review but can share the bias. [D]
 - A loop's tests can pass while the spec is still violated; one practitioner's Ralph run passed 28 tests and then failed a fresh review on a real spec breach. Keep a fresh-eyes review even when tests are green. [S]
 - Watch your own drift. Simon Willison wrote in May 2026 that he no longer reviews every line of agent output, even for production work, and named the risk himself: normalization of deviance. Decide on purpose which tiers get line-by-line human review. [P]
+- Instructions don't stop reward hacking. METR found 30.4% of RE-Bench runs (39 of 128) hacked the task and 0.7% of HCAST runs, and that telling the model not to cheat had a "nearly negligible effect". [R: METR report, 2025-06-05] Back the rule with a check. [D]
+- Ground self-correction in an external signal. Self-correction without one lowered reasoning accuracy [R: ICLR 2024], and Reflexion's coding gain (91% against 80% pass@1 on HumanEval) rests on test results. [R: NeurIPS 2023, per search]
 - For unattended runs, measure **pass^k** (all k runs succeed), not just pass@k (at least one succeeds). At 75% per-run success, three runs in a row all succeed only about 42% of the time. [P: Demystifying evals]
 
 <!-- id: law-7 -->
 ### Law 7. Separate the maker from the checker
 - **Build it:** reviewers get the artifact and the criteria, never the author's reasoning. Anonymize sources when comparing candidates. [D]
 - Claude Code's best practices describe a writer/reviewer split across separate sessions. [P]
-- Team tips report having a second Claude review a plan the way a staff engineer would. [S]
+- Boris Cherny's team tips, 31 Jan 2026: one Claude writes the plan and a second reviews it "as a staff engineer". [P: X thread, tip 2, read from X search results; quoted wording checked 2026-11-18]
 - Karpathy's llm-council: several models answer independently, review each other's answers anonymously, then a chair model synthesizes. [P: repo]
-- Reports of Karpathy's notes list sycophancy and failure to push back among current model weaknesses. [S]
+- Karpathy, 26 Jan 2026: models run along with wrong assumptions, don't push back and are "a little too sycophantic". [P: X post]
+- A reviewer asked to find problems "will always find something", so tell it to skip style and run it once per artifact version (§7, §9.2). [P: best practices, checked 2026-11-18]
 - Claude Code's best practices recommend an adversarial review subagent in a fresh context, acting only on its correctness findings. [P]
 
 <!-- id: 12.3 -->

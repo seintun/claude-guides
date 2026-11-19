@@ -1,12 +1,13 @@
 # research
 
-Primary-source fact-checks. The wider research behind the page and the playbook lives in playbook §19 (evidence) and §20 (sources), and in the page's Sources lesson.
+Primary-source fact-checks. The "As of" column is the date each file was checked; a later playbook version may supersede its advice. The wider research behind the page and the playbook lives in playbook §19 (evidence) and §20 (sources), and in the page's Sources lesson.
 
-| File | What it is |
-|---|---|
-| [bounded-review-evidence.md](bounded-review-evidence.md) | The research behind bounded review (playbook §9.2): 27 findings on repeated LLM critique, multi-round code review, reviewer bias, human review and gates, and risk-based security, each checked against its primary source, with scope notes and a map from each part of the rule to its evidence |
-| [prompt-skill-sources.md](prompt-skill-sources.md) | What Anthropic's guidance (G1 to G29) and published research (R1 to R9) say about writing prompts and briefing agents, each checked against its source. The /prompt scorers grade against it |
-| [prompt-skill-review.md](prompt-skill-review.md) | /prompt v7 scored against the playbook, those sources and the research, with the findings v8 acts on |
-| [thin-scenarios.md](thin-scenarios.md) | Research for the seven thin router scenarios in ENTRY.md: bug fix, refactor, migration, guard hooks, cost blowup, several repos, several writers. For each: what the playbook says now, primary sources, a proposed recipe with graded steps, and where it would go. Not yet in the playbook; its Claude Code claims need a doc check first |
-| [google-scaling-check.md](google-scaling-check.md) | `doc-checker`'s check of Google Research's agent-scaling study (arXiv 2512.08296). It covers the versions, the claims on the page, and results for all four benchmarks |
-| [mega-workshop-evidence.md](mega-workshop-evidence.md) | Which advice from a workshop on running coding agents, plus a "search GitHub before you build" rule, holds up: a verdict per claim with its sources, a map of what went into playbook §5.4, §8, §9.3, §13, §18 and §19, and the gaps no source covers |
+| File | As of | What it is |
+|---|---|---|
+| [bounded-review-evidence.md](bounded-review-evidence.md) | 2026-10-24 | The research behind bounded review (playbook §9.2): 27 findings on repeated LLM critique, multi-round code review, reviewer bias, human review and gates, and risk-based security, each checked against its primary source, with scope notes and a map from each part of the rule to its evidence |
+| [prompt-skill-sources.md](prompt-skill-sources.md) | 2026-10-25 | What Anthropic's guidance (G1 to G29) and published research (R1 to R9) say about writing prompts and briefing agents, each checked against its source. The /prompt scorers grade against it |
+| [prompt-skill-review.md](prompt-skill-review.md) | 2026-10-25 | /prompt v7 scored against the playbook, those sources and the research, with the findings v8 acts on |
+| [thin-scenarios.md](thin-scenarios.md) | 2026-10-24 | Research for the seven thin router scenarios in ENTRY.md: bug fix, refactor, migration, guard hooks, cost blowup, several repos, several writers. For each: what the playbook says now, primary sources, a proposed recipe with graded steps, and where it would go. Not yet in the playbook; its Claude Code claims need a doc check first |
+| [google-scaling-check.md](google-scaling-check.md) | 2026-10-24 | `doc-checker`'s check of Google Research's agent-scaling study (arXiv 2512.08296). It covers the versions, the claims on the page, and results for all four benchmarks |
+| [mega-workshop-evidence.md](mega-workshop-evidence.md) | 2026-10-27 | Which advice from a workshop on running coding agents, plus a "search GitHub before you build" rule, holds up: a verdict per claim with its sources, a map of what went into playbook §5.4, §8, §9.3, §13, §18 and §19, and the gaps no source covers |
+| [agentic-practices-2026-11.md](agentic-practices-2026-11.md) | 2026-11-18 | The record behind playbook 0.7: an expert roster with each source's evidence type and venue, a verification ledger of the Claude Code docs, changelog, papers and vendor posts checked against their primary pages, per-post URL indexes for Boris Cherny's two X threads, Karpathy's posts and the Lauren Tan and Karpathy talk transcripts (with timestamps), a discrepancy table with resolutions, claims kept at [S] or dropped, and a map from each finding to its playbook section |

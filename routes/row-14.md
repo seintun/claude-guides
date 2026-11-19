@@ -31,7 +31,17 @@ Sections and templates this route names, in order: 8, law-5, 17, 18, A. Runbook,
 
 **Large tool sets.** Expose MCP servers as code the agent imports on demand rather than loading every definition up front. [P]
 
-**Build for agents.** Karpathy argues docs should be machine-readable (Markdown, `llms.txt`), since agents are now a primary reader. [S: talk summary]
+**Build for agents.** Karpathy argues docs should be machine-readable: a Markdown file for agents (the auto-captions spell it "lm.txt"; read it as an llms.txt-style file) and Markdown docs, since agents are now a primary reader. [P: talk transcript, 34:18 and 35:01]
+
+**Keep context small through structure, not vigilance.** [D, built on the P and R sources named in each line]
+- State lives in files and git (the spec, the plan, a progress file, commits as checkpoints), so a session can end at any point.
+- The entry file is a map of about 100 lines into a docs tree. OpenAI's team found that one big AGENTS.md "failed in predictable ways", and moved to a roughly 100-line map. The line count is theirs, not a measured threshold. [P, vendor: Lopopolo, 2026-02-11]
+- Give each unit of work a fresh session or worktree. Use `/clear` between unrelated tasks and after repeated failed corrections. [P: best practices]
+- Isolation, strongest first: workflow script variables (the parent sees only the final answer), then a fresh background subagent (a summary returns), then a fork (it inherits the parent's context, so it isolates only new work), then working in-session. The ranking is our reading of the sub-agents and workflows pages. [D]
+- On a long run, lower `autoCompactWindow` (as of v2.1.296, 100K minimum). The default auto-compaction point is about 967K tokens, and the right lower value is a judgment call, not documented advice. [P for the setting; D for the value]
+- Know what compaction keeps (§3A, Memory row), and keep anything the run needs afterwards in the repo.
+- Retired as the headline: "Use subagents to protect your context window" is now in the docs' old-advice table. [P: best practices, 2026-11-18] Boris Cherny's tip 8 of 31 Jan 2026 still offloads tasks "to keep your main agent's context window clean". [P, dated; read from X search results; quoted wording checked 2026-11-18] Keep subagents for parallel, noisy or independent-review work.
+- Why not rely on a big window: Chroma evaluated 18 LLMs and found "significantly higher performance on focused prompts": about 300 tokens beat the full LongMemEval input of about 113,000. [vendor report: Chroma, Context Rot] Accuracy is highest when the relevant text sits at the start or end of the input. [R: Lost in the Middle, TACL 2024] Neither study is about coding agents.
 
 ---
 
@@ -92,7 +102,7 @@ These came out of the independent review. Most are design advice [D]; facts carr
 - **Monorepos, multiple repos and teams.** Nested CLAUDE.md per package; gates that run only affected tests; one plan file per task (`docs/plans/<task>.md`) so parallel work doesn't collide; a named owner who reviews changes to hooks, agents and skills; cross-repo order written into the plan. [D]
 - **Discovery artifacts.** Store them as `docs/discovery/<id>.md`, `docs/specs/<id>.md` and `docs/adr/<n>.md`, each linked from its issue. Mark replaced documents "superseded by …". Give the outcome readout an owner and a date. Move grill questions still open at the question cap into the spec's Open Questions. Park unbet pitches in a dated list you're free to delete; don't let it become a backlog. [D]
 
-**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions.
+**Still unconfirmed after the fact-check:** Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions. Unconfirmed in 0.7: the `-p` default for a logged-in, telemetry-on user; the Mods status; `--max-turns` semantics (the headless page does not document them); the $9 against $200 and 20 minutes against 6 hours figures in Anthropic's harness-design post; and every figure Tan reports about her own team, which is self-reported.
 
 ---
 

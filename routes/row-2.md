@@ -75,6 +75,16 @@ The "cost and risk" column is our advice [D]; the source column names where each
 
 Two versions of "Ralph" exist. Huntley's original restarts a fresh process each pass. Anthropic's ralph-wiggum plugin re-feeds the prompt inside one session through a Stop hook. Dex Horthy (HumanLayer) has argued the plugin misses the key point of Ralph, a fresh context each pass. [S] One user's plugin loop set to `max_iterations: 0` ran 6,239 iterations over about 11.7 hours. Always set an iteration cap. [P: GitHub issue #1699]
 
+**One writer by default.** [D, built on the P and R sources below] One agent writes; helpers read, search or review. Parallel writers fit only when all of these hold: each writer works in an isolated checkout; the work splits into independent failing tests; a strong verifier grades the result; and a lock or claim mechanism stops two writers taking the same task. Carlini's 16 agents in separate containers claimed tasks by writing lock files, ran about 2,000 sessions and cost under $20,000, and the post gives no single-agent baseline. [P, vendor: Anthropic, 2026-02-05] The evidence for the default:
+- Anthropic's research-system post says most coding tasks have fewer parallelizable parts than research, and that work needing shared context is a poor fit. [P: 2025-06-13]
+- Cognition (2026-04-22): "writes stay single-threaded"; helpers read and review. [P, vendor]
+- Google Research and MIT, paper version 3 (8 Apr 2026): returns turn negative once the single-agent baseline exceeds 45% (a fitted estimate, not a cutoff), and independent agents amplified errors 17.2x against 4.4x with central coordination (CI 14.3 to 20.1), both relative to one agent. [R: preprint, arXiv 2512.08296]
+- MAST, a failure taxonomy built from 1,600+ multi-agent traces. [R: NeurIPS 2025 poster, arXiv 2503.13657]
+
+**Planner and worker, with written handoffs, is the scaled pattern.** Cursor reports that flat coordination through a shared lock file collapsed (January 2026), and that it moved to a planner-and-worker hierarchy (February 2026): each worker returns a handoff (what was done, deviations, concerns), the planner's scratchpad is rewritten rather than appended, and the judge and integrator roles were dropped. [P, vendor: Cursor, one setting, no replication]
+
+**Route by model, and measure cost per task.** In Cursor's July 2026 post a hybrid run built on Opus 4.8 cost $1,339 for one task, against $10,565 for GPT-5.5 alone. [P, vendor: one task; model names are that post's era] Measure cost per task on your own work before you standardize a routing. [D]
+
 ```mermaid
 flowchart TD
   A[New task] --> B{"One call with good context enough?"}
