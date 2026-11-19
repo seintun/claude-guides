@@ -87,4 +87,5 @@ repeating a bad habit.
 - [§19.1 Findings that hold up](../playbook/agent-harness-playbook.md#191-findings-that-hold-up): finding 9, evals start from error analysis.
 - [Law 1. Keep the harness thin; let the model do the work](../playbook/agent-harness-playbook.md#law-1-keep-the-harness-thin-let-the-model-do-the-work)
 - Page lessons: page Lesson 13 (Growing), page Lesson 14 (Prompt library), page Lesson 15 (When it goes wrong), page Lesson 16 (Checklist).
+- This repository's own learning loop: [news/README.md](../news/README.md). A weekly scan reads a fixed watchlist and writes a digest, a monthly run folds the checked items into a new guide version, and a person reviews and merges every branch (D).
 - Related runbooks: [build-a-harness](build-a-harness.md), [verify](verify.md).

@@ -57,6 +57,13 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 - [skills/orchestrate/route.py](skills/orchestrate/route.py): the /orchestrate routing rules as code; prints the route, runner-up and requirements for a set of task facts
 - [skills/orchestrate/check_card.py](skills/orchestrate/check_card.py): deterministic check of a routing card (fields, route name, one writer, scopes, check count, budget, high-risk review, expected route)
 - [skills/orchestrate/EXAMPLE.md](skills/orchestrate/EXAMPLE.md): worked example, four requests on one codebase and why each gets its route
+- [skills/refresh/README.md](skills/refresh/README.md): `/refresh`: modes, design choices, install, tests
+- [skills/refresh/SKILL.md](skills/refresh/SKILL.md): `/refresh scan` writes a weekly news digest on a local branch; `/refresh deep` folds the month's verified items into a new guide version; neither pushes, merges or publishes
+- [news/README.md](news/README.md): the versioned news routine: folder layout, the digest format `/guide` reads, how to review and merge, the two desktop scheduled-task prompts to create, and the known limits
+- [news/sources.md](news/sources.md): the watchlist: each source's id, URL and how to read it (X and YouTube in a browser only)
+- [news/state.json](news/state.json): the cursor: last Claude Code changelog version seen and last-read date per source
+- [news/2026-W47.md](news/2026-W47.md): the first digest, a worked example of the format
+- [news/2026-11.md](news/2026-11.md): the first monthly roll-up
 - [tests/live/orchestrate/run.py](tests/live/orchestrate/run.py): live eval of /orchestrate on 12 labelled cases, scored by code
 - [skills/prompt/README.md](skills/prompt/README.md): `/prompt`: install, how it was tested, results
 - [skills/prompt/SKILL.md](skills/prompt/SKILL.md): `/prompt` turns a description into a ready-to-run agent prompt (Templates B, C, H) saved in the guide's git-ignored prompts/ folder

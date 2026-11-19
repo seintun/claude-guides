@@ -75,6 +75,7 @@ Every folder has a README that lists its files.
 | [`wiki/`](wiki/README.md) | Short runbooks distilled from the playbook. People start here |
 | [`playbook/`](playbook/README.md) | The full reference (version 0.7, last updated 2026-11-18) and the cheat sheet. The wiki and the index point into it |
 | [`skills/`](skills/README.md) | Claude Code skills: `/guide` (`skills/guide/`), which lets any project call this guide, `/grill`, which reaches a shared design one question at a time, and `/prompt`, which turns it into a ready-to-run agent prompt |
+| [`news/`](news/README.md) | The versioned news routine: a watchlist, a cursor, one digest per week and one roll-up per month, written by `/refresh` and reviewed by a person before anything reaches `main` |
 | [`site/`](site/README.md) | The teaching page. Open `index.html` locally; `orchestrating-claude.html` is the artifact source, with no doctype because the claude.ai viewer wraps it. `site/history/` holds earlier versions (v11, v17) |
 | [`research/`](research/README.md) | Primary-source fact-checks |
 | [`issues/`](issues/README.md) | The UX issue (13 children), every review report, and the drafts subagents wrote |

@@ -75,6 +75,7 @@ These are the playbook's top mistakes
 - **Assuming the sandbox covers Read, hooks or MCP servers.** It does not (P).
 - **A cloned repo's settings with no managed policy.** The repo can grant itself permissions.
 - **Unreviewed skills and MCP servers.** They run with your full user privileges.
+- **A scheduled run that can push or publish.** Keep push out of its allow list, run it in a worktree and read fetched pages as data. This repository's refresh routine does so: [news/README.md](../news/README.md) (D).
 
 ## Go deeper
 

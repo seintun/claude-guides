@@ -1326,6 +1326,12 @@
    "description": "Turn a description or scenario into a ready-to-run prompt for Claude agents, built from the claude-guides playbook's templates. Use when you need a task prompt, a goal with done-when checks, a plan request, helper briefs and a synthesis step for sub-agents, or a loop or schedule prompt.",
    "path": "skills/prompt/SKILL.md",
    "install": "npx skills add seintun/claude-guides --skill prompt"
+  },
+  {
+   "name": "refresh",
+   "description": "Keep the claude-guides repository current. `scan` reads the news watchlist since the last cursor, writes a weekly digest and commits it on a local branch. `deep` folds the month's verified items into a new guide version and stops before any push. Use when the user, or a scheduled task, says \"Run /refresh scan\" or \"Run /refresh deep\", or asks to update the guide with recent news.",
+   "path": "skills/refresh/SKILL.md",
+   "install": "npx skills add seintun/claude-guides --skill refresh"
   }
  ]
 }

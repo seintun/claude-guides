@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "updated": "2026-11-18",
+  "playbook_version_seen": "0.7",
+  "last_digest": "2026-W47",
+  "last_deep": "2026-11-18",
+  "claude_code_changelog": {
+    "last_seen_version": "2.1.328",
+    "last_read": "2026-11-18"
+  },
+  "sources": {
+    "cc-changelog": {
+      "last_read": "2026-11-18"
+    },
+    "cc-best-practices": {
+      "last_read": "2026-11-18"
+    },
+    "cc-permission-modes": {
+      "last_read": "2026-11-18"
+    },
+    "cc-workflows": {
+      "last_read": "2026-11-18"
+    },
+    "cc-sub-agents": {
+      "last_read": "2026-11-18"
+    },
+    "cc-hooks": {
+      "last_read": "2026-11-18"
+    },
+    "cc-scheduled-tasks": {
+      "last_read": "2026-11-18"
+    },
+    "cc-desktop-scheduled": {
+      "last_read": "2026-11-18"
+    },
+    "cc-goal": {
+      "last_read": "2026-11-18"
+    },
+    "cc-context-memory": {
+      "last_read": "2026-11-18"
+    },
+    "anthropic-engineering": {
+      "last_read": "2026-11-18"
+    },
+    "anthropic-research": {
+      "last_read": "2026-11-18"
+    },
+    "claude-blog": {
+      "last_read": "2026-11-18"
+    },
+    "openai-index": {
+      "last_read": "2026-11-18"
+    },
+    "cursor-blog": {
+      "last_read": "2026-11-18"
+    },
+    "cognition-blog": {
+      "last_read": "2026-11-18"
+    },
+    "amp-news": {
+      "last_read": "2026-11-18"
+    },
+    "github-ai-blog": {
+      "last_read": "2026-11-18"
+    },
+    "factory-blog": {
+      "last_read": "2026-11-18"
+    },
+    "metr-blog": {
+      "last_read": "2026-11-18"
+    },
+    "arxiv-coding-agents": {
+      "last_read": "2026-11-18"
+    },
+    "arxiv-multi-agent": {
+      "last_read": "2026-11-18"
+    },
+    "arxiv-evals": {
+      "last_read": "2026-11-18"
+    },
+    "arxiv-context": {
+      "last_read": "2026-11-18"
+    },
+    "willison-blog": {
+      "last_read": "2026-11-18"
+    },
+    "husain-blog": {
+      "last_read": "2026-11-18"
+    },
+    "hashimoto-writing": {
+      "last_read": "2026-11-18"
+    },
+    "huntley-blog": {
+      "last_read": "2026-11-18"
+    },
+    "x-bcherny": {
+      "last_read": "2026-11-18"
+    },
+    "x-karpathy": {
+      "last_read": "2026-11-18"
+    },
+    "x-poteto": {
+      "last_read": "2026-11-18"
+    },
+    "x-simonw": {
+      "last_read": "2026-11-18"
+    },
+    "yt-ai-engineer": {
+      "last_read": "2026-11-18"
+    },
+    "yt-anthropic": {
+      "last_read": "2026-11-18"
+    },
+    "yt-yc": {
+      "last_read": "2026-11-18"
+    }
+  }
+}
