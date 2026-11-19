@@ -110,6 +110,7 @@ MUTATIONS = [
     ("The evals row points to a section that doesn't exist", "ENTRY.md", sub_once(r"`13\.1 13 law-8`", "`13.9 13 law-8`")),
     ("guide-index.json reports a stale playbook version", "guide-index.json", sub_once(r'"playbook_version": "0\.7"', '"playbook_version": "0.6"')),
     ("The archive index stops listing a snapshot", "archive/README.md", sub_once(r"\| \[v0\.6\]\(v0\.6/\)", "| v0.6")),
+    ("An archived folder's README stops naming a file", "archive/v0.6/playbook/README.md", sub_once(r"^\| `claude-cheat-sheet\.md` .*\n", "")),
     ("A runbook's as-of line names the previous playbook", "wiki/verify.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.$", "Checked against playbook 0.6 (2026-10-27).")),
     ("The cheat sheet loses its as-of line", "playbook/claude-cheat-sheet.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.\n\n", "")),
     ("ENTRY.md's as-of line goes stale", "ENTRY.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.$", "Checked against playbook 0.7 (2026-10-27).")),

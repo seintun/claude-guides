@@ -308,6 +308,21 @@ class Archive(unittest.TestCase):
         self.assertFalse(missing, "These archive files lack the banner:" + short(missing) +
                          "\nRegenerate them with tools/archive_snapshot.py; never edit a snapshot by hand.")
 
+    def test_every_snapshot_folder_lists_its_files(self):
+        """An archived folder has no README, or its README misses an entry (AGENTS.md: every folder lists its files)."""
+        missing = []
+        for d in sorted(p for p in (ROOT / "archive").glob("v*/**") if p.is_dir()) + sorted((ROOT / "archive").glob("v*")):
+            readme = d / "README.md"
+            if not readme.exists():
+                missing.append(f"{d.relative_to(ROOT)}: no README.md")
+                continue
+            text = readme.read_text(encoding="utf-8")
+            for entry in sorted(p.name for p in d.iterdir() if p.name != "README.md"):
+                if entry not in text:
+                    missing.append(f"{d.relative_to(ROOT)}: README.md does not name {entry}")
+        self.assertFalse(missing, "Archive folders without a full README:" + short(missing) +
+                         "\nRegenerate them with tools/archive_snapshot.py.")
+
     def test_snapshot_links_are_permalinks(self):
         """A snapshot keeps a relative link, which would follow the live file instead of the archived version."""
         bad = []
