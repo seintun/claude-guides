@@ -5,9 +5,12 @@ of it to helper agents.
 
 ## Steps
 
-1. **Default to one writer.** One agent writes each set of files, and each builder works in its own
-   git worktree (D). The evidence backs this: pick the topology by task shape and default to one
-   writer (R). [§19.1](../playbook/agent-harness-playbook.md#191-findings-that-hold-up)
+1. **Default to one writer.** One agent writes; helpers read, search or review (D). Parallel writers
+   fit only when all four hold: each writer works in an isolated checkout, the work splits into
+   independent failing tests, a strong verifier grades the result, and a lock or claim mechanism stops
+   two writers taking the same task (D). The evidence backs the default: pick the topology by task
+   shape (R). [§6](../playbook/agent-harness-playbook.md#6-orchestration-patterns),
+   [§19.1](../playbook/agent-harness-playbook.md#191-findings-that-hold-up)
 2. **Ask whether you need a helper at all.** Start with the simplest solution, because many tasks
    need one well-built call, not an agent (P). If one call with good context is enough, stop here.
 3. **Send a helper when the job fits.** Send wide reading where you only need the conclusion, jobs
@@ -42,7 +45,7 @@ of it to helper agents.
 
 ## Checklist
 
-- [ ] One agent writes each set of files, and each builder has its own worktree.
+- [ ] One agent writes each set of files. If I used parallel writers, all four conditions hold: isolated checkouts, independent failing tests, a strong verifier and a claim mechanism.
 - [ ] I can say why this task needs helpers, or I kept it in the lead.
 - [ ] I named the task shape and the pattern that fits it.
 - [ ] Every helper has a written brief with objective, scope, output, budget and stop rule.

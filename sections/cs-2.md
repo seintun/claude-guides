@@ -7,14 +7,17 @@
 | What fills the context | `/context` |
 | Shrink context, keep a focus | `/compact <focus>` |
 | Start clean | `/clear` |
-| Cost | `/usage` |
-| Plan before building | Shift+Tab to plan mode |
+| Cost (a local estimate; read real cost from the Console or OpenTelemetry) | `/usage` |
+| Plan before building | Shift+Tab to plan mode. Auto mode is the interactive default (v2.1.284 for every plan and provider); keep plan mode for non-trivial work |
 | Interrupt | Esc |
 | Go back to an earlier turn | Esc Esc, or `/rewind` |
 | Continue or pick a session | `claude -c`, `/resume` |
 | See running sessions | `claude agents`, Desktop sidebar, or ask "list current sessions and their status" |
 | Manage subagents | `/agents` |
-| Repeat a prompt in this session | `/loop` |
-| Cloud runs on a timetable | `/schedule` |
-| Keep going until a condition holds | `/goal <condition>` |
-| Split mechanical changes into many PRs | `/batch` |
+| Repeat a prompt in this session | `/loop`: 1-minute minimum or self-paced, up to 50 tasks, recurring tasks expire after 7 days, missed runs are not caught up |
+| Cloud runs on a timetable | `/schedule` (preview): 1-hour minimum for timed triggers, starts in auto mode, fresh clone each run, pushes to a `claude/` branch; it can stop and wait for an answer |
+| Keep going until a condition holds | `/goal <condition>`: an evaluator reads the transcript, runs no commands, so name output the session shows and add a turn bound ("or stop after 20 turns") |
+| Split mechanical changes into many PRs | `/batch` (5 to 30 worktree subagents, each opening a PR) |
+| Fan out over dozens of items | Workflows: `/workflows`, `/deep-research`. Up to 16 agents at once, 1,000 per run; no mid-run input, so a run pauses only for permission prompts and usage limits |
+| Cap a headless run | `claude -p --max-budget-usd <n>` is the cost ceiling; `--max-turns <n>` is a turn bound |
+| Clean up | `claude purge` (was `claude project purge`, v2.1.288) |

@@ -9,12 +9,12 @@ Sections and templates this route names, in order: cs:6, cs:7, law-3, 9.1, B, C,
 ```
 Goal: <outcome, one sentence>
 Context: <files, links, prior decisions>
-Done when: <checkable test, command, or acceptance list>
+Done when: <a pass/fail check you can run: test, command, or acceptance list>
 Constraints: <must not touch, budget, style>
 Stop and ask if: <risky or ambiguous cases>
 Plan: interview me first, then write a plan file before building.
 Orchestration: one writer; read-only subagents for search and review.
-Report: receipt per change (PASS/FAIL/NOT RUN with the command).
+Report: short plain-English sentences, one meaning per word. A receipt per change (PASS/FAIL/NOT RUN with the command and its output).
 ```
 
 <!-- id: cs:7 -->

@@ -2,6 +2,11 @@
 
 Use this page before Claude runs a loop, a schedule or a cloud session while you are not watching.
 
+For a whole task from spec to merged PR, follow the ten steps of
+[§11.6](../playbook/agent-harness-playbook.md#116-end-to-end-with-minimal-supervision) and use this page
+for the controls. The human supplies two things: an approved spec at the start and a sign-off on the
+verification artifacts at the end (D).
+
 ## Steps
 
 1. **Check that the work suits an unattended run.** Good fits are a well-specified backlog with
@@ -19,8 +24,8 @@ Use this page before Claude runs a loop, a schedule or a cloud session while you
 4. **Write the stop condition and the retry cap.** Stop when every check passes, or after N
    iterations, minutes or dollars, and stop after two failures with the same cause (D). Do not lean
    on the Stop-hook continuation cap of 8, because it is a backstop (P).
-5. **Set a cost ceiling.** Use `--max-budget-usd` on headless runs and cap the fan-out in the lead's
-   prompt (P, D). Read cost from OpenTelemetry or the Console, not the local `/usage` estimate (P).
+5. **Set a cost ceiling.** `--max-budget-usd` (or a spend limit) is the cost ceiling; `--max-turns`
+   is a turn bound, not a cost cap. Cap the fan-out in the lead's prompt (P, D). Read cost from OpenTelemetry or the Console, not the local `/usage` estimate (P).
 6. **Give the results a home outside the chat.** Use a file, a ticket or a PR comment (D). Cloud runs
    start from a fresh clone, so keep loop state in a ticket, a PR comment or a named branch (P). For
    work that spans sessions, use an initializer session, a JSON feature list that starts at
@@ -35,7 +40,15 @@ Use this page before Claude runs a loop, a schedule or a cloud session while you
 9. **Sandbox the run and strip secrets.** Use a dev container or Docker locally, keep the network
    level minimal and keep production keys out of cloud environments (D). For `claude -p` in CI, use
    `--bare` or a trusted checkout, and run your gate as a CI step (P, D).
-10. **Judge the first run by what it leaves behind.** An overnight run should leave a clean state and
+10. **Know what pauses a run.** In interactive auto mode, 3 consecutive or 20 total blocks (in `-p`
+    the action is denied and the run goes on). An unlisted tool in Manual or default mode. A
+    permission prompt in a workflow. A usage limit, which pauses `/goal`; auth, credit and
+    context-overflow errors clear it. Eight consecutive Stop-hook blocks. A scheduled task that asks
+    before running a skill with `allowed-tools` or hooks (as of v2.1.325, changelog only). The 7-day
+    `/loop` expiry (P). Plan for a
+    paused run, not only a failed one.
+    [§11.6](../playbook/agent-harness-playbook.md#116-end-to-end-with-minimal-supervision)
+11. **Judge the first run by what it leaves behind.** An overnight run should leave a clean state and
     an accurate receipt; that is the roadmap's condition for moving up from Level 4 (D). Check for
     paused runs, not only failed ones, because a cloud scheduled task can stop and wait for an answer
     (P).
@@ -44,7 +57,8 @@ Use this page before Claude runs a loop, a schedule or a cloud session while you
 
 - [ ] The prompt names an end condition: all checks pass, or N iterations, minutes or dollars.
 - [ ] A retry cap stops the run after two failures with the same cause.
-- [ ] A cost ceiling is set, and I know where I read the real cost.
+- [ ] A cost ceiling is set (`--max-budget-usd` or a spend limit), a turn bound is set, and I know where I read the real cost.
+- [ ] I listed what pauses the run, and I know who answers when it does.
 - [ ] Results land in a file, a ticket or a PR comment, not only in the chat.
 - [ ] Running the task twice cannot send, charge or create twice.
 - [ ] A `StopFailure` hook records the failure and notifies me.
@@ -74,6 +88,7 @@ Use this page before Claude runs a loop, a schedule or a cloud session while you
 ## Go deeper
 
 - [§11 Continuous and unattended operation](../playbook/agent-harness-playbook.md#11-continuous-and-unattended-operation)
+- [§11.6 End to end with minimal supervision](../playbook/agent-harness-playbook.md#116-end-to-end-with-minimal-supervision): the ten steps, the cost evidence and staged autonomy.
 - [§11.1 The long-running harness recipe](../playbook/agent-harness-playbook.md#111-the-long-running-harness-recipe)
 - [§11.3 Guardrails for any loop](../playbook/agent-harness-playbook.md#113-guardrails-for-any-loop)
 - [§11.4 Operating model: terminal, cloud, phone](../playbook/agent-harness-playbook.md#114-operating-model-terminal-cloud-phone)

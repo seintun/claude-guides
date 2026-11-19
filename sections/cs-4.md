@@ -3,7 +3,7 @@
 
 - Give outcomes and how you will check them, not step-by-step instructions.
 - Plan first; get a fresh critic for anything risky.
-- One agent writes; helpers only read and review.
-- Turn each repeated correction into a rule ("update CLAUDE.md so this does not repeat"); prune rules that never fire.
+- One agent writes by default; helpers read, search and review. Parallel writers need isolated checkouts, independent failing tests, a strong verifier and a claim mechanism (§6).
+- Turn each repeated correction into the highest rung of the correction ladder that works (Law 8): a check or a type before a CLAUDE.md line. Prune rules that never fire.
 - Put "stop and ask me if..." lines and a budget in every long task.
 - Be specific: file paths, examples, constraints.

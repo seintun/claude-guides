@@ -79,7 +79,7 @@ MUTATIONS = [
     ("GitHub Pages stops publishing the agent files", ".github/workflows/pages.yml", sub_once(r"^\s+git ls-files -z .*\n", "")),
     (".privacy-public gains a bare name", ".privacy-public", sub_once(r"^([\w-]+)\.github\.io/claude-guides$", r"\1")),
     ("ENTRY.md names no real address, only a placeholder", "ENTRY.md", sub_once(r"https://raw\.githubusercontent\.com/[\w-]+/claude-guides/main", "https://raw.githubusercontent.com/<owner>/<repo>/main")),
-    ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 20 scenarios", "a router from 19 scenarios")),
+    ("README claims the wrong number of scenarios", "README.md", sub_once(r"a router from 22 scenarios", "a router from 21 scenarios")),
     ("/orchestrate's router sends ordered backlogs to one session per task", "skills/orchestrate/route.py", sub_once(r"r, why = 5, \"E yes and the items have an order\"", "r, why = 4, \"E yes and the items have an order\"")),
     ("/orchestrate's runner-ups drift from SKILL.md", "skills/orchestrate/route.py", sub_once(r"RUNNER_UP = \{1: 2, 2: 1, 3: 4,", "RUNNER_UP = {1: 2, 2: 1, 3: 2,")),
     ("/orchestrate's router stops treating high risk as needing judgment", "skills/orchestrate/route.py", sub_once(r"judgment = get\(\"needs_judgment\"\) or get\(\"high_risk\"\)", "judgment = get(\"needs_judgment\")")),
@@ -100,6 +100,14 @@ MUTATIONS = [
     ("check_card.py stops capping failures", "skills/orchestrate/check_card.py", sub_once(r" and re\.search\(r\"\\b\(\?:2\|two\)", " or re.search(r\"\\b(?:2|two)")),
     ("An archive snapshot loses its banner", "archive/v0.6/wiki/verify.md", sub_once(r"^> \*\*Archived snapshot, version 0\.6 .*\n\n", "")),
     ("An archive snapshot keeps a relative link", "archive/v0.6/wiki/verify.md", lambda t: t + "\nSee [the live verify page](../../../wiki/verify.md).\n"),
+    ("/guide stops telling a stale clone to pull", "skills/guide/SKILL.md", sub_once(r"your clone is behind main; run `git pull`", "your clone is fine")),
+    ("/guide stops citing evidence grades", "skills/guide/SKILL.md", sub_once(r"each with its evidence grade \(P primary, S second-hand, R research, D design advice\)\. ", "")),
+    ("/guide may give superseded or archived advice as current", "skills/guide/SKILL.md", sub_once(r"Never give an item that playbook §19\.5 marks as superseded, or any file under `GUIDE/archive/`, as current advice; open the archive only if the user asks about history;", "")),
+    ("/guide stops flagging an old playbook", "skills/guide/SKILL.md", sub_once(r"suggest `/refresh scan`", "carry on")),
+    ("/guide's description stops triggering on end-to-end runs and evals", "skills/guide/SKILL.md", sub_once(r"running a task end to end with minimal supervision, setting up evals for an agent, ", "")),
+    ("ENTRY.md loses the end-to-end row (21)", "ENTRY.md", sub_once(r"^\| 21 \|.*\n", "")),
+    ("The evals row points to a section that doesn't exist", "ENTRY.md", sub_once(r"`13\.1 13 law-8`", "`13.9 13 law-8`")),
+    ("guide-index.json reports a stale playbook version", "guide-index.json", sub_once(r'"playbook_version": "0\.7"', '"playbook_version": "0.6"')),
     ("The archive index stops listing a snapshot", "archive/README.md", sub_once(r"\| \[v0\.6\]\(v0\.6/\)", "| v0.6")),
 ]
 

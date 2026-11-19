@@ -6,7 +6,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 ## Start here
 
-- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 20 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
+- [ENTRY.md](ENTRY.md): entry point for a session in any other project. A router from 22 scenarios (vague idea, bug fix, overnight loop, stuck agent and more) to sections, runbook, template and output, a phase table, and the rules that apply everywhere
 - [guide-index.json](guide-index.json): the router, phases, section ids, runbooks and skills as JSON, with a path for each, plus the playbook's version and last-updated date (generated)
 - [routes/README.md](routes/README.md): one file per router row and phase, bundling the sections and templates it names (generated)
 - [sections/README.md](sections/README.md): one file per playbook section, law, template and cheat-sheet section, the text tools/section.py prints (generated)
@@ -86,7 +86,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 - [tools/section.py](tools/section.py): prints one playbook section, template, law or cheat-sheet section by id (`python3 -I tools/section.py 9.5`; `--list` shows every id)
 - [tests/README.md](tests/README.md): how every feature and skill is tested: the offline suite (tests/run.sh), the mutation suite, live routing and grill sessions, browser checks; what each test guards
 - [tests/run.sh](tests/run.sh): runs every offline check and test; must end with SUMMARY all PASS before a commit
-- [tests/scenarios/routing.json](tests/scenarios/routing.json): 20 routing scenarios, one per ENTRY.md row
+- [tests/scenarios/routing.json](tests/scenarios/routing.json): 22 routing scenarios, one per ENTRY.md row
 - [tests/mutation/mutate.py](tests/mutation/mutate.py): makes catastrophic edits to a throwaway copy and checks the suite catches each
 - [tests/live/route_scenarios.py](tests/live/route_scenarios.py): live routing sessions through /guide, the snippet and the prompt; records results
 - [docs/metrics.md](docs/metrics.md): success, speed, token, reading-time and growth metrics (tools/metrics.py)

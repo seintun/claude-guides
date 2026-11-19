@@ -424,6 +424,49 @@
    "template_note": "C",
    "output": "A routing card: the route and its runner-up, each part's model and effort, the order, 2 to 5 checks, a budget and what was not used. Nothing starts before a yes. Run `/orchestrate`, or follow its steps",
    "bundle": "routes/row-20.md"
+  },
+  {
+   "row": 21,
+   "scenario": "Run a task end to end with minimal supervision",
+   "thin": false,
+   "read": [
+    "11.6",
+    "11.3",
+    "9",
+    "6"
+   ],
+   "runbooks": [
+    "wiki/run-unattended.md",
+    "wiki/verify.md"
+   ],
+   "templates": [
+    "B",
+    "E",
+    "H"
+   ],
+   "template_note": "B, E, H",
+   "output": "An approved spec, the five questions answered on paper, state in files, layered checks the agent can't edit, the controls set (auto mode or `dontAsk`, a worktree, `--max-budget-usd`, `--max-turns`), a list of what pauses the run, and a sign-off on artifacts and receipts at the end",
+   "bundle": "routes/row-21.md"
+  },
+  {
+   "row": 22,
+   "scenario": "Set up evals for my agent",
+   "thin": false,
+   "read": [
+    "13.1",
+    "13",
+    "law-8"
+   ],
+   "runbooks": [
+    "wiki/improve.md"
+   ],
+   "templates": [
+    "J",
+    "I"
+   ],
+   "template_note": "J, I",
+   "output": "An eval set of 20 to 50 tasks from real failures, one JSONL line each, graded on outcomes by code where possible; traces read before any judge is built; pass^k and cost per task reported; failures labelled by hand",
+   "bundle": "routes/row-22.md"
   }
  ],
  "phases": [
@@ -522,6 +565,7 @@
    "phase": "7 Overnight: can it run without me?",
    "read": [
     "11",
+    "11.6",
     "10"
    ],
    "runbooks": [
@@ -537,6 +581,7 @@
    "phase": "8 Learn: what should never repeat?",
    "read": [
     "13",
+    "13.1",
     "law-8",
     "15"
    ],
@@ -1154,16 +1199,16 @@
   {
    "id": "cs:2",
    "title": "2. Commands",
-   "lines": 20,
-   "chars": 770,
+   "lines": 23,
+   "chars": 1785,
    "path": "sections/cs-2.md",
    "source": "playbook/claude-cheat-sheet.md"
   },
   {
    "id": "cs:3",
    "title": "3. Stuck signs and fixes",
-   "lines": 11,
-   "chars": 670,
+   "lines": 12,
+   "chars": 946,
    "path": "sections/cs-3.md",
    "source": "playbook/claude-cheat-sheet.md"
   },
@@ -1171,7 +1216,7 @@
    "id": "cs:4",
    "title": "4. Mindset",
    "lines": 9,
-   "chars": 432,
+   "chars": 613,
    "path": "sections/cs-4.md",
    "source": "playbook/claude-cheat-sheet.md"
   },
@@ -1187,7 +1232,7 @@
    "id": "cs:6",
    "title": "6. Prompt template for orchestrated work",
    "lines": 13,
-   "chars": 471,
+   "chars": 562,
    "path": "sections/cs-6.md",
    "source": "playbook/claude-cheat-sheet.md"
   },
@@ -1266,7 +1311,7 @@
   },
   {
    "name": "guide",
-   "description": "Route an agent-orchestration request to the claude-guides playbook and load only the sections it needs. Use for starting from a vague idea, a new feature, bug fix, refactor or migration, setting up a harness or hooks, code review by an agent, an overnight loop, a stuck or looping agent, a cost blowup, multi-repo or parallel work, onboarding a repo, writing an agent-ready issue, or a retro.",
+   "description": "Route an agent-orchestration request to the claude-guides playbook and load only the sections it needs. Use for starting from a vague idea, a new feature, bug fix, refactor or migration, setting up a harness or hooks, code review by an agent, an overnight loop, running a task end to end with minimal supervision, setting up evals for an agent, a stuck or looping agent, a cost blowup, multi-repo or parallel work, onboarding a repo, writing an agent-ready issue, or a retro.",
    "path": "skills/guide/SKILL.md",
    "install": "npx skills add seintun/claude-guides --skill guide"
   },

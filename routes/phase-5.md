@@ -73,6 +73,7 @@ while not done:
 | Sign | Fix |
 |---|---|
 | Same error twice | Stop it. Ask for 3 ranked hypotheses and one test that separates them, or bring in a fresh reviewer agent |
+| Same mistake again after you corrected it | Do not add another CLAUDE.md line first. Go up the correction ladder: change the architecture so it can't be written, then add a lint rule, type or test, then runtime verification, and a skill or CLAUDE.md line last (Law 8) (D) |
 | Busy, no progress | "What is the next checkable step, and what proves it is done?" |
 | Forgets earlier decisions | `/compact <focus>`, or a new session started from the plan file |
 | Waiting on permission | Check the sidebar for "waiting"; pre-allow safe commands in settings |
