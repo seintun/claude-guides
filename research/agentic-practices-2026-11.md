@@ -216,7 +216,7 @@ URL: https://www.youtube.com/watch?v=O_zcc6Xl12g (published 2026-11-14). Auto-ca
 
 | Time | Content |
 |---|---|
-| 0:42 | 3,000 PRs in a month |
+| 0:42 | About 3,000 PRs in a month (her own) |
 | 2:03 | The trust pyramid: deterministic layers first, prose last |
 | 3:08 | A correction becomes a deterministic check |
 | 3:34 | Review volume from about 3 PRs a day to about 300 |
@@ -229,7 +229,7 @@ URL: https://www.youtube.com/watch?v=O_zcc6Xl12g (published 2026-11-14). Auto-ca
 | 16:44 | "most product code that we land no longer really requires deep human review" |
 | 10:50 | TLA+ and Lean: "not a silver bullet" |
 | 12:05 | Most tokens go to verification |
-| 13:32 | 11,000 PRs a month, 0.5% reverts |
+| 13:32 | About 0.5% reverts on about 11,000 team PRs a month, self-reported |
 | 15:32 | Automating a loop that produces slop "just produces more slop" |
 | 16:21 | Release fuzzing, then auto-merge |
 
@@ -252,7 +252,7 @@ URL: https://www.youtube.com/watch?v=O_zcc6Xl12g (published 2026-11-14). Auto-ca
 | Harness-design cost | Report 2: $9 against $200 | Page: "over 20x more expensive" | Use "over 20x"; the two figures are unverified |
 | Husain and Shankar traces | Report 2: at least 30 | Page: at least 100 until saturation; 30 to 50 for open coding | 100 until saturation; 30 to 50 to start |
 | Horthy title | Several names | Document: "Getting AI to Work in Complex Codebases" | Use the title |
-| Tan PR counts | Earlier recaps: about 2,500 | Transcript: 3,000 personal, 11,000 team | Transcript, labelled self-reported |
+| Tan PR counts | Earlier recaps: about 2,500 | Transcript: about 3,000 personal in a month (0:42), about 11,000 team PRs a month at about 0.5% reverts (13:32) | Transcript, labelled self-reported |
 | Tan's tool | A third-party "Poteto Mode" Claude Code skill | Transcript: Cursor | Say Cursor |
 | Anthropic post paths | /engineering/ | /research/ | Both resolve; the playbook uses the path each post is fetched from |
 | Judge value | Anthropic harness post: evaluator worth it beyond solo reliability | Cursor dropped judge and integrator in February | Task-dependent |

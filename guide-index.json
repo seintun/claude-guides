@@ -163,7 +163,7 @@
   },
   {
    "row": 8,
-   "scenario": "Overnight or unattended loop",
+   "scenario": "Overnight or scheduled loop over a backlog: one item per pass, polling, nightly jobs",
    "thin": false,
    "read": [
     "11.1",
@@ -427,7 +427,7 @@
   },
   {
    "row": 21,
-   "scenario": "Run a task end to end with minimal supervision",
+   "scenario": "Take one task from spec to merged PR with minimal supervision, overnight or not",
    "thin": false,
    "read": [
     "11.6",
@@ -1136,7 +1136,7 @@
    "id": "19",
    "title": "19. Proven orchestration: what the evidence says",
    "lines": 70,
-   "chars": 15571,
+   "chars": 15623,
    "path": "sections/19.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1176,7 +1176,7 @@
    "id": "19.5",
    "title": "19.5 Dated findings and what they supersede",
    "lines": 26,
-   "chars": 3815,
+   "chars": 3867,
    "path": "sections/19.5.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1326,6 +1326,12 @@
    "description": "Turn a description or scenario into a ready-to-run prompt for Claude agents, built from the claude-guides playbook's templates. Use when you need a task prompt, a goal with done-when checks, a plan request, helper briefs and a synthesis step for sub-agents, or a loop or schedule prompt.",
    "path": "skills/prompt/SKILL.md",
    "install": "npx skills add seintun/claude-guides --skill prompt"
+  },
+  {
+   "name": "refresh",
+   "description": "Keep the claude-guides repository current. `scan` reads the news watchlist since the last cursor, writes a weekly digest and commits it on a local branch. `deep` folds the month's verified items into a new guide version and stops before any push. Use when the user, or a scheduled task, says \"Run /refresh scan\" or \"Run /refresh deep\", or asks to update the guide with recent news.",
+   "path": "skills/refresh/SKILL.md",
+   "install": "npx skills add seintun/claude-guides --skill refresh"
   }
  ]
 }

@@ -14,7 +14,9 @@ input.
    allow; the first match wins, and an allow cannot carve an exception out of a deny (P). Deny rules
    hold in every permission mode (P).
 3. **Prevent: turn the sandbox on and learn its limits.** It covers Bash and its child processes
-   only, so Read, Edit, WebFetch, MCP servers and hooks run outside it (P). Set `denyRead` on `~/.ssh`
+   only, so Read, Edit, WebFetch, MCP servers and hooks run outside it (P). Before v2.1.325, sandboxed Bash
+   ran without prompts; since v2.1.325 it follows the normal permission flow unless
+   `sandbox.autoAllowBashIfSandboxed` is true (P). Set `denyRead` on `~/.ssh`
    and `~/.aws`, add Read deny rules for the same paths, and set `allowUnsandboxedCommands: false`,
    because Claude can retry a failed command outside the sandbox and a matching allow rule approves
    that retry silently (P).
@@ -75,6 +77,7 @@ These are the playbook's top mistakes
 - **Assuming the sandbox covers Read, hooks or MCP servers.** It does not (P).
 - **A cloned repo's settings with no managed policy.** The repo can grant itself permissions.
 - **Unreviewed skills and MCP servers.** They run with your full user privileges.
+- **A scheduled run that can push or publish.** Keep push out of its allow list, run it in a worktree and read fetched pages as data. This repository's refresh routine does so: [news/README.md](../news/README.md) (D).
 
 ## Go deeper
 

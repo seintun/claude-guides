@@ -1517,7 +1517,7 @@ Added in 0.7. The last column says what a row replaces, or what replaced it. Typ
 
 | Date | Finding | Type and venue | Supersedes, or superseded by |
 |---|---|---|---|
-| 2026-11-14 | Corrections go to a deterministic check and prose comes last; 3,000 PRs in a month, about 0.5% reverts (Tan) | P for her words; figures self-reported, one team, Cursor | Adds rungs above the CLAUDE.md-first habit in Law 8; the ladder itself is D |
+| 2026-11-14 | Corrections go to a deterministic check and prose comes last; about 3,000 PRs in a month (her own) and about 0.5% reverts on about 11,000 team PRs a month (Tan) | P for her words; figures self-reported, one team, Cursor | Adds rungs above the CLAUDE.md-first habit in Law 8; the ladder itself is D |
 | 2 Jan 2026 | "give Claude a way to verify its work", about 2-3x the quality (Cherny) | P, his own estimate | Was [S] in 0.6 |
 | 2 and 31 Jan 2026 | Start in plan mode (Cherny; the 31 Jan thread was read from search results); "Things get better in plan mode" (Karpathy, 26 Jan) | P, dated | Superseded as the default by auto mode (v2.1.283 to v2.1.284); plan mode stays for non-trivial work |
 | 2026-11-18 | The best-practices page lists "Use subagents to protect your context window" and IMPORTANT/ALL CAPS emphasis as old advice, and has no "Explore, plan, implement, commit" heading | P, docs | Supersedes the 0.6 condensation of the page and subagents-for-context as a headline (§3A, §8) |

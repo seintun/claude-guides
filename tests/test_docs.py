@@ -22,7 +22,7 @@ PLAYBOOK_LINK = "../" + PLAYBOOK_REL + "#"
 RUNBOOKS = ["start-a-task", "grill", "orchestrate", "verify", "run-unattended",
             "guardrails", "build-a-harness", "unstick", "improve"]
 REQUIRED_SECTIONS = ["Steps", "Checklist", "Templates", "Watch out for", "Go deeper"]
-TOP_DIRS = ["site", "playbook", "wiki", "docs", "issues", "research", "checks", "tools", "skills", "tests", "archive"]
+TOP_DIRS = ["site", "playbook", "wiki", "docs", "issues", "research", "checks", "tools", "skills", "tests", "archive", "news"]
 ASOF_RE = r"v(\d+) · updated (\d{4}-\d{2}-\d{2}) · evidence checked (\d{4}-\d{2}-\d{2}) \(Claude Code v(\d+\.\d+\.\d+)\)"
 CHANGED_ON_PURPOSE = "If the change is intended, update the expectation in tests/test_docs.py in the same commit."
 
@@ -255,7 +255,7 @@ class Maps(unittest.TestCase):
         import section
         pb_version, pb_updated = section.version()
         want = f"Checked against playbook {pb_version} ({pb_updated})."
-        files = [f"wiki/{n}.md" for n in RUNBOOKS + ["records", "case-study"]] + ["playbook/claude-cheat-sheet.md", "ENTRY.md"]
+        files = [f"wiki/{n}.md" for n in RUNBOOKS + ["records", "case-study"]] + ["playbook/claude-cheat-sheet.md", "ENTRY.md", "wiki/README.md"]
         stale = []
         for rel in files:
             head = read(rel).splitlines()[:6]
