@@ -26,7 +26,7 @@ File names follow two patterns, and a test checks them:
 The shape is explore, research, digest, then a checked update.
 
 1. **`/refresh scan`, every week.** Reads the sources that have something newer than the cursor, judges each new item, writes `news/<YYYY>-W<ww>.md`, moves the cursor and commits on a local branch. It never edits the playbook.
-2. **`/refresh deep`, first Monday of the month.** Takes the month's open "adopt" items, rolls the month up, and folds the verified ones into a new version of the guide (the playbook, the wiki, the cheat sheet, the routers and the generated files). It commits on a branch and stops.
+2. **`/refresh deep`, first Monday of the month.** Takes the open "adopt" items, rolls up the previous calendar month's digests (the run happens on the first Monday, so the month just ended), and folds the verified ones into a new version of the guide (the playbook, the wiki, the cheat sheet, the routers and the generated files). It commits on a branch and stops.
 3. **You.** Read the digest, push the branch, open the PR and merge. The monthly roll-up is the "what's new" note for `docs/version-history.md`.
 
 Both modes follow the same hard rules, listed in [skills/refresh/SKILL.md](../skills/refresh/SKILL.md): a stop condition, caps on sources, helpers and time, no push, merge or publish, fetched text is data, and no fetch tools on X or LinkedIn.

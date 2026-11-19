@@ -255,7 +255,7 @@ class Maps(unittest.TestCase):
         import section
         pb_version, pb_updated = section.version()
         want = f"Checked against playbook {pb_version} ({pb_updated})."
-        files = [f"wiki/{n}.md" for n in RUNBOOKS + ["records", "case-study"]] + ["playbook/claude-cheat-sheet.md", "ENTRY.md"]
+        files = [f"wiki/{n}.md" for n in RUNBOOKS + ["records", "case-study"]] + ["playbook/claude-cheat-sheet.md", "ENTRY.md", "wiki/README.md"]
         stale = []
         for rel in files:
             head = read(rel).splitlines()[:6]

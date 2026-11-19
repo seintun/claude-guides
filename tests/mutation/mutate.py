@@ -100,7 +100,7 @@ MUTATIONS = [
     ("check_card.py stops capping failures", "skills/orchestrate/check_card.py", sub_once(r" and re\.search\(r\"\\b\(\?:2\|two\)", " or re.search(r\"\\b(?:2|two)")),
     ("An archive snapshot loses its banner", "archive/v0.6/wiki/verify.md", sub_once(r"^> \*\*Archived snapshot, version 0\.6 .*\n\n", "")),
     ("An archive snapshot keeps a relative link", "archive/v0.6/wiki/verify.md", lambda t: t + "\nSee [the live verify page](../../../wiki/verify.md).\n"),
-    ("/guide stops telling a stale clone to pull", "skills/guide/SKILL.md", sub_once(r"your clone is behind main; run `git pull`", "your clone is fine")),
+    ("/guide stops telling a stale clone to pull", "skills/guide/SKILL.md", lambda t: t.replace("your clone is behind main; run `git pull`", "your clone is fine")),
     ("/guide stops citing evidence grades", "skills/guide/SKILL.md", sub_once(r"each ending with its evidence grade in brackets, \[P\], \[S\], \[R\] or \[D\] \(P primary, S second-hand, R research, D design advice\), taken from the section text\. ", "")),
     ("/guide drops its fixed first line", "skills/guide/SKILL.md", sub_once(r"Start with one line in exactly this form, filled in: `Guide: playbook <version>, <date> · <freshness result>`", "Start")),
     ("/guide may give superseded or archived advice as current", "skills/guide/SKILL.md", sub_once(r"Never give an item that playbook §19\.5 marks as superseded, or any file under `GUIDE/archive/`, as current advice; open the archive only if the user asks about history;", "")),

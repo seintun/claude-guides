@@ -1,5 +1,7 @@
 # Wiki
 
+Checked against playbook 0.7 (2026-11-18).
+
 Short runbooks distilled from the [playbook](../playbook/agent-harness-playbook.md). Each one gives the steps, a checklist, the templates to copy, the pitfalls, and links into the playbook for the detail. A wiki page adds no facts of its own; when it and the playbook disagree, the playbook wins.
 
 | Runbook | Use it when | Phase in the [orchestration index](../orchestration-index.md) |

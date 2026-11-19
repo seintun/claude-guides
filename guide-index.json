@@ -1136,7 +1136,7 @@
    "id": "19",
    "title": "19. Proven orchestration: what the evidence says",
    "lines": 70,
-   "chars": 15571,
+   "chars": 15623,
    "path": "sections/19.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1176,7 +1176,7 @@
    "id": "19.5",
    "title": "19.5 Dated findings and what they supersede",
    "lines": 26,
-   "chars": 3815,
+   "chars": 3867,
    "path": "sections/19.5.md",
    "source": "playbook/agent-harness-playbook.md"
   },
