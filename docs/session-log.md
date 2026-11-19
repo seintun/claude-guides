@@ -28,6 +28,17 @@ The work happened on 2026-10-24, in one Claude Code session in the Claude deskto
 | 22 | The final independent review found a blocking quiz keyboard bug and mid-width text problems | Version 16: 21 of 21 checks pass in 8 views |
 | 23 | Compile everything into one searchable HTML file, in a Git repo with an agents file | This repository |
 
+## Session 2026-11-18: guide refresh 0.7
+
+| # | Request | Outcome |
+|---|---|---|
+| 1 | Keep playbook 0.6 and page v17 as read-only history | `archive/v0.6/`, `tools/archive_snapshot.py` and the tag `guide-v0.6` (PR #10) |
+| 2 | Update the playbook to 0.7 from the changelog, docs and named practitioners | Playbook 0.7: correction ladder, refreshed feature map, single-writer default (PR #11) |
+| 3 | Carry 0.7 into the wiki, cheat sheet and ENTRY, and make `/guide` report freshness | ENTRY rows 21 and 22 and the `/guide` first line (PR #12) |
+| 4 | Bring the teaching page to match | Page v18: six parts, a "What's new" panel, navigation fixed in frames, the compendium as one long page (PR #13) |
+| 5 | A routine that keeps the guide current from news | `/refresh`, `news/` and its scheduled-task prompts (PR #14) |
+| 6 | Fix the archive review findings and align the docs | Folder READMEs, banner notes, counts and logs brought in line (PR #15) |
+
 ## Tools and agents used
 
 - **Browsers:** the built-in browser pane, for checking the published page while signed in; Playwright (Chromium), for the automated checks on a local wrapped copy.

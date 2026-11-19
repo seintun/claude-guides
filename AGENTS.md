@@ -8,10 +8,12 @@ A guide for building, orchestrating and guiding AI coding agents. It has four la
 
 1. `playbook/agent-harness-playbook.md` is the canonical reference. Facts, laws, patterns and Templates A to M live here, each graded P (primary), S (second-hand), R (research) or D (design advice).
 2. `wiki/` holds short runbooks distilled from the playbook. A wiki page links to the playbook section it summarises and adds no facts of its own.
-3. `site/orchestrating-claude.html` is the teaching page, published as a claude.ai artifact. It teaches the same material in 17 lessons.
+3. `site/orchestrating-claude.html` is the teaching page, published as a claude.ai artifact. It teaches the same material in 17 lessons in six parts.
 4. `site/index.html`, `docs/orchestrating-claude-compendium.html`, `guide-index.json`, `routes/` and `sections/` are generated. Never edit them by hand; rebuild them.
 
 When the playbook and another layer disagree, the playbook wins. Fix the other layer and say so in the commit.
+
+`archive/` holds read-only snapshots made by `tools/archive_snapshot.py`; never edit one by hand or route current advice to it.
 
 ## Finding your way
 

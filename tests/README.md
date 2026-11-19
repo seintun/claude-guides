@@ -12,7 +12,7 @@ This repository is a guide that other sessions call. A bad edit here misleads ev
 | Layer | Command | Cost | When |
 |---|---|---|---|
 | Offline suite | `tests/run.sh` (add `-v` for every test) | under 10 seconds, no network | Before every commit. The pre-commit hook runs it, and GitHub Actions runs it on every pull request and every push to `main` ([.github/workflows/tests.yml](../.github/workflows/tests.yml)). CI has no `.privacy-terms`, so it checks only the built-in privacy rules |
-| Mutation suites | `python3 -I tests/mutation/mutate.py --record` (71 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
+| Mutation suites | `python3 -I tests/mutation/mutate.py --record` (101 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
 | Live routing | `python3 -I tests/live/route_scenarios.py --record` | about $0.20 a run (3 runs by default) | After changing ENTRY.md, a skill, the snippet or the prompt |
 | Live grill | `skills/grill/test.sh` | one short session | After changing `/grill` |
 | Live orchestrate | `python3 -I tests/live/orchestrate/run.py --k 2 --record` | about $2 to $3 for the command as shown (12 cases twice, 24 sessions on Sonnet) | After changing `/orchestrate`, `route.py` or `check_card.py` |
@@ -33,7 +33,7 @@ git config core.hooksPath .githooks
 | Feature | Fails if… | Tests | Scenarios |
 |---|---|---|---|
 | Playbook, the source of truth | a section, law or template disappears, is renamed or moved; a §20 source is dropped; graded claims or lines are mass-deleted; an in-file anchor breaks | [test_playbook.py](test_playbook.py), against [baselines/playbook.json](baselines/playbook.json) | Hard invariants (§0–§20, 3A, 17A, Laws 1–10, Templates A–M) plus the recorded baseline |
-| ENTRY.md router | a scenario's row is deleted or renumbered; a row drops a section, template or runbook; a row has no scenario; a thin row stops naming its gap; a route points at the whole playbook | [test_router.py](test_router.py), `tools/check_entry.py` | [scenarios/routing.json](scenarios/routing.json): 18 requests, one per row |
+| ENTRY.md router | a scenario's row is deleted or renumbered; a row drops a section, template or runbook; a row has no scenario; a thin row stops naming its gap; a route points at the whole playbook | [test_router.py](test_router.py), `tools/check_entry.py` | [scenarios/routing.json](scenarios/routing.json): 22 requests, one per row |
 | `tools/section.py` | an id kind stops resolving; a section runs on into the next; an unknown id passes | [test_router.py](test_router.py) | `9.5`, `17A`, `F`, `law-7`, `cs:3`, `99.9` |
 | `/guide`, the snippet and the prompt | the skill gets a pre-run shell line again (it stalled `claude -p`); it stops pointing at ENTRY.md or `section.py`; the snippet becomes an `@` import or more than one line; the installer writes outside its symlink, overwrites a real folder, leaves `{{GUIDE}}` unfilled, or misreads the root when a git hook in a worktree sets `GIT_DIR` | [test_skills.py](test_skills.py); live: [live/route_scenarios.py](live/route_scenarios.py) | The installer runs against a throwaway `HOME`; live runs use the routing scenarios |
 | `/grill` | a rule disappears from the skill, including open fact questions, the problem and riskiest assumption, and the `ASSUMED` and `UNKNOWN` markers; the transcript checker passes a bad grill | [test_skills.py](test_skills.py), with [fixtures/grill/](fixtures/grill/) | 9 recorded transcripts, good and bad: asks a known fact, two questions, no recommendation, writes a plan, and more |
@@ -53,7 +53,7 @@ git config core.hooksPath .githooks
 
 Two mutation suites check that the guards bite. Each starts with a control copy that must pass, then makes one damaging edit per copy and expects `tests/run.sh` to fail there. [mutation/review_edits.py](mutation/review_edits.py) holds the 75 edits from the independent review and later dry runs. It also retries each caught edit after the steps a careful editor would take: rebuilding the generated files, then regenerating the baseline. An edit only counts as caught if it still fails after both. Results are in [results/review-edits.json](results/review-edits.json).
 
-[mutation/mutate.py](mutation/mutate.py) copies the clone into `build/test-tmp/` and makes one catastrophic edit per copy. Then it runs `tests/run.sh` there and expects a failure. The 71 edits include deleting a playbook section or template, renaming a law, truncating the playbook, dropping a source, deleting or breaking a router row, telling sessions to read the whole playbook, deleting a runbook, committing a personal path, dropping the "playbook wins" or privacy rule, and reintroducing each security bug the fact-check review found. A mutation the suite misses is printed as NOT CAUGHT, which means a guardrail is missing. The clone itself is never edited.
+[mutation/mutate.py](mutation/mutate.py) copies the clone into `build/test-tmp/` and makes one catastrophic edit per copy. Then it runs `tests/run.sh` there and expects a failure. The 101 edits include deleting a playbook section or template, renaming a law, truncating the playbook, dropping a source, deleting or breaking a router row, telling sessions to read the whole playbook, deleting a runbook, committing a personal path, dropping the "playbook wins" or privacy rule, and reintroducing each security bug the fact-check review found. A mutation the suite misses is printed as NOT CAUGHT, which means a guardrail is missing. The clone itself is never edited.
 
 ## When a test fails on purpose
 
@@ -67,7 +67,7 @@ Some changes are meant to break a guard. A guard is a contract, so change it in 
 
 Recorded runs live in [results/](results/):
 - `live.jsonl`: one line per live session, with the row it chose, pass or fail, duration, turns, tokens and cost.
-- `mutation.json`: the last mutation run. `review-edits.json`: the last run of the 56 review edits.
+- `mutation.json`: the last mutation run. `review-edits.json`: the last run of the 75 review edits.
 - `prompt-battle.json`: the `/prompt` battle test: sixteen blind reviews (v1 tied 3 to 3; v2, v3, v4 and v5 won 6 to 0; v5 beat v4 4 to 2; v5 beat the unshipped checker trial (round 9) 11 to 1 and tied v6 6 to 6, v7 tied v6 7 to 5, v7 beat the unshipped v8 11 to 1 and the unshipped v9 7 to 5, each across both position orders), seven contradiction audits and the rubric (v4 scored 67 of 67, against 23 to 24 for a plain request).
 - `orchestrate-live.jsonl`: one line per live `/orchestrate` run, with the route chosen and expected, the failed checks, tool calls, turns and cost.
 - `metrics-history.jsonl`: one snapshot per `tools/metrics.py --record`.
