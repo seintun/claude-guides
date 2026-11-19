@@ -22,7 +22,7 @@ PLAYBOOK_LINK = "../" + PLAYBOOK_REL + "#"
 RUNBOOKS = ["start-a-task", "grill", "orchestrate", "verify", "run-unattended",
             "guardrails", "build-a-harness", "unstick", "improve"]
 REQUIRED_SECTIONS = ["Steps", "Checklist", "Templates", "Watch out for", "Go deeper"]
-TOP_DIRS = ["site", "playbook", "wiki", "docs", "issues", "research", "checks", "tools", "skills", "tests"]
+TOP_DIRS = ["site", "playbook", "wiki", "docs", "issues", "research", "checks", "tools", "skills", "tests", "archive"]
 CHANGED_ON_PURPOSE = "If the change is intended, update the expectation in tests/test_docs.py in the same commit."
 
 
@@ -242,6 +242,46 @@ class Maps(unittest.TestCase):
                     self.skipTest("tests/README.md does not exist yet (it is written separately); checking tests/ is skipped until it does")
                 self.assertTrue((ROOT / d / "README.md").exists(),
                                 f"{d}/README.md does not exist. AGENTS.md: every folder has a README.md that lists its files. Add it.")
+
+
+class Archive(unittest.TestCase):
+    """archive/ keeps earlier versions readable and clearly marked as history."""
+
+    def snapshots(self):
+        return sorted(p for p in (ROOT / "archive").glob("v*/**/*.md"))
+
+    def test_archive_has_snapshots(self):
+        """The archive folder exists but holds no snapshot, or its index stops listing one."""
+        snaps = self.snapshots()
+        self.assertTrue(snaps, "archive/ has no snapshot. Run tools/archive_snapshot.py.")
+        index = read("archive/README.md")
+        for version in sorted({p.relative_to(ROOT / "archive").parts[0] for p in snaps}):
+            self.assertIn(f"]({version}/)", index, f"archive/README.md does not list {version}. Add a row to its Snapshots table.")
+
+    def test_every_snapshot_carries_the_banner(self):
+        """A snapshot loses its banner, so a reader takes old advice for current advice."""
+        missing = [str(p.relative_to(ROOT)) for p in self.snapshots()
+                   if not p.read_text(encoding="utf-8").startswith("> **Archived snapshot, version ")]
+        self.assertFalse(missing, "These archive files lack the banner:" + short(missing) +
+                         "\nRegenerate them with tools/archive_snapshot.py; never edit a snapshot by hand.")
+
+    def test_snapshot_links_are_permalinks(self):
+        """A snapshot keeps a relative link, which would follow the live file instead of the archived version."""
+        bad = []
+        for p in self.snapshots():
+            body = p.read_text(encoding="utf-8").split("\n", 2)[-1]  # skip the banner, which links the live file on purpose
+            fence = False
+            for line in body.split("\n"):
+                if line.strip().startswith("```"):
+                    fence = not fence
+                    continue
+                if fence:
+                    continue
+                for target in re.findall(r"\]\(([^)\s]+)\)", re.sub(r"`[^`]*`", "", line)):
+                    if not re.match(r"(https?|mailto):|#", target):
+                        bad.append(f"{p.relative_to(ROOT)}: {target}")
+        self.assertFalse(bad, "Relative links inside archive snapshots:" + short(bad) +
+                         "\nRegenerate with tools/archive_snapshot.py, which rewrites them to permalinks at the tag.")
 
 
 class GuidingStar(unittest.TestCase):

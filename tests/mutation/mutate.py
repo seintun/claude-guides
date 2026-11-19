@@ -98,6 +98,9 @@ MUTATIONS = [
     ("/orchestrate starts work without a yes", "skills/orchestrate/SKILL.md", sub_once(r"and start nothing before a yes", "and then begin the work")),
     ("check_card.py allows two writers on route 1", "skills/orchestrate/check_card.py", sub_once(r"ok = len\(writers\) <= 1 and", "ok = len(writers) <= 2 and")),
     ("check_card.py stops capping failures", "skills/orchestrate/check_card.py", sub_once(r" and re\.search\(r\"\\b\(\?:2\|two\)", " or re.search(r\"\\b(?:2|two)")),
+    ("An archive snapshot loses its banner", "archive/v0.6/wiki/verify.md", sub_once(r"^> \*\*Archived snapshot, version 0\.6 .*\n\n", "")),
+    ("An archive snapshot keeps a relative link", "archive/v0.6/wiki/verify.md", lambda t: t + "\nSee [the live verify page](../../../wiki/verify.md).\n"),
+    ("The archive index stops listing a snapshot", "archive/README.md", sub_once(r"\| \[v0\.6\]\(v0\.6/\)", "| v0.6")),
 ]
 
 

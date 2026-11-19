@@ -75,10 +75,11 @@ Every folder has a README that lists its files.
 | [`wiki/`](wiki/README.md) | Short runbooks distilled from the playbook. People start here |
 | [`playbook/`](playbook/README.md) | The full reference (version 0.6, last updated 2026-10-27) and the cheat sheet. The wiki and the index point into it |
 | [`skills/`](skills/README.md) | Claude Code skills: `/guide` (`skills/guide/`), which lets any project call this guide, `/grill`, which reaches a shared design one question at a time, and `/prompt`, which turns it into a ready-to-run agent prompt |
-| [`site/`](site/README.md) | The teaching page. Open `index.html` locally; `orchestrating-claude.html` is the artifact source, with no doctype because the claude.ai viewer wraps it. `site/history/` holds the v11 baseline |
+| [`site/`](site/README.md) | The teaching page. Open `index.html` locally; `orchestrating-claude.html` is the artifact source, with no doctype because the claude.ai viewer wraps it. `site/history/` holds earlier versions (v11, v17) |
 | [`research/`](research/README.md) | Primary-source fact-checks |
 | [`issues/`](issues/README.md) | The UX issue (13 children), every review report, and the drafts subagents wrote |
 | [`docs/`](docs/README.md) | The decision log, session log, version history, a proposal, and the generated compendium |
+| [`archive/`](archive/README.md) | Read-only snapshots of earlier versions (playbook 0.6 and its wiki, page v17), and a table of superseded conventions with the evidence that replaced them. History only: never current advice |
 | [`checks/`](checks/README.md) | Static and browser checks that gate every change to the page and the compendium |
 | [`tools/`](tools/README.md) | Build, link-check and maintenance scripts. `tools/provenance/` keeps the one-off edit scripts for the record |
 | [`AGENTS.md`](AGENTS.md), [`CLAUDE.md`](CLAUDE.md), [`llms.txt`](llms.txt) | Instructions and a machine-readable map for agents |
