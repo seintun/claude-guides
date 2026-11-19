@@ -163,7 +163,7 @@
   },
   {
    "row": 8,
-   "scenario": "Overnight or unattended loop",
+   "scenario": "Overnight or scheduled loop over a backlog: one item per pass, polling, nightly jobs",
    "thin": false,
    "read": [
     "11.1",
@@ -427,7 +427,7 @@
   },
   {
    "row": 21,
-   "scenario": "Run a task end to end with minimal supervision",
+   "scenario": "Take one task from spec to merged PR with minimal supervision, overnight or not",
    "thin": false,
    "read": [
     "11.6",

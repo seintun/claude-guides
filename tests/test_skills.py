@@ -135,9 +135,14 @@ class GuideFreshness(unittest.TestCase):
         self.assertIn("not yet folded in", self.body, "skills/guide/SKILL.md must list newer news items as not yet folded in.")
         self.assertRegex(self.body, r"more than 45 days old.{0,260}/refresh scan", "skills/guide/SKILL.md must suggest /refresh scan after 45 days.")
 
+    def test_answer_opens_with_the_freshness_line(self):
+        """/guide answers without saying which playbook version it used (a cold test on 2026-11-18 skipped it)."""
+        self.assertIn("`Guide: playbook <version>, <date> · <freshness result>`", self.body,
+                      "skills/guide/SKILL.md must make the answer open with the fixed freshness line.")
+
     def test_cites_grades_and_never_gives_superseded_or_archive_as_current(self):
         """/guide gives a step with no grade, or hands out superseded advice or an archive file as current."""
-        self.assertRegex(self.body, r"evidence grade \(P primary, S second-hand, R research, D design advice\)",
+        self.assertRegex(self.body, r"evidence grade in brackets, \[P\], \[S\], \[R\] or \[D\] \(P primary, S second-hand, R research, D design advice\)",
                          "skills/guide/SKILL.md must cite the P, S, R or D grade on each step.")
         self.assertRegex(self.body, r"P or R (claim )?.{0,40}S claim", "skills/guide/SKILL.md must prefer a P or R claim over an S claim.")
         self.assertRegex(self.body, re.compile(r"Never give .{0,60}§19\.5.{0,40}superseded.{0,80}archive.{0,40}current advice", re.S),
