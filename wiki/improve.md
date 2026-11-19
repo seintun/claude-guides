@@ -8,14 +8,20 @@ repeating a bad habit.
 1. **Hold a retro after each real task (Template I).** Ask where turns were wasted, what you had to
    correct, which check caught a real problem, which check was missing and which helper came back
    empty. Propose up to 3 changes, and apply none until you say yes (D).
-2. **Turn each lesson into one change.** A change is a CLAUDE.md rule, a skill, a hook, a test or a
-   tool fix (D). Keep detailed learnings in `docs/solutions/` or skills, and promote to CLAUDE.md only
+2. **Turn each lesson into one change, on the highest rung that works.** This is the correction
+   ladder, from the top: (1) change the architecture or API so the mistake can't be written; (2) add a
+   lint rule, a type or a test; (3) add runtime verification; (4) only then add a skill or a CLAUDE.md
+   line (D). Keep detailed learnings in `docs/solutions/` or skills, and promote to CLAUDE.md only
    the rules that stop a repeated mistake (D). Keep a mined rule or skill only if re-running the
    evals shows it helps (D). [§13](../playbook/agent-harness-playbook.md#13-evals-and-learning)
    [Law 8](../playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule)
-3. **Start an eval set from real failures.** Collect 20 to 50 simple tasks drawn from real failures
-   (P), one JSONL line per task (Template J). Record where each task came from, such as an incident
-   (D).
+3. **Start an eval set from real failures.** Collect 20 to 50 tasks drawn from failures you have
+   already seen, one JSONL line per task (Template J), and grade outcomes, not paths (P). Do error
+   analysis before you build judges: read traces, group the failures into a counted taxonomy and keep
+   reading until new traces stop showing new kinds (P, practitioner method). Give each trial a clean
+   environment, prefer a code grader and calibrate any model grader against human labels (P). Report
+   pass^k and cost per task, and prefer tasks from your own repo over public leaderboards (P, R).
+   [§13.1](../playbook/agent-harness-playbook.md#131-build-an-eval-set-from-real-failures)
 4. **Pick graders and read transcripts.** Code-based graders are fast, objective and brittle,
    model-based graders need calibration, and humans are the gold standard but slow (P). Prefer code
    checks before LLM judges, and validate any judge against expert labels (P). Scores say that
@@ -42,8 +48,8 @@ repeating a bad habit.
 ## Checklist
 
 - [ ] A retro ran after my last real task, and each proposal was accepted or rejected.
-- [ ] Each accepted lesson became a rule, skill, hook, test or tool fix.
-- [ ] The eval set holds tasks from real failures, one JSONL line each.
+- [ ] Each accepted lesson went on the highest rung of the correction ladder that works.
+- [ ] The eval set holds tasks from real failures, one JSONL line each, and I read traces before building a judge.
 - [ ] I read transcripts of failing runs, not only scores.
 - [ ] The scorecard tracks six measures, and I looked at the trend after ten tasks.
 - [ ] After a model upgrade I re-ran a frozen eval set with k trials per task.
@@ -71,6 +77,7 @@ repeating a bad habit.
 
 ## Go deeper
 
+- [§13.1 Build an eval set from real failures](../playbook/agent-harness-playbook.md#131-build-an-eval-set-from-real-failures): the recipe in six steps.
 - [§13 Evals and learning](../playbook/agent-harness-playbook.md#13-evals-and-learning): graders, the scorecard and the learning loop.
 - [§14 Model failure modes and countermeasures](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures): the full table, including jagged competence and context rot.
 - [§15 Anti-patterns](../playbook/agent-harness-playbook.md#15-anti-patterns)

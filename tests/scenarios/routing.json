@@ -127,7 +127,9 @@
     "E"
    ],
    "runbook": "run-unattended",
-   "also": []
+   "also": [
+    21
+   ]
   },
   {
    "id": "code-review",
@@ -318,6 +320,41 @@
    "runbook": "skills/orchestrate/README.md",
    "also": [
     18
+   ]
+  },
+  {
+   "id": "end-to-end-unattended",
+   "request": "Take this approved spec all the way to a merged PR with as little supervision as the checks allow.",
+   "row": 21,
+   "ids": [
+    "11.6",
+    "11.3",
+    "9"
+   ],
+   "templates": [
+    "B",
+    "E",
+    "H"
+   ],
+   "runbook": "run-unattended",
+   "also": [
+    8
+   ]
+  },
+  {
+   "id": "set-up-evals",
+   "request": "Set up evals for my agent so I can tell whether a harness change helps.",
+   "row": 22,
+   "ids": [
+    "13.1",
+    "13"
+   ],
+   "templates": [
+    "J"
+   ],
+   "runbook": "improve",
+   "also": [
+    16
    ]
   }
  ]

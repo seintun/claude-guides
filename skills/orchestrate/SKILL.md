@@ -51,7 +51,7 @@ Runner-ups, the nearest alternative to each route: 1 to 2, 2 to 1, 3 to 4 (to 2 
 
 Rules that hold on every route:
 
-- One writer per set of files. Helpers read, search and review [D].
+- One writer per set of files. Helpers read, search and review [D]. Writers in parallel (routes 3 to 5) fit only when each has an isolated checkout, the work splits into independent failing checks, a strong verifier grades the result, and a claim mechanism stops two writers taking the same task [D, built on P and R sources: playbook §6].
 - Do not nest coordinators. Independent agents amplified errors 17.2x, and a central orchestrator 4.4x, both against one agent [R]. Keep one coordinator; extra layers are our advice to avoid [D].
 - Agent teams are experimental, give teammates no worktree isolation, and use about 7x the tokens of a standard session when teammates run in plan mode [P]. Prefer routes 3 to 5 for writing code [D].
 - The orchestrator-workers pattern costs about 15x the tokens of a chat [P]. Pay that only for parallel reading, an independent judgment, or context that would overflow.

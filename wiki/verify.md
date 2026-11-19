@@ -12,7 +12,10 @@ agent hands back.
    automated check → gate → receipt. For example, a test in `npm test`, enforced by a Stop hook and a
    CI required check (D).
 3. **Require a receipt.** For each criterion, record PASS, FAIL or NOT RUN with the command and its
-   output, then list what is not done and the next step. NOT RUN is not PASS (D).
+   output, then list what is not done and the next step. NOT RUN is not PASS (D). Ask for the report
+   in plain English: short, active sentences with one meaning per word, close to ASD-STE100 (P).
+   Karpathy's tip to add a diagram or an HTML page for a large change is one person's practice
+   (P, opinion).
    [§9.4](../playbook/agent-harness-playbook.md#94-receipt-format)
 4. **Pick a rung on the trust ladder by risk.** Rung 1, "the agent says it's done", is never enough.
    Rung 2 shows the command and output, rung 3 has a hook rerun the checks, rung 4 adds a fresh
@@ -29,13 +32,22 @@ agent hands back.
    (D). Anthropic's long-running harness called removing or editing tests unacceptable (P). Keep one
    acceptance check outside the builder's workspace, run by CI or the Stop gate (D).
    [§9.3](../playbook/agent-harness-playbook.md#93-rules-that-keep-verification-honest)
-8. **Check in order, cheapest first.** Use rules-based feedback (lint, types, tests), then visual
-   feedback through a browser for UI, then an LLM judge (P). Give any judge a rubric (P), use one from
-   a different model family than the work and repeat it (D), and never make it the only gate (D).
+8. **Check in layers, cheapest and most deterministic first.** The order is: types, lint, tests and
+   build; a Stop hook that reruns them; runtime verification (run the app and look at the result);
+   `/goal` with a turn bound in the condition, which names output the session shows because the
+   evaluator runs no commands; then a fresh reviewer (D, built on P sources). Keep the done check out
+   of the agent's reach, and review the verification artifacts (screenshots, command output), not only
+   the diff (P). Give any LLM judge a rubric (P), use one from a different model family than the work
+   and repeat it (D), and never make it the only gate (D).
+   [§9](../playbook/agent-harness-playbook.md#9-verification-stack),
    [§9.3](../playbook/agent-harness-playbook.md#93-rules-that-keep-verification-honest)
-9. **Get an independent review.** The maker is not the checker. A fresh reviewer gets the artifact
-   and the criteria, never the author's reasoning or conclusion, and sources are anonymized when it
-   compares candidates (D). Keep the fresh-eyes review even when tests are green (S). Bound it: only
+9. **Get an independent review.** The maker is not the checker. A reviewer is read-only (for example
+   `tools: Read, Grep, Glob`), starts in a clean context, is anchored to the spec and runs once per
+   artifact version (D). It gets the artifact and the criteria, never the author's reasoning or
+   conclusion, and sources are anonymized when it compares candidates (D). Tell it to skip style:
+   a reviewer asked to find problems "will always find something" (P). When every reviewer is an
+   agent, add one independent final check, a gate that reruns the checks or a human (D)
+   ([§7](../playbook/agent-harness-playbook.md#7-delegation-protocol)). Keep the fresh-eyes review even when tests are green (S). Bound it: only
    a blocker with evidence reopens a review, a re-review reads the fix diff for open and new blockers,
    only the reviewer or a human closes a blocker without a fix, and after two rounds a human decides (D). [§9.2](../playbook/agent-harness-playbook.md#92-trust-ladder);
    evidence in [research/bounded-review-evidence.md](../research/bounded-review-evidence.md).
@@ -50,7 +62,8 @@ agent hands back.
 - [ ] The receipt lists PASS, FAIL or NOT RUN per criterion, with the command.
 - [ ] NOT RUN is not counted as PASS.
 - [ ] Test paths are protected from the builder by a hook or CODEOWNERS.
-- [ ] A reviewer with a fresh context got the diff and the criteria only.
+- [ ] A reviewer with a fresh context got the diff and the criteria only, and was told to skip style.
+- [ ] The report is in plain English, and one final check is a gate or a human, not an agent.
 - [ ] No LLM judge is the only gate.
 - [ ] I chose which risk tiers get line-by-line human review.
 
@@ -87,6 +100,7 @@ agent hands back.
 - [§4 The core loop (one agent)](../playbook/agent-harness-playbook.md#4-the-core-loop-one-agent): where verify sits in the loop.
 - [Law 2. Verification multiplies quality](../playbook/agent-harness-playbook.md#law-2-verification-multiplies-quality)
 - [Law 7. Separate the maker from the checker](../playbook/agent-harness-playbook.md#law-7-separate-the-maker-from-the-checker)
+- [§7 Delegation protocol](../playbook/agent-harness-playbook.md#7-delegation-protocol): the reviewer rule.
 - [Law 9. Enforce with code; request with words](../playbook/agent-harness-playbook.md#law-9-enforce-with-code-request-with-words)
 - Page lessons: page Lesson 9 (Self-checks), page Lesson 15 (When it goes wrong), page Lesson 16 (Checklist).
 - Related runbooks: [orchestrate](orchestrate.md), [run-unattended](run-unattended.md).

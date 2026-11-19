@@ -12,7 +12,7 @@ mistake, loses context in a long session or builds more than you asked for.
 | "Done" with no proof | Declares victory early (P) | Ask "Receipt please: PASS, FAIL or NOT RUN, with the command for each" | [§14](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures), [cheat sheet §3](../playbook/claude-cheat-sheet.md#3-stuck-signs-and-fixes) |
 | Tests pass, but the tests changed | Edits, disables or deletes tests to make them pass (P) | Read the test diff. Add a test-immutability rule plus a hook or CODEOWNERS on test paths | [§14](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures) |
 | Forgets earlier decisions in a long session | Context rot (P) | `/compact <focus>`, or start a new session from the plan file | [§14](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures), [cheat sheet §3](../playbook/claude-cheat-sheet.md#3-stuck-signs-and-fixes) |
-| Repeats an old mistake in a new session | Forgets between sessions (P) | Put the lesson in CLAUDE.md, memory or a progress file | [§14](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures), [§8](../playbook/agent-harness-playbook.md#8-context-engineering) |
+| Repeats an old mistake in a new session | Forgets between sessions (P) | Fix it on the highest rung of the correction ladder that works: the architecture, then a lint rule, type or test, then runtime verification, and a CLAUDE.md line last | [Law 8](../playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule), [§14](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures) |
 | Builds extras, bloats, leaves dead code | Overbuilds (S); adds features nobody asked for (P) | Set a diff-size budget, write no-gos into the issue, ask for a simplifier pass | [§14](../playbook/agent-harness-playbook.md#14-model-failure-modes-and-countermeasures) |
 | Waiting on permission | A permission prompt is blocking it | Check the sidebar for "waiting". Pre-allow safe commands in settings | [Cheat sheet §3](../playbook/claude-cheat-sheet.md#3-stuck-signs-and-fixes) |
 | Silent background agent | The helper went quiet | Ask for status. If nothing comes back, stop it and re-brief it with narrower scope | [Cheat sheet §3](../playbook/claude-cheat-sheet.md#3-stuck-signs-and-fixes) |
@@ -46,8 +46,10 @@ mistake, loses context in a long session or builds more than you asked for.
    outside the chat (D). When the budget runs out, stop and report. The Stop-hook continuation cap of
    8 is a backstop, not your stop condition (P).
    [§11.3](../playbook/agent-harness-playbook.md#113-guardrails-for-any-loop)
-8. **Hand the lesson to a retro.** Run Template I and propose up to 3 changes: a CLAUDE.md rule, a
-   skill, a hook, a test or a tool fix. Apply none until you say yes (D). Promote to CLAUDE.md only
+8. **Hand the lesson to a retro.** When the same mistake comes back, put the fix on the highest rung
+   of the correction ladder that works: change the architecture so it can't be written, then a lint
+   rule, type or test, then runtime verification, and a skill or CLAUDE.md line last (D). Run
+   Template I and propose up to 3 changes. Apply none until you say yes (D). Promote to CLAUDE.md only
    the rules that stop a repeated mistake (D).
    [Law 8](../playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule)
 
@@ -59,7 +61,7 @@ mistake, loses context in a long session or builds more than you asked for.
 - [ ] Decisions and progress live in files, so a new session can start from the plan file.
 - [ ] The goal names no-gos and a diff-size budget.
 - [ ] The next run has a stop condition, a retry cap and a results sink outside the chat.
-- [ ] I ran a retro, and each proposed change was accepted or rejected.
+- [ ] I ran a retro, and each repeated mistake went on the highest rung of the correction ladder that works.
 
 ## Templates
 
@@ -84,6 +86,7 @@ mistake, loses context in a long session or builds more than you asked for.
 - [§4 The core loop (one agent)](../playbook/agent-harness-playbook.md#4-the-core-loop-one-agent): where escalation sits, and the order to verify in.
 - [§8 Context engineering](../playbook/agent-harness-playbook.md#8-context-engineering): compaction, notes, subagents and state formats.
 - [§11.3 Guardrails for any loop](../playbook/agent-harness-playbook.md#113-guardrails-for-any-loop): stop condition, retry cap and results sink.
+- [Law 8. Turn every correction into a rule](../playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule): the correction ladder.
 - [§15 Anti-patterns](../playbook/agent-harness-playbook.md#15-anti-patterns)
 - [Cheat sheet §3. Stuck signs and fixes](../playbook/claude-cheat-sheet.md#3-stuck-signs-and-fixes): six signs and one-line fixes.
 - Page lessons: page Lesson 1 (Everything is one loop), page Lesson 15 (When it goes wrong).

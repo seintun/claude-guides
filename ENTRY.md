@@ -37,6 +37,8 @@ Rows marked **thin** have no full recipe in the playbook. They route to the near
 | 18 | Several writers on one codebase (thin) | `7 3A` | [orchestrate](wiki/orchestrate.md) | D, C | One writer per file set, a worktree per builder, one plan file per task. Gap: no merge or integration step |
 | 19 | Write a prompt for an agent | `cs:6 cs:7 law-3 9.1` | [/prompt skill](skills/prompt/README.md) | B, C, H | A saved prompt in `GUIDE/prompts/<project>/` with a goal, 2 to 5 checks, a budget, stop-and-ask cases and a receipt. Run `/prompt`, or follow its steps |
 | 20 | Choose how to run a task: inline, subagents, parallel builders, sessions or a hub | `6 7 19.1 3A` | [/orchestrate skill](skills/orchestrate/README.md), [orchestrate](wiki/orchestrate.md) | C | A routing card: the route and its runner-up, each part's model and effort, the order, 2 to 5 checks, a budget and what was not used. Nothing starts before a yes. Run `/orchestrate`, or follow its steps |
+| 21 | Run a task end to end with minimal supervision | `11.6 11.3 9 6` | [run-unattended](wiki/run-unattended.md), [verify](wiki/verify.md) | B, E, H | An approved spec, the five questions answered on paper, state in files, layered checks the agent can't edit, the controls set (auto mode or `dontAsk`, a worktree, `--max-budget-usd`, `--max-turns`), a list of what pauses the run, and a sign-off on artifacts and receipts at the end |
+| 22 | Set up evals for my agent | `13.1 13 law-8` | [improve](wiki/improve.md) | J, I | An eval set of 20 to 50 tasks from real failures, one JSONL line each, graded on outcomes by code where possible; traces read before any judge is built; pass^k and cost per task reported; failures labelled by hand |
 
 ## Phase table
 
@@ -50,8 +52,8 @@ Use this when the request is a stage of work, not a scenario. Each phase has a r
 | 4 Orchestrate: who does what? | `6 7 3A` | [orchestrate](wiki/orchestrate.md) | C |
 | 5 Build: is the loop healthy? | `4 8 cs:3` | [unstick](wiki/unstick.md) | B |
 | 6 Check: is it really done? | `9 law-2` | [verify](wiki/verify.md) | F, G, M |
-| 7 Overnight: can it run without me? | `11 10` | [run-unattended](wiki/run-unattended.md) | E, H |
-| 8 Learn: what should never repeat? | `13 law-8 15` | [improve](wiki/improve.md) | I, J |
+| 7 Overnight: can it run without me? | `11 11.6 10` | [run-unattended](wiki/run-unattended.md) | E, H |
+| 8 Learn: what should never repeat? | `13 13.1 law-8 15` | [improve](wiki/improve.md) | I, J |
 
 ## Rules that apply everywhere
 

@@ -33,8 +33,8 @@ Finish with up to three fixes that block, or say that none do. Do not edit anyth
 | 4 | Orchestrate | Who does what, in parallel or in sequence? | [§6](playbook/agent-harness-playbook.md#6-orchestration-patterns), [§7](playbook/agent-harness-playbook.md#7-delegation-protocol), [§16C](playbook/agent-harness-playbook.md#c-subagent-brief), [§3A](playbook/agent-harness-playbook.md#3a-claude-code-feature-map) | [Orchestrate](wiki/orchestrate.md) | Agent roster, briefs |
 | 5 | Build | Is the loop healthy while running? | [§4](playbook/agent-harness-playbook.md#4-the-core-loop-one-agent), [§8](playbook/agent-harness-playbook.md#8-context-engineering), cheat sheet [§3](playbook/claude-cheat-sheet.md#3-stuck-signs-and-fixes) | [Orchestrate](wiki/orchestrate.md) | Commits, state file |
 | 6 | Check | Is it really done? | [§9](playbook/agent-harness-playbook.md#9-verification-stack), [§16F](playbook/agent-harness-playbook.md#f-stop-hook-that-blocks-done-while-tests-fail), [Law 2](playbook/agent-harness-playbook.md#law-2-verification-multiplies-quality), [Law 7](playbook/agent-harness-playbook.md#law-7-separate-the-maker-from-the-checker) | [Verify](wiki/verify.md) | Receipts |
-| 7 | Overnight | Can it run without me? | [§11](playbook/agent-harness-playbook.md#11-continuous-and-unattended-operation), [§10](playbook/agent-harness-playbook.md#10-guardrails), [§16E](playbook/agent-harness-playbook.md#e-long-running-state-files), [§16H](playbook/agent-harness-playbook.md#h-loop-and-schedule-prompts) | [Run unattended](wiki/run-unattended.md), [Guardrails](wiki/guardrails.md) | Loop or schedule, morning report |
-| 8 | Learn | What should never repeat? | [§13](playbook/agent-harness-playbook.md#13-evals-and-learning), [§16I](playbook/agent-harness-playbook.md#i-retro-prompt), [Law 8](playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule), [§15](playbook/agent-harness-playbook.md#15-anti-patterns) | [Improve](wiki/improve.md) | CLAUDE.md rules, evals |
+| 7 | Overnight | Can it run without me? | [§11](playbook/agent-harness-playbook.md#11-continuous-and-unattended-operation), [§11.6](playbook/agent-harness-playbook.md#116-end-to-end-with-minimal-supervision), [§10](playbook/agent-harness-playbook.md#10-guardrails), [§16E](playbook/agent-harness-playbook.md#e-long-running-state-files), [§16H](playbook/agent-harness-playbook.md#h-loop-and-schedule-prompts) | [Run unattended](wiki/run-unattended.md), [Guardrails](wiki/guardrails.md) | Loop or schedule, morning report |
+| 8 | Learn | What should never repeat? | [§13](playbook/agent-harness-playbook.md#13-evals-and-learning), [§13.1](playbook/agent-harness-playbook.md#131-build-an-eval-set-from-real-failures), [§16I](playbook/agent-harness-playbook.md#i-retro-prompt), [Law 8](playbook/agent-harness-playbook.md#law-8-turn-every-correction-into-a-rule), [§15](playbook/agent-harness-playbook.md#15-anti-patterns) | [Improve](wiki/improve.md) | CLAUDE.md rules, evals |
 
 ## Review checklists
 
@@ -58,7 +58,7 @@ Finish with up to three fixes that block, or say that none do. Do not edit anyth
 - Unfamiliar work searched the repo first, then the official docs, then other projects for ideas, and every new dependency was vetted (§5.4).
 
 ### 4. Orchestrate
-- There is one writer per set of files; helpers only read or review (§6).
+- There is one writer per set of files; helpers only read or review. Parallel writers need isolated checkouts, independent failing tests, a strong verifier and a claim mechanism (§6).
 - Each subagent brief has a goal, scope, what is already ruled out and the return format (§7, §16C).
 - Fan-out is justified by independence, not by parallelism alone.
 - Model per role: cheap scouts, a strong architect and reviewer.
@@ -79,13 +79,14 @@ Finish with up to three fixes that block, or say that none do. Do not edit anyth
 ### 7. Overnight
 - A state file and a progress log exist so a fresh context can resume (§11.1, §16E).
 - The loop has a stop condition, a budget cap and an attempt cap (§11.3).
+- For a whole task from spec to merged PR, the five questions are answered on paper and the list of what pauses the run is written (§11.6).
 - Permissions are pre-approved for safe actions only; nothing irreversible runs unattended (§10).
 - It works on a branch or worktree, never on main.
 - The morning report lists what passed, what failed and what is waiting on you.
 
 ### 8. Learn
-- Each repeated correction became a rule; dead rules were pruned (Law 8).
-- Failures became eval tasks (§13, §16J).
+- Each repeated correction went on the highest rung of the correction ladder that works; dead rules were pruned (Law 8).
+- Failures became eval tasks, and traces were read before any judge was built (§13, §13.1, §16J).
 - A mined rule or skill stayed only if re-running the evals showed it helps (§13).
 - A retro was written (§16I).
 

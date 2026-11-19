@@ -112,6 +112,49 @@ class GuideSkill(unittest.TestCase):
                       "skills/guide/SKILL.md must find the root with: git -C \"${CLAUDE_SKILL_DIR}\" rev-parse --show-toplevel")
 
 
+class GuideFreshness(unittest.TestCase):
+    """/guide must say which playbook version it answered from, catch a stale clone and cite evidence grades."""
+
+    def setUp(self):
+        self.fields, self.body = frontmatter(SKILLS["guide"])
+
+    def test_reads_version_and_date_from_the_index_and_states_them(self):
+        """/guide answers from a playbook it never dated, so a stale copy passes for current."""
+        for needle in ("guide-index.json", "playbook_version", "playbook_updated"):
+            self.assertIn(needle, self.body, f"skills/guide/SKILL.md freshness step must read {needle}.")
+
+    def test_catches_a_clone_that_is_behind_main(self):
+        """The symlink reads the local clone, which is stale until pulled; /guide must compare with main and say so."""
+        self.assertRegex(self.body, re.compile(r"/main/guide-index\.json", re.I),
+                         "skills/guide/SKILL.md must compare the clone with main's guide-index.json.")
+        self.assertIn("your clone is behind main; run `git pull`", self.body,
+                      "skills/guide/SKILL.md must tell the user to git pull when main is newer.")
+
+    def test_flags_newer_news_and_an_old_playbook(self):
+        """Newer adopted findings are listed as not yet folded in; a playbook over 45 days old suggests a scan."""
+        self.assertIn("not yet folded in", self.body, "skills/guide/SKILL.md must list newer news items as not yet folded in.")
+        self.assertRegex(self.body, r"more than 45 days old.{0,260}/refresh scan", "skills/guide/SKILL.md must suggest /refresh scan after 45 days.")
+
+    def test_cites_grades_and_never_gives_superseded_or_archive_as_current(self):
+        """/guide gives a step with no grade, or hands out superseded advice or an archive file as current."""
+        self.assertRegex(self.body, r"evidence grade \(P primary, S second-hand, R research, D design advice\)",
+                         "skills/guide/SKILL.md must cite the P, S, R or D grade on each step.")
+        self.assertRegex(self.body, r"P or R (claim )?.{0,40}S claim", "skills/guide/SKILL.md must prefer a P or R claim over an S claim.")
+        self.assertRegex(self.body, re.compile(r"Never give .{0,60}§19\.5.{0,40}superseded.{0,80}archive.{0,40}current advice", re.S),
+                         "skills/guide/SKILL.md must never give a superseded item (§19.5) or an archive file as current advice.")
+
+    def test_description_triggers_on_end_to_end_runs_and_evals(self):
+        """New router rows 21 and 22 are unreachable if the description never names them."""
+        desc = self.fields["description"]
+        self.assertIn("end to end", desc, "skills/guide/SKILL.md description must trigger on end-to-end runs.")
+        self.assertIn("evals", desc, "skills/guide/SKILL.md description must trigger on setting up evals.")
+
+    def test_allowed_tools_stay_minimal(self):
+        """The freshness step needs no new tool: only Read, git -C, python3 -I and the raw.githubusercontent.com curl."""
+        allowed = self.fields["allowed-tools"]
+        self.assertNotRegex(allowed, r"Write|Edit|WebFetch|Bash\(\*", "skills/guide/SKILL.md allowed-tools grew; /guide only reads.")
+
+
 class GuideSnippetAndPrompt(unittest.TestCase):
     def test_snippet_is_one_line_pointer_without_import(self):
         """snippet.md stays one line and a plain pointer, since an @ import would load a file into every session."""

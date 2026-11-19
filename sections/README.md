@@ -80,8 +80,8 @@ One file per playbook section, law, template and cheat-sheet section, so an agen
 | [`19.5`](19.5.md) | 19.5 Dated findings and what they supersede | 26 |
 | [`20`](20.md) | 20. Sources | 191 |
 | [`cs:1`](cs-1.md) | 1. Which surface | 11 |
-| [`cs:2`](cs-2.md) | 2. Commands | 20 |
-| [`cs:3`](cs-3.md) | 3. Stuck signs and fixes | 11 |
+| [`cs:2`](cs-2.md) | 2. Commands | 23 |
+| [`cs:3`](cs-3.md) | 3. Stuck signs and fixes | 12 |
 | [`cs:4`](cs-4.md) | 4. Mindset | 9 |
 | [`cs:5`](cs-5.md) | 5. Voice input (Wispr Flow) | 6 |
 | [`cs:6`](cs-6.md) | 6. Prompt template for orchestrated work | 13 |
