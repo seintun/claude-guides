@@ -1,5 +1,7 @@
 # Improve
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page after real tasks, when you want the harness to get better, or when the model keeps
 repeating a bad habit.
 

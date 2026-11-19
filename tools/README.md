@@ -4,7 +4,7 @@ Run every command from the repository root. None needs a third-party package.
 
 | Script | What it does |
 |---|---|
-| `build_compendium.py` | Builds `docs/orchestrating-claude-compendium.html` from the Markdown and the page. Run: `python3 -I tools/build_compendium.py` |
+| `build_compendium.py` | Builds `docs/orchestrating-claude-compendium.html`, one long page grouped by the teaching page's six parts, from the page, the wiki and the playbook's page map. Run: `python3 -I tools/build_compendium.py` |
 | `check_links.py` | Checks that every relative link in the Markdown files points to a file that exists, and that every `#anchor` matches a heading. Run: `python3 -I tools/check_links.py` |
 | `route_cost.py` | Estimates the tokens one route loads: the skill, ENTRY.md, a row's sections and optionally its runbook. Run: `python3 -I tools/route_cost.py 9.5 F --runbook wiki/verify.md` |
 | `metrics.py` | Success and performance metrics: suite results and timing, mutation catch rate, live routing results, tokens per route, reading time, and growth across git history. Run: `python3 -I tools/metrics.py --write --record`, which writes docs/metrics.md |

@@ -92,6 +92,40 @@ async (page) => {
     line(ok ? 'PASS' : 'FAIL', 'nav-2', 'Choosing 17 Evidence shows its h2 below the menu', JSON.stringify(r));
   }
 
+  // Contents links: click every rail or menu link, part chip and what's-new link, and see its heading land
+  // below any sticky header, with the URL hash set. Desktop uses the rail; the phone uses the lessons menu.
+  for (const [w, h] of [[1280, 900], [375, 812]]) {
+    out.push(`== contents links (${w}x${h})`);
+    await load(w, h, 'light');
+    const phone = w <= 980;
+    const groups = [
+      ['contents', phone ? '#lessons-menu' : '.rail'],
+      ['part chips', '.part-head .part-lessons'],
+      ["what's new", '#whatsnew'],
+    ];
+    const bad = [];
+    let clicked = 0;
+    for (const [label, root] of groups) {
+      const links = await page.evaluate((r) => [...new Set([...document.querySelectorAll(r + ' a[href^="#"]')].map((a) => a.getAttribute('href')))], root);
+      for (const href of links) {
+        if (phone && label === 'contents') await page.evaluate(() => { document.getElementById('lessons-menu').open = true; });
+        await page.locator(`${root} a[href="${href}"]`).first().click();
+        await page.waitForTimeout(100);
+        const r = await page.evaluate(([href, phone]) => {
+          const t = document.getElementById(href.slice(1));
+          const head = t ? (t.matches('section') ? t.querySelector('h2') : t.querySelector('h2')) : null;
+          if (!head) return { missing: true };
+          const hr = head.getBoundingClientRect();
+          const menu = document.getElementById('lessons-menu');
+          return { top: Math.round(hr.top), bottom: Math.round(hr.bottom), sticky: phone ? Math.round(menu.getBoundingClientRect().bottom) : 0, vh: innerHeight, hash: location.hash };
+        }, [href, phone]);
+        clicked++;
+        if (r.missing || r.top < r.sticky - 1 || r.bottom > r.vh || r.hash !== href) bad.push(`${label} ${href} ${JSON.stringify(r)}`);
+      }
+    }
+    line(bad.length ? 'FAIL' : 'PASS', `nav-3 ${w}`, `Every contents, part and what's-new link lands its heading below the sticky header, with the hash set`, bad.length ? bad.slice(0, 4).join(' | ') : `${clicked} links clicked`);
+  }
+
   // Quiz by keyboard: arrow keys move the choice without scoring; Check answer scores it.
   out.push('== quiz keyboard (1280x900)');
   await load(1280, 900, 'light');

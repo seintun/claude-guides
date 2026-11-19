@@ -338,7 +338,7 @@
       var lv = sec.querySelector('.kicker .lv');
       if (!lv || !/^(Core|Builder|Reference) · \d+ min$/.test(lv.textContent)) fails.push('#' + sec.id + ' kicker lacks level and minutes');
     });
-    if (window.innerWidth > 980 && document.querySelectorAll('.rail .rail-group').length !== 4) fails.push('rail does not show 4 groups');
+    if (window.innerWidth > 980 && document.querySelectorAll('.rail .rail-group').length !== 6) fails.push('rail does not show 6 parts');
     var rules = document.getElementById('rules-list');
     var shown = rules ? [].filter.call(rules.children, visible).length : 0;
     var btn = document.querySelector('#rules .more-btn[aria-expanded="false"]');
@@ -371,10 +371,81 @@
     return result('dom-13', 'Theme toggle: dark or light, icon and label follow, two clicks restore', fails, 'starts ' + start);
   }
 
+  /* ---------- parts, contents links, what's new ---------- */
+  function hrefs(list) { return [].map.call(list, function (a) { return a.getAttribute('href'); }); }
+  function c14Parts() {
+    var fails = [];
+    var parts = [].slice.call(document.querySelectorAll('main .part-head'));
+    if (parts.length !== 6) fails.push(parts.length + ' part headers, want 6');
+    var owner = {};
+    parts.forEach(function (p) {
+      if (!p.querySelector('h2') || !p.querySelector('.part-why') || !/^Part \d of 6$/.test((p.querySelector('.part-no') || {}).textContent || '')) fails.push('#' + p.id + ' lacks its h2, purpose line or "Part N of 6"');
+      hrefs(p.querySelectorAll('.part-lessons a')).forEach(function (h) { (owner[h.slice(1)] = owner[h.slice(1)] || []).push(p.id); });
+    });
+    var secs = [].slice.call(document.querySelectorAll('main section[id]'));
+    secs.forEach(function (sec) {
+      var o = owner[sec.id] || [];
+      if (o.length !== 1) { fails.push('#' + sec.id + ' is listed under ' + o.length + ' parts'); return; }
+      var prev = sec.previousElementSibling;
+      while (prev && !prev.classList.contains('part-head')) prev = prev.previousElementSibling;
+      if (!prev || prev.id !== o[0]) fails.push('#' + sec.id + ' sits under ' + (prev ? prev.id : 'no part') + ' but is listed under ' + o[0]);
+    });
+    Object.keys(owner).forEach(function (id) { if (!secs.some(function (s) { return s.id === id; })) fails.push('part lists #' + id + ', which is not a lesson'); });
+    // the rail and the phone menu show the same six parts, each with the part's lessons in order
+    [['.rail', document.querySelector('.rail')], ['.lessons-menu', document.querySelector('.lessons-menu .lm-list')]].forEach(function (pair) {
+      var root = pair[1];
+      if (!root) { fails.push(pair[0] + ' missing'); return; }
+      var groups = [].slice.call(root.querySelectorAll('.rail-group'));
+      if (groups.length !== parts.length) { fails.push(pair[0] + ' shows ' + groups.length + ' parts'); return; }
+      groups.forEach(function (g, i) {
+        var a = g.querySelector('a'), ol = g.nextElementSibling;
+        if (!a || a.getAttribute('href') !== '#' + parts[i].id) fails.push(pair[0] + ' group ' + (i + 1) + ' does not link to #' + parts[i].id);
+        var want = hrefs(parts[i].querySelectorAll('.part-lessons a')).join(' '), got = ol ? hrefs(ol.querySelectorAll('a')).join(' ') : '';
+        if (want !== got) fails.push(pair[0] + ' ' + parts[i].id + ' lists "' + got + '", the part lists "' + want + '"');
+      });
+    });
+    return result('dom-14', 'Every lesson sits under exactly one part; the rail and phone menu show the same parts', fails, parts.length + ' parts, ' + secs.length + ' lessons');
+  }
+  function c15Contents() {
+    var fails = [], n = 0;
+    ['.rail', '.lessons-menu', '.part-head', '#whatsnew', '#paths'].forEach(function (sel) {
+      document.querySelectorAll(sel + ' a[href^="#"]').forEach(function (a) {
+        var h = a.getAttribute('href'); n++;
+        if (h.length < 2 || document.querySelectorAll('[id="' + decodeURIComponent(h.slice(1)).replace(/"/g, '') + '"]').length !== 1) fails.push(sel + ' ' + h + ' does not resolve to exactly one id');
+      });
+    });
+    return result('dom-15', 'Every rail, menu, part and what\'s-new link resolves to exactly one id', fails, n + ' links');
+  }
+  function c16Updated() {
+    var fails = [], tagged = document.querySelectorAll('main section[data-updated]');
+    var wn = document.getElementById('whatsnew');
+    if (!wn) fails.push('no #whatsnew panel');
+    else {
+      var items = wn.querySelectorAll('li').length;
+      if (items < 3 || items > 5) fails.push("what's new has " + items + ' bullets, want 3 to 5');
+      if (!/v\d+ · \d{4}-\d{2}-\d{2}/.test((wn.querySelector('.wn-label') || {}).textContent || '')) fails.push("what's new label lacks 'vN · date'");
+    }
+    if (!tagged.length) fails.push('no lesson carries data-updated');
+    tagged.forEach(function (sec) {
+      var tag = sec.querySelector('.kicker .upd'), want = 'Updated ' + sec.getAttribute('data-updated');
+      if (!tag || !visible(tag) || tag.textContent.trim() !== want) fails.push('#' + sec.id + ' shows no visible "' + want + '" tag');
+      if (wn && !wn.querySelector('a[href="#' + sec.id + '"]')) fails.push("what's new does not link to #" + sec.id);
+    });
+    document.querySelectorAll('main .upd').forEach(function (t) { if (!t.closest('section[data-updated]')) fails.push('an Updated tag sits in a lesson without data-updated'); });
+    var re = /^v(\d+) · updated (\d{4}-\d{2}-\d{2}) · evidence checked (\d{4}-\d{2}-\d{2}) \(Claude Code v\d+\.\d+\.\d+\)$/;
+    var head = document.querySelector('.hero .asof'), foot = document.querySelector('footer .asof');
+    [['header', head], ['footer', foot]].forEach(function (p) {
+      if (!p[1] || !re.test(p[1].textContent.trim())) fails.push(p[0] + ' as-of line missing or malformed: ' + (p[1] ? p[1].textContent.trim() : 'none'));
+    });
+    if (head && foot && head.textContent.trim() !== foot.textContent.trim()) fails.push('header and footer as-of lines differ');
+    if (!document.querySelector('footer a[href*="version-history"]')) fails.push('footer does not link the version history');
+    return result('dom-16', "What's new, visible Updated tags and the as-of line", fails, tagged.length + ' lessons updated');
+  }
+
   window.__uxChecks = function (o) {
     o = o || {};
     var out = [];
-    [c1Overflow, c2Title, c3SvgText, c4Scrollers, c5Contrast, c5NonText, c6Links, c7Structure, c8Tags, c9Glossary, c10Benchmarks, c11Wayfinding, c12Paths, c13Theme].forEach(function (fn) {
+    [c1Overflow, c2Title, c3SvgText, c4Scrollers, c5Contrast, c5NonText, c6Links, c7Structure, c8Tags, c9Glossary, c10Benchmarks, c11Wayfinding, c12Paths, c13Theme, c14Parts, c15Contents, c16Updated].forEach(function (fn) {
       try { out.push(fn(o)); } catch (e) { out.push({ id: fn.name, name: fn.name, status: 'FAIL', detail: 'check threw: ' + e.message }); }
     });
     return out;

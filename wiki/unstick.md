@@ -1,5 +1,7 @@
 # Unstick an agent
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when a Claude agent loops, will not finish, says "done" over broken work, repeats a
 mistake, loses context in a long session or builds more than you asked for.
 

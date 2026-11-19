@@ -1,5 +1,7 @@
 # Case study: this repository's own work
 
+Checked against playbook 0.7 (2026-11-18).
+
 Read this page to see the playbook applied from first request to final review, on the work that built
 this repository's teaching page and playbook.
 

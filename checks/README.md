@@ -9,12 +9,14 @@ checks/static.sh
 ```
 
 - Reads `site/orchestrating-claude.html`, or the page you pass as the first argument.
-- Prints PASS or FAIL for static-1 to static-5:
+- Prints PASS or FAIL for static-1 to static-7:
   - loop-colour roles
   - no `--series-*` tokens
   - the artifact page contract
   - external links open in a new tab
   - no baseline source URL dropped (`checks/urls-v11.txt`)
+  - the standalone copy `site/index.html` is current (static-6, `static.sh` only)
+  - every in-page link (`href="#id"`, outside script, style and code) resolves to exactly one id (static-7)
 - Writes `build/preview.html`, a copy wrapped in a doctype and body as the artifact viewer does, for the DOM checks.
 - Exits 1 on any FAIL.
 
@@ -52,16 +54,20 @@ Run `checks/run-dom.js` with Playwright's `browser_run_code_unsafe` tool, passin
 | dom-10 | The evidence chart draws as many benchmarks as its caption names |
 | kbd-1 to kbd-3 | Phase explorer: arrow keys move from the focused node, the group is one tab stop, and focus survives at phase 10 |
 | dom-11 | Skip link, phone lesson menu, and Next and Contents on every lesson |
-| dom-12 | Reading paths, levels and minutes, grouped rail, collapsed extras |
+| dom-12 | Reading paths, levels and minutes, a rail with six parts, collapsed extras |
 | nav-1, nav-2 | Phone menu stays at the top; choosing Lesson 17 shows its heading below the menu |
+| nav-3 | At 1280 and 375px, every rail or menu link, part chip and what's-new link lands its heading below the sticky header and sets the URL hash |
 | quiz-1 | Quiz: arrow keys choose without scoring; Check answer scores |
+| dom-14 | Six part headers; every lesson sits under exactly one, in order; the rail and the phone menu show the same parts and lessons |
+| dom-15 | Every rail, menu, part-chip, what's-new and reading-path link resolves to exactly one id |
+| dom-16 | The what's-new panel has 3 to 5 bullets and links each updated lesson; each `data-updated` lesson shows a visible "Updated DATE" tag; header and footer carry the same as-of line; the footer links the version history |
 | dom-13 | The theme toggle is a 44px `<button>`; the page is dark or light; the sun shows in dark and the moon in light, each with the matching aria-label; two clicks restore the theme |
 | theme-1 to theme-5 | With empty storage the page loads dark even when the system prefers light; one click gives light; the choice survives a reload; a viewer's own `data-theme` gives way to it; a second click gives dark |
 | page-1, page-2 | Every id is unique; no script errors in any view |
 
 `run-dom.js` also covers 768 and 1024px, so eight views in all. The page starts dark and remembers the reader's choice, so `run-dom.js` and `shots.js` set the page theme to match each view's emulated colour scheme; the theme scenario opts out with `?theme-test`.
 
-The v11 baseline is in `baseline-v11.txt`. Version 17, last updated 2026-10-27, passes all 27 checks.
+The v11 baseline is in `baseline-v11.txt`. Version 18, last updated 2026-11-18, passes all 32 checks.
 
 ## 3. Compendium check
 
@@ -70,6 +76,8 @@ The v11 baseline is in `baseline-v11.txt`. Version 17, last updated 2026-10-27, 
 - no sideways scroll at 1280, 375 and 320px
 - every `#` link has a target
 - unique ids
+- six parts; every lesson, runbook and mapped playbook section appears once, in part order (c-7)
+- every contents and what's-new link lands its heading below the sticky bar, with the hash set, at 1280 and 375px (c-8)
 - search finds and marks text
 - no script errors
 - no network requests, so it works offline

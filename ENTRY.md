@@ -1,5 +1,7 @@
 # Claude Guides: start here
 
+Checked against playbook 0.7 (2026-11-18).
+
 Read this first when another project calls this guide, through `/guide`, a CLAUDE.md pointer or a pasted prompt. It routes your request to a few playbook sections, at most one runbook and one template. Never load the whole playbook: it is about 1,500 lines.
 
 ## How to use it

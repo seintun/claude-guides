@@ -1,5 +1,7 @@
 # Build a harness
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when you set up a harness around Claude for a repository, or need to decide which stage
 to build next.
 

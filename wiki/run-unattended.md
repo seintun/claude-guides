@@ -1,5 +1,7 @@
 # Run unattended
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page before Claude runs a loop, a schedule or a cloud session while you are not watching.
 
 For a whole task from spec to merged PR, follow the ten steps of

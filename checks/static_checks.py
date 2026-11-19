@@ -72,4 +72,16 @@ report("static-5", "Every baseline source URL is still linked", missing, f"{len(
 for u in added:
     print(f"INFO static-5 added {u}")
 
+# static-7: every in-page link (href="#id") in real markup resolves to exactly one id. Script, style, code and pre
+# blocks are skipped, because they hold example text, not links.
+markup = re.sub(r"<(script|style|code|pre)\b.*?</\1>", " ", src, flags=re.S)
+ids = re.findall(r'\sid="([^"]+)"', re.sub(r"<(script|style)\b.*?</\1>", " ", src, flags=re.S))
+fails = []
+targets = sorted(set(re.findall(r'<a\s[^>]*href="#([^"]+)"', markup)))
+for target in targets:
+    n = ids.count(target)
+    if n != 1:
+        fails.append(f"#{target} matches {n} ids")
+report("static-7", "Every in-page link resolves to exactly one id", fails, f"{len(targets)} distinct targets")
+
 sys.exit(1 if "FAIL" in results else 0)
