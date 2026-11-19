@@ -36,7 +36,7 @@ Read the docs pages only when the changelog suggests an edit. Record in `state.j
 | anthropic-engineering | Anthropic engineering index | https://www.anthropic.com/engineering | fetch | New posts on harnesses, agents, evals, memory |
 | anthropic-research | Anthropic research index | https://www.anthropic.com/research | fetch | Containment, safety, source-control posts |
 | claude-blog | Claude blog | https://claude.com/blog | fetch | Product and feature posts |
-| openai-index | OpenAI index pages for Codex, evals and engineering | https://openai.com/news/engineering/ | fetch | Harness, Codex and eval posts. The page may block fetch tools; if it does, read it in a browser |
+| openai-index | OpenAI index pages for Codex, evals and engineering | https://openai.com/news/engineering/ | browser | Harness, Codex and eval posts. Returns 403 to fetch tools (checked 2026-11-18); read it in a browser |
 
 ## Tool vendors
 
@@ -46,7 +46,7 @@ Read the docs pages only when the changelog suggests an edit. Record in `state.j
 | cognition-blog | Cognition blog | https://cognition.com/blog | fetch | Multi-agent and context posts |
 | amp-news | Amp news | https://ampcode.com/news | fetch | Agent design notes |
 | github-ai-blog | GitHub blog, AI and ML | https://github.blog/ai-and-ml/ | fetch | Copilot agent practice |
-| factory-blog | Factory blog | https://factory.ai/news | fetch | Droid and agent-run posts |
+| factory-blog | Factory blog | https://factory.com/news | fetch | Droid and agent-run posts |
 
 ## Labs and papers
 
