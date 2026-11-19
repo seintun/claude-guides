@@ -114,7 +114,9 @@ MUTATIONS = [
     ("ENTRY.md's as-of line goes stale", "ENTRY.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.$", "Checked against playbook 0.7 (2026-10-27).")),
     ("The page header keeps an old evidence date", "site/orchestrating-claude.html", sub_once(r"evidence checked 2026-11-18", "evidence checked 2026-10-27")),
     ("A contents link points at a lesson that doesn't exist", "site/orchestrating-claude.html", sub_once(r'<li><a href="#rules">Ten rules</a></li>', '<li><a href="#ten-rules">Ten rules</a></li>')),
-    ("A part header drops a lesson", "site/orchestrating-claude.html", sub_once(r'<li><a href="#growing">03 Growing</a></li>|<li><a href="#growing">13 Growing</a></li>', "")),
+    ("A part header drops a lesson", "site/orchestrating-claude.html", sub_once(r'<li><a href="#growing">13 Growing</a></li>', "")),
+    ("A lesson's data-updated date drifts from the what's-new panel", "site/orchestrating-claude.html", sub_once(r'<section id="rules" class="prose" data-updated="2026-11-18">', '<section id="rules" class="prose" data-updated="2026-11-17">')),
+    ("A duplicate id is injected into the compendium's build input", "site/orchestrating-claude.html", sub_once(r'<section id="sources" class="prose"', '<div id="loop"></div>\n<section id="sources" class="prose"')),
     ("The compendium embeds the page in a frame again", "docs/orchestrating-claude-compendium.html", sub_once(r"<main>", '<main><iframe title="page" srcdoc=""></iframe>')),
 ]
 

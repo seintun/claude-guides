@@ -205,7 +205,8 @@ class Maps(unittest.TestCase):
         if checked != pb_updated:
             stale.append(f"page as-of line says evidence checked {checked}; the playbook Version line says {pb_updated}")
         through = re.search(r"checked through v(\d+\.\d+\.\d+)", read(PLAYBOOK_REL))
-        if through and through.group(1) != cc_version:
+        self.assertTrue(through, "the playbook's Version line must say 'checked through vX.Y.Z', so the page's Claude Code version can be compared")
+        if through.group(1) != cc_version:
             stale.append(f"page as-of line names Claude Code v{cc_version}; the playbook says it was checked through v{through.group(1)}")
         for rel in ("docs/README.md", "llms.txt"):
             text = read(rel)
@@ -231,6 +232,22 @@ class Maps(unittest.TestCase):
                 stale.append(f"compendium banner lacks {text!r}: rebuild with python3 -I tools/build_compendium.py")
         self.assertFalse(stale, f"These disagree with the page footer ({want}) or the playbook Version line "
                          f"(version {pb_version}, last updated {pb_updated}):" + short(stale))
+
+    def test_updated_lessons_match_the_whats_new_panel(self):
+        """A lesson's data-updated date drifts from the what's-new date and the as-of line, so its visible Updated tag says another day."""
+        page = read("site/orchestrating-claude.html")
+        asof = re.search(ASOF_RE, page)
+        self.assertTrue(asof, "the page has no as-of line")
+        updated = asof.group(2)
+        label = re.search(r'<p class="wn-label">What\'s new · v(\d+) · (\d{4}-\d{2}-\d{2})</p>', page)
+        self.assertTrue(label, "the what's-new panel lost its 'v18 · date' label")
+        self.assertEqual((label.group(1), label.group(2)), (asof.group(1), updated), "the what's-new label differs from the as-of line")
+        panel = re.search(r'<div class="whatsnew" id="whatsnew">(.*?)\n  </div>', page, re.S).group(1)
+        tagged = re.findall(r'<section id="([a-z]+)"[^>]*data-updated="([^"]+)"', page)
+        self.assertTrue(tagged, "no lesson carries data-updated")
+        for sid, date in tagged:
+            self.assertEqual(date, updated, f"#{sid} data-updated is {date}, but the what's-new panel and as-of line say {updated}")
+            self.assertIn(f'href="#{sid}"', panel, f"the what's-new panel does not link #{sid}, which is marked updated")
 
     def test_reader_files_say_which_playbook_they_were_checked_against(self):
         """The playbook moves to a new version or date, but a runbook, the cheat sheet or ENTRY.md still says it was checked against the old one."""

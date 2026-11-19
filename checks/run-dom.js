@@ -94,36 +94,65 @@ async (page) => {
 
   // Contents links: click every rail or menu link, part chip and what's-new link, and see its heading land
   // below any sticky header, with the URL hash set. Desktop uses the rail; the phone uses the lessons menu.
-  for (const [w, h] of [[1280, 900], [375, 812]]) {
-    out.push(`== contents links (${w}x${h})`);
-    await load(w, h, 'light');
-    const phone = w <= 980;
-    const groups = [
-      ['contents', phone ? '#lessons-menu' : '.rail'],
-      ['part chips', '.part-head .part-lessons'],
-      ["what's new", '#whatsnew'],
-    ];
-    const bad = [];
-    let clicked = 0;
-    for (const [label, root] of groups) {
-      const links = await page.evaluate((r) => [...new Set([...document.querySelectorAll(r + ' a[href^="#"]')].map((a) => a.getAttribute('href')))], root);
-      for (const href of links) {
-        if (phone && label === 'contents') await page.evaluate(() => { document.getElementById('lessons-menu').open = true; });
-        await page.locator(`${root} a[href="${href}"]`).first().click();
-        await page.waitForTimeout(100);
-        const r = await page.evaluate(([href, phone]) => {
-          const t = document.getElementById(href.slice(1));
-          const head = t ? (t.matches('section') ? t.querySelector('h2') : t.querySelector('h2')) : null;
-          if (!head) return { missing: true };
-          const hr = head.getBoundingClientRect();
-          const menu = document.getElementById('lessons-menu');
-          return { top: Math.round(hr.top), bottom: Math.round(hr.bottom), sticky: phone ? Math.round(menu.getBoundingClientRect().bottom) : 0, vh: innerHeight, hash: location.hash };
-        }, [href, phone]);
-        clicked++;
-        if (r.missing || r.top < r.sticky - 1 || r.bottom > r.vh || r.hash !== href) bad.push(`${label} ${href} ${JSON.stringify(r)}`);
+  // Run twice per width: on the page itself, and with the page inside an iframe (as the claude.ai viewer and
+  // the compendium host it), where a bare "#id" must not change the top-level address.
+  const FRAME_HOST = 'file://' + encodeURI(ROOT + '/llms.txt');
+  const loadFramed = async (w, h) => {
+    await page.setViewportSize({ width: w, height: h });
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(FRAME_HOST, { waitUntil: 'load' });
+    await page.evaluate((src) => {
+      document.documentElement.innerHTML = '<head></head><body style="margin:0"><iframe id="pf" src="' + src + '" style="border:0;display:block;width:100vw;height:100vh"></iframe></body>';
+    }, PAGE);
+    const frame = await (await page.waitForSelector('#pf')).contentFrame();
+    await frame.waitForLoadState('load');
+    await frame.evaluate(() => document.fonts && document.fonts.ready);
+    return frame;
+  };
+  for (const variant of ['page', 'frame']) {
+    for (const [w, h] of [[1280, 900], [375, 812]]) {
+      out.push(`== contents links, ${variant} (${w}x${h})`);
+      let ctx;
+      if (variant === 'frame') ctx = await loadFramed(w, h);
+      else { await load(w, h, 'light'); ctx = page; }
+      const topUrl = page.url();
+      const phone = w <= 980;
+      const groups = [
+        ['contents', phone ? '#lessons-menu' : '.rail'],
+        ['part chips', '.part-head .part-lessons'],
+        ["what's new", '#whatsnew'],
+      ];
+      const bad = [];
+      let clicked = 0;
+      for (const [label, root] of groups) {
+        const links = await ctx.evaluate((r) => [...new Set([...document.querySelectorAll(r + ' a[href^="#"]')].map((a) => a.getAttribute('href')))], root);
+        if (!links.length) bad.push(`${label}: no links found under ${root}`);
+        for (const href of links) {
+          if (phone && label === 'contents') await ctx.evaluate(() => { document.getElementById('lessons-menu').open = true; });
+          await ctx.locator(`${root} a[href="${href}"]`).first().click();
+          await page.waitForTimeout(100);
+          const r = await ctx.evaluate((href) => {
+            const t = document.getElementById(href.slice(1));
+            const head = t ? t.querySelector('h2') : null;
+            if (!head) return { missing: true };
+            const hr = head.getBoundingClientRect();
+            // The real sticky header: the lowest edge among wide sticky or fixed elements pinned to the top.
+            let sticky = 0;
+            document.querySelectorAll('body *').forEach((el) => {
+              const pos = getComputedStyle(el).position;
+              if (pos !== 'sticky' && pos !== 'fixed') return;
+              const b = el.getBoundingClientRect();
+              if (b.top <= 1 && b.width >= innerWidth * 0.5 && b.height > 0) sticky = Math.max(sticky, Math.round(b.bottom));
+            });
+            return { top: Math.round(hr.top), bottom: Math.round(hr.bottom), sticky, vh: innerHeight, hash: location.hash };
+          }, href);
+          clicked++;
+          if (r.missing || r.top < r.sticky - 1 || r.bottom > r.vh || r.hash !== href) bad.push(`${label} ${href} ${JSON.stringify(r)}`);
+        }
       }
+      if (variant === 'frame' && page.url() !== topUrl) bad.push(`top-level URL changed: ${topUrl} -> ${page.url()}`);
+      line(bad.length ? 'FAIL' : 'PASS', `nav-3 ${variant} ${w}`, `Every contents, part and what's-new link lands its heading below the sticky header, with the hash set${variant === 'frame' ? ', inside a frame, and the top-level URL is unchanged' : ''}`, bad.length ? bad.slice(0, 4).join(' | ') : `${clicked} links clicked`);
     }
-    line(bad.length ? 'FAIL' : 'PASS', `nav-3 ${w}`, `Every contents, part and what's-new link lands its heading below the sticky header, with the hash set`, bad.length ? bad.slice(0, 4).join(' | ') : `${clicked} links clicked`);
   }
 
   // Quiz by keyboard: arrow keys move the choice without scoring; Check answer scores it.

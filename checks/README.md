@@ -56,7 +56,7 @@ Run `checks/run-dom.js` with Playwright's `browser_run_code_unsafe` tool, passin
 | dom-11 | Skip link, phone lesson menu, and Next and Contents on every lesson |
 | dom-12 | Reading paths, levels and minutes, a rail with six parts, collapsed extras |
 | nav-1, nav-2 | Phone menu stays at the top; choosing Lesson 17 shows its heading below the menu |
-| nav-3 | At 1280 and 375px, every rail or menu link, part chip and what's-new link lands its heading below the sticky header and sets the URL hash |
+| nav-3 | At 1280 and 375px, on the page and again inside an iframe, every rail or menu link, part chip and what's-new link lands its heading below the real sticky header and sets the hash; in the frame the top-level URL stays unchanged |
 | quiz-1 | Quiz: arrow keys choose without scoring; Check answer scores |
 | dom-14 | Six part headers; every lesson sits under exactly one, in order; the rail and the phone menu show the same parts and lessons |
 | dom-15 | Every rail, menu, part-chip, what's-new and reading-path link resolves to exactly one id |

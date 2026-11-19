@@ -78,6 +78,8 @@ markup = re.sub(r"<(script|style|code|pre)\b.*?</\1>", " ", src, flags=re.S)
 ids = re.findall(r'\sid="([^"]+)"', re.sub(r"<(script|style)\b.*?</\1>", " ", src, flags=re.S))
 fails = []
 targets = sorted(set(re.findall(r'<a\s[^>]*href="#([^"]+)"', markup)))
+if not targets:
+    fails.append("no in-page links found, so nothing was checked")
 for target in targets:
     n = ids.count(target)
     if n != 1:

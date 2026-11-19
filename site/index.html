@@ -61,6 +61,10 @@ code,kbd{font-family:var(--f-mono);font-size:.88em;background:var(--code-bg);pad
 /* "Orchestrating" is about 8.5 font-sizes wide in this face, so the size follows the hero column's width. */
 h1{font-family:var(--f-display);font-stretch:125%;font-weight:850;font-size:clamp(32px,calc((100vw - 72px) * .068),76px);line-height:.94;letter-spacing:-.025em;margin:0;text-wrap:balance}
 .lede{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:60ch;margin:20px 0 0}
+.lede-more{margin:4px 0 0;max-width:60ch}
+.lede-more summary{display:inline-block;cursor:pointer;font-family:var(--f-mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);padding:10px 0;min-height:44px}
+.lede-more[open] summary{display:none}
+.lede-more .lede{margin-top:0}
 .thesis{border:1.5px solid var(--ink);border-radius:10px;padding:20px 22px;background:var(--surface)}
 .thesis .label{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin:0 0 8px}
 .thesis p{margin:0;font-family:var(--f-display);font-stretch:110%;font-weight:650;font-size:22px;line-height:1.25;text-wrap:balance}
@@ -183,6 +187,7 @@ details.yours[open] summary{margin-bottom:10px}
 /* Skip link, lesson menu for narrow screens, and the links at the end of each lesson */
 .skip{position:absolute;left:12px;top:-80px;z-index:80;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:6px;font-weight:700;text-decoration:none}
 .skip:focus{top:12px}
+.skip-nav:focus{top:64px}
 
 /* Theme toggle: one icon button at the top of the hero. The page starts dark; the button shows
    a sun while dark (switch to light) and a moon while light (switch to dark). */
@@ -218,7 +223,7 @@ section + section{border-top:1px solid var(--rule)}
 .whatsnew ul{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:15px;line-height:1.45}
 .asof{font-family:var(--f-mono);font-size:12.5px;line-height:1.5;color:var(--ink-2);margin:0}
 .hero .asof{margin:14px 0 0}
-.upd{display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:11.5px;letter-spacing:.06em;vertical-align:1px}
+.upd{display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:12px;letter-spacing:.06em;vertical-align:1px}
 .kicker{font-family:var(--f-mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
 h2{font-family:var(--f-display);font-stretch:118%;font-weight:800;font-size:clamp(28px,3.6vw,40px);line-height:1.05;letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
 h3{font-family:var(--f-display);font-stretch:110%;font-weight:700;font-size:21px;line-height:1.2;margin:0 0 8px;text-wrap:balance}
@@ -569,6 +574,7 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:48px;padding
 </script>
 
 <a class="skip" href="#main">Skip to the lessons</a>
+<a class="skip skip-nav" id="skip-nav" href="#lessons-rail">Skip to the lesson list</a>
 <div class="shell">
 
 <header class="hero" id="top">
@@ -576,7 +582,11 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:48px;padding
   <div>
     <p class="eyebrow">Field guide · goals, agents, loops</p>
     <h1>Orchestrating Claude</h1>
-    <p class="lede">How to give Claude a goal it can check, let it explore and plan with helper agents, make it prove its own work, and keep it running when you step away. Plain words, with a picture for every moving part. Advice from Boris Cherny (who created Claude Code), Andrej Karpathy, Anthropic's engineers and leading practitioners is tagged by how solid its source is.</p>
+    <p class="lede">How to give Claude a goal it can check, let it explore and plan with helper agents, make it prove its own work, and keep it running when you step away.</p>
+    <details class="lede-more">
+      <summary>Read more</summary>
+      <p class="lede">Plain words, with a picture for every moving part. Advice from Boris Cherny (who created Claude Code), Andrej Karpathy, Anthropic's engineers and leading practitioners is tagged by how solid its source is.</p>
+    </details>
     <p class="asof">v18 · updated 2026-11-18 · evidence checked 2026-11-18 (Claude Code v2.1.328)</p>
   </div>
   <div class="thesis">
@@ -644,7 +654,7 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:48px;padding
   <summary><span class="lm-label">Lessons</span><span class="lm-cur" id="lm-cur">01 The loop</span></summary>
 </details>
 
-<nav class="rail" aria-label="Lessons">
+<nav class="rail" id="lessons-rail" aria-label="Lessons">
   <p class="rail-group"><a href="#part-foundations">Foundations</a></p>
   <ol aria-label="Foundations">
     <li><a href="#loop">The loop</a></li>
@@ -782,7 +792,7 @@ footer{grid-column:1/-1;border-top:1px solid var(--rule);margin-top:48px;padding
     <li><span class="n">03</span><h3>Give outcomes, not steps</h3><p>Say what done looks like and let Claude find the path.</p><p class="src"><a class="ev s" href="https://github.com/forrestchang/andrej-karpathy-skills" target="_blank" rel="noopener" data-src="Karpathy&#x27;s Jan 2026 notes, as quoted in andrej-karpathy-skills" aria-label="S, second-hand report: Karpathy&#x27;s Jan 2026 notes, as quoted in andrej-karpathy-skills (opens in a new tab)">S</a> Reports of Karpathy's notes: give success criteria and watch it go. <a class="ev p" href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener" data-src="Anthropic: Effective context engineering for AI agents (Sep 2025)" aria-label="P, primary source: Anthropic: Effective context engineering for AI agents (Sep 2025) (opens in a new tab)">P</a> Anthropic: pitch prompts at the right altitude, then add rules only for failures you actually see.</p></li>
     <li><span class="n">04</span><h3>Treat context as a budget</h3><p>Load what the next step needs into the <a class="term" id="fu-context" href="#gl-context">context window</a> (Claude's working memory), not everything. Send heavy reading to helpers.</p><p class="src"><a class="ev s" href="https://the-decoder.com/shopify-ceo-and-ex-openai-researcher-agree-that-context-engineering-beats-prompt-engineering/" target="_blank" rel="noopener" data-src="The Decoder: Karpathy and Lütke on context engineering (Jun 2025)" aria-label="S, second-hand report: The Decoder: Karpathy and Lütke on context engineering (Jun 2025) (opens in a new tab)">S</a> Karpathy endorsed "context engineering" over prompt engineering. <a class="ev p" href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" target="_blank" rel="noopener" data-src="Anthropic: Effective context engineering for AI agents (Sep 2025)" aria-label="P, primary source: Anthropic: Effective context engineering for AI agents (Sep 2025) (opens in a new tab)">P</a> Anthropic: recall drops as the window fills; helpers return 1,000 to 2,000-token summaries.</p></li>
     <li><span class="n">05</span><h3>Let it search</h3><p>Fast grep-style search and a good map beat a retrieval pipeline for code.</p><p class="src"><a class="ev p" href="https://latent.space/p/claude-code" target="_blank" rel="noopener" data-src="Latent Space: Boris Cherny and Cat Wu on Claude Code (May 2025)" aria-label="P, primary source: Latent Space: Boris Cherny and Cat Wu on Claude Code (May 2025) (opens in a new tab)">P</a> Early Claude Code tried RAG with embeddings; plain agentic search outperformed it, by the team's own impressions rather than a benchmark.</p></li>
-    <li><span class="n">06</span><h3>Plan before building</h3><p>Approve a plan of small, testable slices instead of approving every edit.</p><p class="src"><a class="ev s" href="https://newsletter.pragmaticengineer.com/p/building-claude-code-with-boris-cherny" target="_blank" rel="noopener" data-src="Pragmatic Engineer: Building Claude Code with Boris Cherny (Mar 2026)" aria-label="S, second-hand report: Pragmatic Engineer: Building Claude Code with Boris Cherny (Mar 2026) (opens in a new tab)">S</a> Boris Cherny started most sessions in Plan mode (early 2026); a good plan often lands in one shot. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Official best practices: have Claude interview you and write a spec, then build it in a fresh session.</p></li>
+    <li><span class="n">06</span><h3>Plan before building</h3><p>Approve a plan of small, testable slices instead of approving every edit.</p><p class="src"><a class="ev p" href="https://x.com/bcherny/status/2007179845336527000" target="_blank" rel="noopener" data-src="Boris Cherny, 2 Jan 2026 thread, post 6" aria-label="P, primary source: Boris Cherny, 2 Jan 2026 thread, post 6 (opens in a new tab)">P</a> Boris Cherny, Jan 2026: most sessions start in Plan mode; a good plan often lands in one shot. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Official best practices: have Claude interview you and write a spec, then build it in a fresh session.</p></li>
     <li><span class="n">07</span><h3>Keep maker and checker apart</h3><p>Reviewers get the work and the criteria, never the author's reasoning.</p><p class="src"><a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Best practices: an adversarial review subagent in a fresh context. Karpathy's llm-council has models review each other anonymously.</p></li>
     <li><span class="n">08</span><h3>Turn corrections into rules</h3><p>Fix a repeated mistake at the highest layer that works: the <a class="term" id="fu-ladder" href="#gl-ladder">correction ladder</a>. From the top: change the design so the mistake can't be written; add a lint rule, a type or a test; run the app and check the result; only then add a skill or a CLAUDE.md line. Keep CLAUDE.md short: a generated one, such as <code>/init</code> output, added cost without helping in one study, so cut it to what Claude can't find out on its own. <a class="ev r" href="https://arxiv.org/abs/2602.11988" target="_blank" rel="noopener" data-src="Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents? (preprint, v3 2026)" aria-label="R, research paper: Evaluating AGENTS.md (opens in a new tab)">R</a> <span class="ev d" tabindex="0" role="note" data-src="Design advice: our synthesis, not a quote" aria-label="D, our design advice: Design advice: our synthesis, not a quote">D</span></p><p class="src"><a class="ev p" href="https://www.youtube.com/watch?v=O_zcc6Xl12g" target="_blank" rel="noopener" data-src="Lauren Tan: &quot;All Code Is Slop (Except Mine)&quot;, AI Engineer (Nov 2026; self-reported figures)" aria-label="P, primary source: Lauren Tan: &quot;All Code Is Slop (Except Mine)&quot;, AI Engineer (Nov 2026; self-reported figures) (opens in a new tab)">P</a> Lauren Tan (Nov 2026) turns each correction into a deterministic check and puts prose last; her figures are self-reported and her tool is Cursor. <a class="ev p" href="https://x.com/bcherny/status/2007179840848597422" target="_blank" rel="noopener" data-src="Boris Cherny, 2 Jan 2026 thread, post 4" aria-label="P, primary source: Boris Cherny, 2 Jan 2026 thread, post 4 (opens in a new tab)">P</a> Boris Cherny, Jan 2026: the last rung is a CLAUDE.md line, added after each mistake. <a class="ev s" href="https://www.jitendrazaa.com/blog/others/tips/10-claude-code-tips-from-the-creator-boris-cherny-february/" target="_blank" rel="noopener" data-src="Recap of the Claude Code team&#x27;s tips thread (Jan 2026)" aria-label="S, second-hand report: Recap of the Claude Code team&#x27;s tips thread (Jan 2026) (opens in a new tab)">S</a> The team's tips thread: after a correction, tell Claude to update CLAUDE.md. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a> Best practices: cut any CLAUDE.md line whose removal wouldn't cause a mistake. The docs do not state the ladder; it is our advice built on these sources. <span class="ev d" tabindex="0" role="note" data-src="Design advice: our synthesis, not a quote" aria-label="D, our design advice: Design advice: our synthesis, not a quote">D</span></p></li>
     <li><span class="n">09</span><h3>Enforce with code</h3><p>Anything that must happen every time lives in a hook (such as a <a class="term" id="fu-stophook" href="#gl-stophook">Stop hook</a>, which runs when Claude tries to finish), CI or a permission rule, not only in prose.</p><p class="src"><a class="ev p" href="https://code.claude.com/docs/en/hooks" target="_blank" rel="noopener" data-src="Claude Code docs: Hooks" aria-label="P, primary source: Claude Code docs: Hooks (opens in a new tab)">P</a> A Stop hook exiting with code 2 blocks Claude from finishing. Anthropic's long-running harness forbade editing tests and kept state in JSON.</p></li>
@@ -2060,7 +2070,7 @@ Risk: &lt;trivial | normal | high&gt;</pre>
   <p class="kicker">Lesson 17 · What the evidence says <span class="lv reference">Reference · 8 min</span></p>
   <h2>Proven orchestration, by the evidence</h2>
   <p class="takeaway"><span>Takeaway</span> The evidence backs one writer by default, outside checks over self-critique, and measuring repeated runs and cost, not single wins.</p>
-  <p class="intro">This lesson counts only measured results: peer-reviewed or well-cited studies, research reports, and engineering write-ups from large teams that publish numbers. No YouTube and no product marketing. When a company reports on its own product, the playbook marks it as vendor-reported.</p>
+  <p class="intro">The main findings here are measured results: peer-reviewed or well-cited studies, research reports, and engineering write-ups from large teams that publish numbers. The dated findings table at the end also lists talks and vendor posts, and each such row says whether it is self-reported or vendor-reported.</p>
 
   <figure>
     <p class="scroll-cue" aria-hidden="true">Swipe sideways to see the whole figure →</p>
@@ -2172,15 +2182,15 @@ Risk: &lt;trivial | normal | high&gt;</pre>
   <h3>Newer, dated findings</h3>
   <div class="tbl-wrap">
     <table>
-      <caption>Added in version 18, from playbook section 19.5. The last column says what a row replaces.</caption>
+      <caption>Added in version 18, from playbook section 19.5, newest first. The last column says what a row replaces.</caption>
       <thead><tr><th>Date</th><th>Finding</th><th>Replaces or changes</th></tr></thead>
       <tbody>
-        <tr><td class="job">2026-11-14</td><td>Corrections go to a deterministic check and prose comes last: about 3,000 PRs in a month at about 0.5% reverts, one team on Cursor, figures self-reported. <a class="ev p" href="https://www.youtube.com/watch?v=O_zcc6Xl12g" target="_blank" rel="noopener" data-src="Lauren Tan: &quot;All Code Is Slop (Except Mine)&quot;, AI Engineer (Nov 2026; self-reported figures)" aria-label="P, primary source: Lauren Tan: &quot;All Code Is Slop (Except Mine)&quot;, AI Engineer (Nov 2026; self-reported figures) (opens in a new tab)">P</a></td><td>Adds rungs above the CLAUDE.md-first habit. The ladder itself is our advice.</td></tr>
         <tr><td class="job">2026-11-18</td><td>The best-practices page lists "Use subagents to protect your context window" and IMPORTANT or ALL CAPS emphasis as old advice. <a class="ev p" href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener" data-src="Claude Code docs: Best practices" aria-label="P, primary source: Claude Code docs: Best practices (opens in a new tab)">P</a></td><td>Supersedes the earlier condensation of that page.</td></tr>
-        <tr><td class="job">2026-04-08</td><td>Google and MIT, paper version 3: planning loses 39% to 70%; the +80.8% gain is for Finance Agent only; returns turn negative above a 45% single-agent baseline; errors are amplified 17.2 times against 4.4 times. <a class="ev r" href="https://arxiv.org/abs/2512.08296v3" target="_blank" rel="noopener" data-src="Google Research: Towards a science of scaling agent systems, version 3 (Apr 2026, preprint)" aria-label="R, research paper: Google Research: Towards a science of scaling agent systems, version 3 (Apr 2026, preprint) (opens in a new tab)">R</a></td><td>Version 1 said +80.9%; the chart above shows version 1 and says so.</td></tr>
+        <tr><td class="job">2026-11-14</td><td>Corrections go to a deterministic check and prose comes last: about 3,000 PRs in a month at about 0.5% reverts, one team on Cursor, figures self-reported. <a class="ev p" href="https://www.youtube.com/watch?v=O_zcc6Xl12g" target="_blank" rel="noopener" data-src="Lauren Tan: &quot;All Code Is Slop (Except Mine)&quot;, AI Engineer (Nov 2026; self-reported figures)" aria-label="P, primary source: Lauren Tan: &quot;All Code Is Slop (Except Mine)&quot;, AI Engineer (Nov 2026; self-reported figures) (opens in a new tab)">P</a></td><td>Adds rungs above the CLAUDE.md-first habit. The ladder itself is our advice.</td></tr>
+        <tr><td class="job">2026-04-08</td><td>Google and MIT, paper version 3: planning loses 39% to 70%; the +80.8% gain is for Finance Agent only; returns turn negative above a 45% single-agent baseline; errors are amplified 17.2 times against 4.4 times; 260 configurations in version 3. <a class="ev r" href="https://arxiv.org/abs/2512.08296v3" target="_blank" rel="noopener" data-src="Google Research: Towards a science of scaling agent systems, version 3 (Apr 2026, preprint)" aria-label="R, research paper: Google Research: Towards a science of scaling agent systems, version 3 (Apr 2026, preprint) (opens in a new tab)">R</a></td><td>Version 1 said +80.9%; the chart above shows version 1 and says so.</td></tr>
+        <tr><td class="job">2026-03-24</td><td>A planner, generator and evaluator harness cost over 20 times a solo run, whose core feature was broken; one task, vendor-reported. <a class="ev p" href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener" data-src="Anthropic: Harness design for long-running apps (Mar 2026, vendor)" aria-label="P, primary source: Anthropic: Harness design for long-running apps (Mar 2026, vendor) (opens in a new tab)">P</a></td><td>The post's dollar and hour figures are unverified, so none appears here.</td></tr>
         <tr><td class="job">2026-02-24</td><td>METR's productivity update: original developers 18% slower, new developers 4% slower, which METR calls only very weak evidence. <a class="ev r" href="https://metr.org/blog/2026-02-24-uplift-update/" target="_blank" rel="noopener" data-src="METR: uplift update (Feb 2026)" aria-label="R, research paper: METR: uplift update (Feb 2026) (opens in a new tab)">R</a></td><td>Updates the 2025 trial (19% slower) in finding 06.</td></tr>
         <tr><td class="job">2026-02-23</td><td>OpenAI found 59.4% of 138 audited SWE-bench Verified problems flawed and stopped reporting it. <a class="ev p" href="https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/" target="_blank" rel="noopener" data-src="OpenAI: Why we no longer evaluate SWE-bench Verified (Feb 2026, vendor)" aria-label="P, primary source: OpenAI: Why we no longer evaluate SWE-bench Verified (Feb 2026, vendor) (opens in a new tab)">P</a></td><td>Public leaderboard scores are weak evidence for your own repo.</td></tr>
-        <tr><td class="job">2026-03-24</td><td>A planner, generator and evaluator harness cost over 20 times a solo run, whose core feature was broken; one task, vendor-reported. <a class="ev p" href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener" data-src="Anthropic: Harness design for long-running apps (Mar 2026, vendor)" aria-label="P, primary source: Anthropic: Harness design for long-running apps (Mar 2026, vendor) (opens in a new tab)">P</a></td><td>The post's dollar and hour figures are unverified, so none appears here.</td></tr>
       </tbody>
     </table>
   </div>
@@ -2562,8 +2572,12 @@ Risk: &lt;trivial | normal | high&gt;</pre>
     }
     fill(i);
     document.getElementById('pd-count').textContent = (i+1) + ' of ' + PH.length;
-    document.getElementById('pd-prev').disabled = i === 0;
-    document.getElementById('pd-next').disabled = i === PH.length-1;
+    var pdPrev = document.getElementById('pd-prev'), pdNext = document.getElementById('pd-next');
+    // A button that is disabled while it has focus drops focus to the page; hand it to the other button.
+    if(i === PH.length-1 && document.activeElement === pdNext) pdPrev.focus({preventScroll: true});
+    if(i === 0 && document.activeElement === pdPrev) pdNext.focus({preventScroll: true});
+    pdPrev.disabled = i === 0;
+    pdNext.disabled = i === PH.length-1;
   }
   function fill(i){
     var p = PH[i];
@@ -3004,6 +3018,14 @@ Risk: &lt;trivial | normal | high&gt;</pre>
   menu.appendChild(menuList);
   menu.addEventListener('click', function(e){ if(e.target.closest('a')) menu.open = false; });
   function menuShown(){ return getComputedStyle(menu).display !== 'none'; }
+  // "Skip to the lesson list" goes to the phone menu where there is one, else to the rail.
+  var skipNav = document.getElementById('skip-nav');
+  if(skipNav) skipNav.addEventListener('click', function(e){
+    e.preventDefault();
+    if(menuShown()){ menu.open = true; menu.querySelector('summary').focus(); return; }
+    var first = document.querySelector('.rail a');
+    if(first) first.focus();
+  });
   // "Contents" opens the lesson menu where there is one; on wide screens the rail is
   // always in view, so the link just goes back to the top.
   document.addEventListener('click', function(e){
@@ -3053,6 +3075,16 @@ Risk: &lt;trivial | normal | high&gt;</pre>
     });
     var i = secs.indexOf(cur), name = document.querySelector('.rail a[href="#' + cur.id + '"]');
     if(name) menuCur.textContent = (i < 17 ? (i + 1 < 10 ? '0' : '') + (i + 1) + ' ' : '') + name.textContent;
+    // A part header that has reached the line, with no lesson started yet, names the part.
+    var head = null;
+    Array.prototype.forEach.call(document.querySelectorAll('main .part-head'), function(h){
+      if(h.getBoundingClientRect().top <= line && h.getBoundingClientRect().top > cur.getBoundingClientRect().top) head = h;
+    });
+    if(head){
+      var pn = head.querySelector('.part-no'), pt = head.querySelector('.part-title');
+      var num = pn ? (pn.textContent.match(/\d+/) || [''])[0] : '';
+      if(pt) menuCur.textContent = 'Part ' + num + ' · ' + pt.textContent;
+    }
   }
   window.addEventListener('scroll', function(){
     if(!ticking){ ticking = true; requestAnimationFrame(markRail); }

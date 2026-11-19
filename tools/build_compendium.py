@@ -62,6 +62,9 @@ DOC_LINKS = {
     "mega-workshop-evidence.md": ("mw", "mw"),
     "playbook-factcheck-v0.3.md": ("rev-fc", "rev-fc"),
 }
+# Markdown links whose target is not in the compendium and that may become plain text. Empty today: every link a
+# document writes resolves. A new entry needs a reason; any other link that loses its target fails the build.
+KNOWN_DEGRADED = set()
 # Links to a file whose name is not unique are resolved by the path from the linking document.
 PATH_LINKS = {
     "skills/grill/SKILL.md": ("skill-grill", "skill-grill"),
@@ -594,6 +597,10 @@ def finish(markup):
         return '<span class="file-ref" title="#' + m.group(1) + '">'
     markup = re.sub(r'<a href="#([^"]+)" data-doc="1">(.*?)</a>',
                     lambda m: (doc_link(m) + m.group(2) + ("</a>" if m.group(1) in known else "</span>")), markup, flags=re.S)
+    unexpected = sorted(set(degraded) - KNOWN_DEGRADED)
+    if unexpected:
+        sys.exit(f"Markdown link(s) lost their target and would become plain text: {unexpected[:10]}. "
+                 "Fix the link, or add the id to KNOWN_DEGRADED in tools/build_compendium.py with a reason.")
     bad = sorted({h for h in re.findall(r'<a href="#([^"]+)"', re.sub(r"<(pre|script)\b.*?</\1>", " ", markup, flags=re.S)) if h not in known})
     if bad:
         sys.exit(f"dangling links in the compendium: {bad[:10]}")

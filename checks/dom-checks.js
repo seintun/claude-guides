@@ -409,7 +409,9 @@
   function c15Contents() {
     var fails = [], n = 0;
     ['.rail', '.lessons-menu', '.part-head', '#whatsnew', '#paths'].forEach(function (sel) {
-      document.querySelectorAll(sel + ' a[href^="#"]').forEach(function (a) {
+      var found = document.querySelectorAll(sel + ' a[href^="#"]');
+      if (!found.length) fails.push(sel + ' has no in-page links, so nothing was checked');
+      found.forEach(function (a) {
         var h = a.getAttribute('href'); n++;
         if (h.length < 2 || document.querySelectorAll('[id="' + decodeURIComponent(h.slice(1)).replace(/"/g, '') + '"]').length !== 1) fails.push(sel + ' ' + h + ' does not resolve to exactly one id');
       });

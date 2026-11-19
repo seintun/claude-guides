@@ -51,12 +51,15 @@ async (page) => {
           });
         });
         map.extra_pb.forEach((k) => { if (q(`[data-pb="${k}"]`).length !== 1) fails.push(`playbook ${k} is not shown once in More playbook sections`); pbOrder.push(k); });
+        const wantLessons = map.parts.reduce((n, mp) => n + mp.lessons.length, 0);
+        const wantWiki = map.parts.reduce((n, mp) => n + mp.lessons.reduce((m, ml) => m + ml.wiki.length, 0), 0);
+        if (!wantLessons || !wantWiki) fails.push('the embedded map lists no lessons or no runbooks');
         const domLessons = q('[data-lesson]').map((e) => e.getAttribute('data-lesson'));
-        if (domLessons.join() !== lessonOrder.join() || domLessons.length !== 18) fails.push(`lessons in the DOM: ${domLessons.length}, not the map's 18 in order`);
+        if (domLessons.join() !== lessonOrder.join() || domLessons.length !== wantLessons) fails.push(`lessons in the DOM: ${domLessons.length}, not the map's ${wantLessons} in order`);
         const domPb = q('[data-pb]').map((e) => e.getAttribute('data-pb'));
         if (domPb.join() !== pbOrder.join()) fails.push('playbook sections are not in part order');
         const domWiki = q('[data-wiki]').map((e) => e.getAttribute('data-wiki'));
-        if (domWiki.join() !== wikiOrder.join() || domWiki.length !== 11) fails.push(`runbooks in the DOM: ${domWiki.length}, not the map's 11 in order`);
+        if (domWiki.join() !== wikiOrder.join() || domWiki.length !== wantWiki) fails.push(`runbooks in the DOM: ${domWiki.length}, not the map's ${wantWiki} in order`);
         const asof = document.querySelector('.hero .asof');
         if (!asof || asof.textContent.trim() !== map.asof) fails.push('the as-of line is missing or differs from the page');
         if (!document.querySelector('#whatsnew li')) fails.push("no what's-new block");
@@ -66,11 +69,19 @@ async (page) => {
       line(!st.fails.length, `c-7 ${w}${scheme[0]}`, 'Parts, lessons, runbooks and playbook sections each appear once, in part order', st.fails.slice(0, 5).join(' | ') || `${st.lessons} lessons, ${st.wiki} runbooks, ${st.pb} playbook sections`);
 
       // Contents: every TOC and what's-new link lands its heading below the sticky bar, with the hash set.
+      // Real scrolling here: smooth scroll is allowed, and each click waits until the page stops moving.
+      await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'no-preference' });
+      await page.evaluate(() => window.scrollTo(0, 0));
+      const scrollEnd = () => page.evaluate(() => new Promise((res) => {
+        let last = -1, same = 0;
+        const tick = () => { const y = scrollY; same = y === last ? same + 1 : 0; last = y; if (same >= 4) res(); else requestAnimationFrame(tick); };
+        requestAnimationFrame(tick);
+      }));
       const hrefs = await page.evaluate(() => [...new Set([...document.querySelectorAll('.toc a, #whatsnew a')].map((a) => a.getAttribute('href')))]);
       const bad = [];
       for (const href of hrefs) {
         await page.locator(`.toc a[href="${href}"], #whatsnew a[href="${href}"]`).first().click();
-        await page.waitForTimeout(80);
+        await scrollEnd();
         const r = await page.evaluate((href) => {
           const t = document.getElementById(href.slice(1));
           const heading = t && (t.querySelector('h2, h3') || t);
@@ -80,6 +91,7 @@ async (page) => {
         }, href);
         if (r.missing || r.top < r.bar - 1 || r.bottom > r.vh || r.hash !== href) bad.push(`${href} ${JSON.stringify(r)}`);
       }
+      if (!hrefs.length) bad.push('no contents or what\'s-new links found');
       line(!bad.length, `c-8 ${w}${scheme[0]}`, "Every contents and what's-new link lands its heading below the sticky bar, with the hash set", bad.slice(0, 3).join(' | ') || `${hrefs.length} links clicked`);
     }
     if (w === 1280 && scheme === 'light') {
