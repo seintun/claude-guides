@@ -55,13 +55,13 @@ Run `checks/run-dom.js` with Playwright's `browser_run_code_unsafe` tool, passin
 | kbd-1 to kbd-3 | Phase explorer: arrow keys move from the focused node, the group is one tab stop, and focus survives at phase 10 |
 | dom-11 | Skip link, phone lesson menu, and Next and Contents on every lesson |
 | dom-12 | Reading paths, levels and minutes, a rail with six parts, collapsed extras |
+| dom-13 | The theme toggle is a 44px `<button>`; the page is dark or light; the sun shows in dark and the moon in light, each with the matching aria-label; two clicks restore the theme |
 | nav-1, nav-2 | Phone menu stays at the top; choosing Lesson 17 shows its heading below the menu |
 | nav-3 | At 1280 and 375px, on the page and again inside an iframe, every rail or menu link, part chip and what's-new link lands its heading below the real sticky header and sets the hash; in the frame the top-level URL stays unchanged |
 | quiz-1 | Quiz: arrow keys choose without scoring; Check answer scores |
 | dom-14 | Six part headers; every lesson sits under exactly one, in order; the rail and the phone menu show the same parts and lessons |
 | dom-15 | Every rail, menu, part-chip, what's-new and reading-path link resolves to exactly one id |
 | dom-16 | The what's-new panel has 3 to 5 bullets and links each updated lesson; each `data-updated` lesson shows a visible "Updated DATE" tag; header and footer carry the same as-of line; the footer links the version history |
-| dom-13 | The theme toggle is a 44px `<button>`; the page is dark or light; the sun shows in dark and the moon in light, each with the matching aria-label; two clicks restore the theme |
 | theme-1 to theme-5 | With empty storage the page loads dark even when the system prefers light; one click gives light; the choice survives a reload; a viewer's own `data-theme` gives way to it; a second click gives dark |
 | page-1, page-2 | Every id is unique; no script errors in any view |
 

@@ -15,6 +15,10 @@ The guide root is the top of your clone of this repository: whatever `git rev-pa
 - **The snippet and the prompt** are templates with `{{GUIDE}}` in place of the root. `install.sh` fills it in from the same `git rev-parse` and prints them.
 - **If you move or re-clone the repository,** rerun `install.sh --apply` and paste the new snippet. Nothing else changes.
 
+## Freshness check
+
+Before it answers, `/guide` reads `playbook_version` and `playbook_updated` from `guide-index.json`, compares them with `main`, and flags a clone that is behind `main` or a guide more than 45 days old.
+
 ## Install without a clone
 
 Run `npx skills add seintun/claude-guides --skill guide` from your project.

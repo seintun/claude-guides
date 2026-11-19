@@ -73,7 +73,8 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 ## Record of the work
 
-- [docs/decision-log.md](docs/decision-log.md): 27 decisions, with the reason and the decider for each
+- [docs/decision-log.md](docs/decision-log.md): 34 decisions, with the reason and the decider for each
+- [docs/decisions.md](docs/decisions.md): one dated line per piece of work routed through `/guide`: the request, the row and sections chosen, and each decision with its reason
 - [docs/session-log.md](docs/session-log.md): every request in the build session and its outcome
 - [docs/version-history.md](docs/version-history.md): page versions 1–18, playbook versions 0.1–0.7
 - [archive/README.md](archive/README.md): read-only snapshots of earlier versions (playbook 0.6, page v17) and the superseded-conventions table. History only, never a route for current advice
@@ -86,17 +87,20 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 ## Teaching page and checks
 
-- [site/index.html](site/index.html): the 17-lesson teaching page as a full HTML document; open this one locally (generated)
+- [site/index.html](site/index.html): the 17-lesson teaching page (version 18, six parts) as a full HTML document; open this one locally (generated)
 - [site/orchestrating-claude.html](site/orchestrating-claude.html): the page source (artifact body), live at https://claude.ai/artifact/8q1jNZyZ1HTjDBvqgBWMLq
+- [site/history/orchestrating-claude-v17.html](site/history/orchestrating-claude-v17.html): the teaching page as it stood at version 17, kept as a read-only snapshot
 - [checks/README.md](checks/README.md): static and browser checks that gate every page change
 - [tools/README.md](tools/README.md): build, maintenance, link-check and privacy-check scripts (run `python3 -I tools/check_privacy.py` before every commit)
 - [tools/section.py](tools/section.py): prints one playbook section, template, law or cheat-sheet section by id (`python3 -I tools/section.py 9.5`; `--list` shows every id)
 - [tests/README.md](tests/README.md): how every feature and skill is tested: the offline suite (tests/run.sh), the mutation suite, live routing and grill sessions, browser checks; what each test guards
 - [tests/run.sh](tests/run.sh): runs every offline check and test; must end with SUMMARY all PASS before a commit
+- [tests/test_refresh_skill.py](tests/test_refresh_skill.py): guards /refresh: no `disable-model-invocation`, no `allowed-tools`, no hooks, and its never-push rules
 - [tests/scenarios/routing.json](tests/scenarios/routing.json): 22 routing scenarios, one per ENTRY.md row
 - [tests/mutation/mutate.py](tests/mutation/mutate.py): makes catastrophic edits to a throwaway copy and checks the suite catches each
 - [tests/live/route_scenarios.py](tests/live/route_scenarios.py): live routing sessions through /guide, the snippet and the prompt; records results
 - [docs/metrics.md](docs/metrics.md): success, speed, token, reading-time and growth metrics (tools/metrics.py)
 - [tools/metrics.py](tools/metrics.py): builds docs/metrics.md
+- [tools/archive_snapshot.py](tools/archive_snapshot.py): makes a read-only snapshot of the playbook and page under archive/ before a release
 - [tools/build_index.py](tools/build_index.py): builds guide-index.json, routes/ and sections/ from the playbook, cheat sheet, ENTRY.md, wiki and skills
 - [tools/check_entry.py](tools/check_entry.py): checks ENTRY.md is under 150 lines, has at least 15 router rows, and names only section ids that resolve
