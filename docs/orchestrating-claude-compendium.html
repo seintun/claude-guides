@@ -3314,6 +3314,23 @@ Risk: &amp;lt;trivial | normal | high&amp;gt;&lt;/pre&gt;
     try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch(err) {}
     if(target){ reveal(target); if(document.fonts) document.fonts.ready.then(function(){ target.scrollIntoView(); }); }
   }
+  // In-page links scroll here, not through the browser. Inside a frame (the claude.ai viewer,
+  // the compendium) a bare &quot;#id&quot; resolves against the parent&#x27;s address and loads the wrong page.
+  document.addEventListener(&#x27;click&#x27;, function(e){
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest(&#x27;a[href^=&quot;#&quot;]&#x27;);
+    if(!a) return;
+    var id = a.getAttribute(&#x27;href&#x27;).slice(1), t = null;
+    try { t = id &amp;&amp; document.getElementById(decodeURIComponent(id)); } catch(err) {}
+    if(!t) return;
+    e.preventDefault();
+    reveal(t);
+    var still = window.matchMedia &amp;&amp; window.matchMedia(&#x27;(prefers-reduced-motion: reduce)&#x27;).matches;
+    t.scrollIntoView({behavior: still ? &#x27;auto&#x27; : &#x27;smooth&#x27;, block: &#x27;start&#x27;});
+    try { history.replaceState(null, &#x27;&#x27;, &#x27;#&#x27; + id); } catch(err) {}
+    if(!t.hasAttribute(&#x27;tabindex&#x27;)) t.setAttribute(&#x27;tabindex&#x27;, &#x27;-1&#x27;);
+    try { t.focus({preventScroll: true}); } catch(err) {}
+  });
 
   // The current lesson is the last section whose top has passed 30% of the viewport.
   var links = document.querySelectorAll(&#x27;.rail a, .lessons-menu a&#x27;);

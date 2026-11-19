@@ -2836,6 +2836,23 @@ Risk: &lt;trivial | normal | high&gt;</pre>
     try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch(err) {}
     if(target){ reveal(target); if(document.fonts) document.fonts.ready.then(function(){ target.scrollIntoView(); }); }
   }
+  // In-page links scroll here, not through the browser. Inside a frame (the claude.ai viewer,
+  // the compendium) a bare "#id" resolves against the parent's address and loads the wrong page.
+  document.addEventListener('click', function(e){
+    if(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest('a[href^="#"]');
+    if(!a) return;
+    var id = a.getAttribute('href').slice(1), t = null;
+    try { t = id && document.getElementById(decodeURIComponent(id)); } catch(err) {}
+    if(!t) return;
+    e.preventDefault();
+    reveal(t);
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    t.scrollIntoView({behavior: still ? 'auto' : 'smooth', block: 'start'});
+    try { history.replaceState(null, '', '#' + id); } catch(err) {}
+    if(!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
+    try { t.focus({preventScroll: true}); } catch(err) {}
+  });
 
   // The current lesson is the last section whose top has passed 30% of the viewport.
   var links = document.querySelectorAll('.rail a, .lessons-menu a');
