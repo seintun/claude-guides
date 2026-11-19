@@ -38,8 +38,7 @@ Sections and templates this route names, in order: 11.1, 11.3, 11.5, 10.2, 18, H
 - Teleport forks history silently. [P]
 - A cloud scheduled task can stop and wait for an answer. Check for paused runs, not only failed ones. [P]
 - An uncapped loop will run all night. [P: bug report, 6,239 iterations]
-
----
+- "No human review", auto-merge and minimal merge gates are single-team self-reports, not defaults. Tan describes release fuzzing that opens and auto-merges fix PRs, and says there is "nothing left to review" (9:10); at 16:44 she says "most product code that we land no longer really requires deep human review". [P for the words; S for the effect: self-reported, no independent audit; talk, 9:10 and 16:21] OpenAI's team describes "minimal blocking merge gates" and agent-to-agent review, and says the setup "should not be assumed to generalize". [P, vendor: Lopopolo, 2026-02-11] No independent study shows that removing human diff review is safe (§19.4).
 
 <!-- id: 10.2 -->
 ### 10.2 Layered model
@@ -69,7 +68,7 @@ These came out of the independent review. Most are design advice [D]; facts carr
 - **Monorepos, multiple repos and teams.** Nested CLAUDE.md per package; gates that run only affected tests; one plan file per task (`docs/plans/<task>.md`) so parallel work doesn't collide; a named owner who reviews changes to hooks, agents and skills; cross-repo order written into the plan. [D]
 - **Discovery artifacts.** Store them as `docs/discovery/<id>.md`, `docs/specs/<id>.md` and `docs/adr/<n>.md`, each linked from its issue. Mark replaced documents "superseded by …". Give the outcome readout an owner and a date. Move grill questions still open at the question cap into the spec's Open Questions. Park unbet pitches in a dated list you're free to delete; don't let it become a backlog. [D]
 
-**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions.
+**Still unconfirmed after the fact-check:** Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions. Unconfirmed in 0.7: the `-p` default for a logged-in, telemetry-on user; the Mods status; `--max-turns` semantics (the headless page does not document them); the $9 against $200 and 20 minutes against 6 hours figures in Anthropic's harness-design post; and every figure Tan reports about her own team, which is self-reported.
 
 ---
 

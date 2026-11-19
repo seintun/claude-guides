@@ -3,4 +3,4 @@
 - **Build it:** every component must name the failure it prevents. On each model upgrade, re-run your evals with components removed and delete what no longer earns its tokens. [D]
 - Boris Cherny describes Claude Code as the thinnest possible wrapper over the model, and says that as the model improves it absorbs the scaffolding around it. [P: Latent Space, May 2025]
 - Secondhand notes say the Claude Code team builds for the model about six months ahead. [S]
-- Anthropic: start with the simplest solution; many tasks need one well-built call, not an agent. [P: Building effective agents]
+- Anthropic advises "finding the simplest solution possible"; many tasks need one well-built call, not an agent. [P: Building effective agents, 2024-12-19]

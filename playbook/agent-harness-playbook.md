@@ -2,7 +2,7 @@
 
 Jump to: [Contents](#contents) · [Find it fast](#find-it-fast) · [Templates](#16-templates)
 
-Version 0.6, last updated 2026-10-27: evidence from a review of a workshop's advice on running coding agents, each claim checked against its primary source ([research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md)): generated context files (§8), a hidden acceptance check and LLM-judge bias (§9.3), mined lessons and skills (§13), approval fatigue, merge rate, flaky tests and dark launches (§18), a prior-art rule (§5.4), and four findings in §19. Version 0.5, 2026-10-24: fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): guarded Stop gate, a guardrails block for irreversible actions, a risk switch in Template B, 23 corrected claims, six caveats, and the fact-check linked as evidence. Version 0.4 added navigation (contents, find-it-fast, template index) and corrected Google-study wording. Version 0.3 followed an independent fact-check. A build reference for people designing an agent harness around Claude (Claude Code, the Claude Agent SDK, or the raw API), and for agents that read it as reference material.
+Version 0.7, last updated 2026-11-18: primary-source evidence from the Claude Code changelog and docs (checked through v2.1.328) and from named practitioners and labs, each claim checked against its page ([research/agentic-practices-2026-11.md](../research/agentic-practices-2026-11.md)): a correction ladder (Law 8), the Claude Code feature map refreshed (§3A), single writer as the default (§6), context kept small by structure (§8), a layered check order (§9), an end-to-end run with minimal supervision (§11.6), an eval-set recipe (§13.1), new failure modes and anti-patterns (§14, §15), dated evidence with a superseded column (§19), and the sources (§20). Where a newer Anthropic doc and an older practitioner tip differ, the newer doc is the default and the older tip stays, dated. Version 0.6, 2026-10-27: evidence from a review of a workshop's advice on running coding agents, each claim checked against its primary source ([research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md)): generated context files (§8), a hidden acceptance check and LLM-judge bias (§9.3), mined lessons and skills (§13), approval fatigue, merge rate, flaky tests and dark launches (§18), a prior-art rule (§5.4), and four findings in §19. Version 0.5, 2026-10-24: fixes from the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md): guarded Stop gate, a guardrails block for irreversible actions, a risk switch in Template B, 23 corrected claims, six caveats, and the fact-check linked as evidence. Version 0.4 added navigation (contents, find-it-fast, template index) and corrected Google-study wording. Version 0.3 followed an independent fact-check. A build reference for people designing an agent harness around Claude (Claude Code, the Claude Agent SDK, or the raw API), and for agents that read it as reference material.
 
 ---
 
@@ -16,9 +16,9 @@ Version 0.6, last updated 2026-10-27: evidence from a review of a workshop's adv
   - **[S] secondary:** reported by articles or recaps quoting a post; wording not confirmed against the original.
   - **[R] research:** an independent paper or preprint; a single study, not settled fact.
   - **[D] design inference:** practice synthesized from the sources and field use, not a quote.
-- Confirm [S] claims against the original before quoting them in public. Social posts (X, LinkedIn) were not fetched directly; claims that rest on them are graded [S].
+- Confirm [S] claims against the original before quoting them in public. A social post is graded [P] only when it was read on the post itself (as of 0.7, the X threads and YouTube transcripts named in §20 were read in a browser); a claim that rests on a recap of a post stays [S]. One thread, Boris Cherny's of 31 Jan 2026, was read from X search results, not from each post page, so only its quoted wording was checked. Vendor self-reports are marked vendor, and figures a speaker reports about their own team are marked self-reported.
 - A grade on the first grade line after a heading's Read-when and Page-terms lines applies to that whole section, unless a line is marked otherwise.
-- **Fact-check.** The [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md) checked 142 sourced claims against primary sources on 2026-10-24: 118 true, 21 partly true, 3 unverified, none false. Version 0.5 folds in its corrections, and the file ends with a receipt for each one. The evidence added on 2026-10-27 (§5.4, §8, §9.3, §13, §18, §19) was checked claim by claim against its primary sources, and several of those sources are preprints; see [research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md). What stays unconfirmed is listed at the end of §18.
+- **Fact-check.** The [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md) checked 142 sourced claims against primary sources on 2026-10-24: 118 true, 21 partly true, 3 unverified, none false. Version 0.5 folds in its corrections, and the file ends with a receipt for each one. The evidence added on 2026-10-27 (§5.4, §8, §9.3, §13, §18, §19) was checked claim by claim against its primary sources, and several of those sources are preprints; see [research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md). What stays unconfirmed is listed at the end of §18. Version 0.7 (2026-11-18) adds claims checked against the Claude Code docs and changelog, the research papers and METR pages, the vendor posts, and the X and YouTube sources, read in a browser; the verdicts, the corrections to the research reports and the claims kept at [S] or dropped are in [research/agentic-practices-2026-11.md](../research/agentic-practices-2026-11.md).
 - **Companion page.** The "Orchestrating Claude" page teaches the same material in 17 lessons plus Sources. The table after this list maps each lesson to its playbook section.
 - **Page terms.** The playbook keeps its own words. Where the page says something else, a "Page terms" line under the heading gives the page's word (for example, §2's Ten laws are the page's "Ten rules").
 
@@ -89,12 +89,14 @@ Version 0.6, last updated 2026-10-27: evidence from a review of a workshop's adv
   - [11.3 Guardrails for any loop](#113-guardrails-for-any-loop)
   - [11.4 Operating model: terminal, cloud, phone](#114-operating-model-terminal-cloud-phone)
   - [11.5 Risks of running without watching](#115-risks-of-running-without-watching)
+  - [11.6 End to end with minimal supervision](#116-end-to-end-with-minimal-supervision)
 - [12. Toolchain: planning, code host and CI](#12-toolchain-planning-code-host-and-ci)
   - [12.1 Linear as the planning layer](#121-linear-as-the-planning-layer)
   - [12.2 GitHub as the gate](#122-github-as-the-gate)
   - [12.3 Reference pipeline](#123-reference-pipeline)
   - [12.4 Guardrail checklist](#124-guardrail-checklist)
 - [13. Evals and learning](#13-evals-and-learning)
+  - [13.1 Build an eval set from real failures](#131-build-an-eval-set-from-real-failures)
 - [14. Model failure modes and countermeasures](#14-model-failure-modes-and-countermeasures)
 - [15. Anti-patterns](#15-anti-patterns)
 - [16. Templates](#16-templates)
@@ -119,6 +121,7 @@ Version 0.6, last updated 2026-10-27: evidence from a review of a workshop's adv
   - [19.2 Where reputable sources disagree](#192-where-reputable-sources-disagree)
   - [19.3 What this changes in the playbook](#193-what-this-changes-in-the-playbook)
   - [19.4 Evidence gaps](#194-evidence-gaps)
+  - [19.5 Dated findings and what they supersede](#195-dated-findings-and-what-they-supersede)
 - [20. Sources](#20-sources)
 
 ## Find it fast
@@ -140,8 +143,10 @@ Version 0.6, last updated 2026-10-27: evidence from a review of a workshop's adv
 | Make "done" provable with gates, receipts and hooks | [§9](#9-verification-stack), [§9.4](#94-receipt-format), [Template F](#f-stop-hook-that-blocks-done-while-tests-fail), [Template G](#g-posttooluse-formatter) |
 | Set permissions, a sandbox and defenses against injection | [§10](#10-guardrails) |
 | Run loops, schedules or cloud sessions while you are away | [§11](#11-continuous-and-unattended-operation), [Template H](#h-loop-and-schedule-prompts) |
+| Run a whole task end to end with little supervision | [§11.6](#116-end-to-end-with-minimal-supervision) |
 | Wire Linear and GitHub, and lock down the pipeline | [§12](#12-toolchain-planning-code-host-and-ci), [Template M](#m-pr-review-workflow-with-the-claude-code-github-action) |
 | Measure the harness and turn lessons into rules | [§13](#13-evals-and-learning), [Template I](#i-retro-prompt), [Template J](#j-eval-task-record-jsonl-one-line-per-task) |
+| Build an eval set from real failures | [§13.1](#131-build-an-eval-set-from-real-failures) |
 | Fix a bad model habit (declares victory early, edits tests) | [§14](#14-model-failure-modes-and-countermeasures) |
 | Check a design for common mistakes | [§15](#15-anti-patterns) |
 | Copy a ready-made prompt, hook, state file or workflow | [§16](#16-templates) |
@@ -172,24 +177,25 @@ Each law opens with "Build it", then gives the evidence behind it.
 - **Build it:** every component must name the failure it prevents. On each model upgrade, re-run your evals with components removed and delete what no longer earns its tokens. [D]
 - Boris Cherny describes Claude Code as the thinnest possible wrapper over the model, and says that as the model improves it absorbs the scaffolding around it. [P: Latent Space, May 2025]
 - Secondhand notes say the Claude Code team builds for the model about six months ahead. [S]
-- Anthropic: start with the simplest solution; many tasks need one well-built call, not an agent. [P: Building effective agents]
+- Anthropic advises "finding the simplest solution possible"; many tasks need one well-built call, not an agent. [P: Building effective agents, 2024-12-19]
 
 ### Law 2. Verification multiplies quality
 - **Build it:** no task without a check the agent can run itself; no "done" without that check's output. Keep one acceptance check outside its reach, where it can't read or edit it (§9.3). [D]
-- Recaps of Boris Cherny's January 2026 setup thread call verification his top tip and report that a working feedback loop improves output quality two to three times. [S]
+- Boris Cherny, 2 Jan 2026: "give Claude a way to verify its work", which he estimates at 2-3x the quality. That is his own estimate, not a measurement. [P: X thread, post 13/]
 - The Claude Agent SDK frames the agent loop as gather context, take action, verify work, repeat. [P]
 - Anthropic's long-running harness found agents declare the whole project finished too early unless a feature list and end-to-end tests hold them to account. [P]
-- Karpathy's "Software 3.0" talk stresses fast generate-and-verify cycles with a human auditing. [S: talk summary]
+- Karpathy's "Software Is Changing (Again)" talk, 18 Jun 2025: "we as humans are doing the verification"; he recommends small incremental chunks and concrete prompts. [P: talk transcript, auto-captions, 22:16, 23:55 and 24:32]
 - Claude Code's best-practices page puts this first: give Claude a pass/fail check (tests, a build, a screenshot) so it can iterate without you. [P]
 
 ### Law 3. Specify outcomes, not steps
 - **Build it:** every task carries a "done when" list a command or a person can check. [D]
-- Reports of Karpathy's January 2026 notes on coding with Claude Code: the leverage comes from giving the agent success criteria and letting it loop, rather than step-by-step instructions. [S]
+- Karpathy, 26 Jan 2026: don't tell the agent what to do; "give it success criteria and watch it go". He also lists tests first, a browser MCP and declarative over imperative. [P: X post]
 - Anthropic: write prompts at the "right altitude", neither brittle if-else rules nor vague guidance; start minimal and add instructions for failures you actually observe. [P: context engineering]
 
 ### Law 4. Context is a budget, not a bin
-- **Build it:** load just in time (paths and IDs, not file dumps); isolate heavy reading in subagents; write state to files; compact on purpose between phases. [D]
-- Karpathy endorsed "context engineering": filling the context window with just the right information for the next step. [S: June 2025]
+- **Build it:** load just in time (paths and IDs, not file dumps); isolate heavy, noisy reading in subagents or a workflow; write state to files; compact on purpose between phases; keep context small through structure, not vigilance (§8). [D]
+- Karpathy endorsed "context engineering" (25 Jun 2025): filling the context window with just the right information for the next step. [P: X post]
+- Claude Code's best-practices page now lists "Use subagents to protect your context window" among old advice. Subagents stay useful for parallel, noisy or independent-review work (§8). [P: checked 2026-11-18]
 - Anthropic: recall degrades as the window fills ("context rot"); treat context as a finite attention budget. [P]
 - Subagents can explore with tens of thousands of tokens and return condensed 1,000 to 2,000-token summaries. [P]
 - In Anthropic's illustrative example (a Google Drive to Salesforce workflow), presenting MCP tools as code modules the agent loads on demand cut token use from about 150,000 to 2,000 (98.7%). No measurement method is given, so read it as an order of magnitude. [P: Code execution with MCP]
@@ -203,24 +209,31 @@ Each law opens with "Build it", then gives the evidence behind it.
 
 ### Law 6. Plan before building
 - **Build it:** a plan file with slices, each naming its test. Humans approve the plan, not every edit. [D]
-- Recaps of Boris Cherny's workflow: most sessions start in Plan mode; once the plan is good, implementation often lands in one shot. [S]
-- Claude Code's best-practices page: explore, plan, code, commit. [P: current docs]
+- Boris Cherny, 2 Jan 2026: "Most sessions start in Plan mode", and once the plan is good Claude "can usually 1-shot it"; on 31 Jan 2026: "Start every complex task in plan mode". Dated advice: the 2 Jan thread names Opus 4.5. [P: 2 Jan thread, post 6/; 31 Jan thread, tip 2, read from X search results; quoted wording checked 2026-11-18] Reports say that by June 2026 he worked mostly in auto mode. [S]
+- Karpathy, 26 Jan 2026: "Things get better in plan mode". [P: X post]
+- Claude Code's current docs make auto mode the interactive default (v2.1.283 to v2.1.284) and no longer headline "Explore, plan, implement, commit"; plan mode is still a permission mode. Plan anything non-trivial, through plan mode or a written spec, and skip the plan for a one-sentence diff. [P: best practices and permission modes, checked 2026-11-18; D for the advice]
 - HumanLayer: research, then plan, then implement, with human review on research and plans, because one bad line in a plan costs more than one bad line of code. [P: author post]
 
 ### Law 7. Separate the maker from the checker
 - **Build it:** reviewers get the artifact and the criteria, never the author's reasoning. Anonymize sources when comparing candidates. [D]
 - Claude Code's best practices describe a writer/reviewer split across separate sessions. [P]
-- Team tips report having a second Claude review a plan the way a staff engineer would. [S]
+- Boris Cherny's team tips, 31 Jan 2026: one Claude writes the plan and a second reviews it "as a staff engineer". [P: X thread, tip 2, read from X search results; quoted wording checked 2026-11-18]
 - Karpathy's llm-council: several models answer independently, review each other's answers anonymously, then a chair model synthesizes. [P: repo]
-- Reports of Karpathy's notes list sycophancy and failure to push back among current model weaknesses. [S]
+- Karpathy, 26 Jan 2026: models run along with wrong assumptions, don't push back and are "a little too sycophantic". [P: X post]
+- A reviewer asked to find problems "will always find something", so tell it to skip style and run it once per artifact version (§7, §9.2). [P: best practices, checked 2026-11-18]
 - Claude Code's best practices recommend an adversarial review subagent in a fresh context, acting only on its correctness findings. [P]
 
 ### Law 8. Turn every correction into a rule
-- **Build it:** a short retro after real tasks; each lesson becomes a rule, a skill, a hook, a test or a tool fix. Review a skill before it lands, and keep a mined rule only if re-running the evals shows it helps (§13). Prune rules that never fire. [D]
-- Boris Cherny, as quoted in recaps: after a correction, tell Claude to update CLAUDE.md so the mistake doesn't repeat; his team keeps one shared CLAUDE.md in git. [S]
+- **Build it:** fix a repeated mistake at the highest layer that works. This is the correction ladder, from the top rung down: (1) change the architecture or API so the mistake can't be written; (2) add a lint rule, a type or a test; (3) add runtime verification (run the app and check the result); (4) only then add a skill or CLAUDE.md line. After real tasks hold a short retro; each lesson goes on the highest rung that works. The ladder is design advice built on the sources below; the docs do not state it. Review a skill before it lands, and keep a mined rule only if re-running the evals shows it helps (§13). Prune rules that never fire. [D]
+- Lauren Tan (Nov 2026) puts deterministic layers first and prose last, and turns a correction into a deterministic check: she bans `useEffect` in product code and enforces module boundaries by directory structure. Her results are self-reported, and her tool is Cursor. [P: talk transcript, 2:03, 3:08, 5:26, 6:10 and 9:10; adopting the method is D]
+- OpenAI's harness team enforces invariants with custom linters and structural tests, which it calls "taste invariants". [P, vendor: Lopopolo, 2026-02-11]
+- Karpathy, 26 Jan 2026: bloat and orthogonal edits persisted "despite a few simple attempts to fix it via instructions in CLAUDE.md". [P: X post]
+- Claude Code's best-practices page splits deterministic from non-deterministic instructions and keeps hooks for rules with "zero exceptions", and it lists IMPORTANT and ALL CAPS emphasis among old advice. It does not state a ladder. [P: best practices, "Deterministic and non-deterministic instructions", checked 2026-11-18]
+- GitHub's Copilot team describes guardrails "akin to contract testing that can only be updated by humans". [P, vendor: McGoffin, 2026-03-31]
+- The last rung, dated: Boris Cherny, 2 Jan 2026: "Anytime we see Claude do something incorrectly we add it to the CLAUDE.md". On 31 Jan 2026 his tip 3 asks Claude to update CLAUDE.md after each correction. His team keeps one shared CLAUDE.md in git. [P: 2 Jan thread, post 4/; 31 Jan thread, tip 3, read from X search results; quoted wording checked 2026-11-18] Tan (Nov 2026) puts prose last.
 - Anthropic: start with a minimal prompt and add instructions from observed failures. [P]
 - Every's "compound engineering" makes this a phase: plan, work, review, then compound, writing learnings into CLAUDE.md and `docs/solutions/`. [P]
-- The tension: Claude Code's best practices warn that a bloated CLAUDE.md gets ignored, and say to cut any line whose removal would not cause a mistake. [P] Resolve it by keeping detailed learnings in `docs/solutions/` or skills, and promoting to CLAUDE.md only the rules that stop a repeated mistake. [D]
+- The tension: Claude Code's best practices warn that a bloated CLAUDE.md gets ignored, and say to cut any line whose removal would not cause a mistake. [P] Resolve it by keeping detailed learnings in `docs/solutions/` or skills, and promoting to CLAUDE.md only the rules that stop a repeated mistake a check can't catch. [D]
 
 ### Law 9. Enforce with code; request with words
 - **Build it:** anything that must happen every time (tests, formatting, policy) lives in hooks, CI, permissions or the sandbox, not only in prose. [D]
@@ -234,7 +247,7 @@ Each law opens with "Build it", then gives the evidence behind it.
 - Karpathy, October 2025: this is the decade of agents, not the year; agents lack continual learning and are weak at code nobody has written before. [P: Dwarkesh podcast] By his December 2025 year in review he wrote that he had vibe coded many projects that year, so treat the October view as a dated snapshot. [P: bearblog]
 - Anthropic: work where agents must share context or depend on each other is not a good fit for multi-agent systems, and most coding tasks have fewer truly parallel parts than research. [P: multi-agent research system]
 - Google Research's controlled study of 180 agent configurations (paper version 1, December 2025; a later version, April 2026, reports 260 configurations across 6 benchmarks): multi-agent setups lost 39–70% on sequential planning; gains shrank, and often turned negative, once a single agent already scored above about 45% (a fitted estimate, not a hard cutoff); and independent agents amplified errors 17.2× versus 4.4× with a central orchestrator, both relative to a single agent. [R: arXiv 2512.08296] See §19.
-- Karpathy's "autonomy slider": choose per task how much initiative the model gets. [S: talk summary]
+- Karpathy's "autonomy slider": choose per task how much initiative the model gets. [P: talk transcript, 20:23]
 
 ---
 
@@ -297,12 +310,12 @@ flowchart TB
 
 **Page terms.** Claude Code feature map (the page's "Toolbox", Lesson 8, "Which Claude feature does which job").
 
-Checked against code.claude.com on 2026-10-24, and the subagent, workflow, agent-team, cross-session and model rows again on 2026-11-14 [P]. Features marked preview or experimental change fast; re-check before you build on them.
+Checked against code.claude.com on 2026-10-24, and the subagent, workflow, agent-team, cross-session and model rows again on 2026-11-14. The limits, defaults and versions named below were re-checked on 2026-11-18 against the raw docs pages and the changelog through v2.1.328 [P]. Where a docs page and the changelog disagree, the changelog entry is cited. A row says "as of vX.Y.Z" where a version fixes the fact, so the next refresh can find what is stale. The changelog page dates v2.1.328 as 19 November 2026 (the page's own date), and six version numbers (2.1.297, 2.1.298, 2.1.313, 2.1.315, 2.1.320 and 2.1.324) are missing from it, so this is not a complete change list. Features marked preview or experimental change fast; re-check before you build on them.
 
 | Job | Feature | Key facts and limits |
 |---|---|---|
-| Workers | Subagents | Markdown files in `.claude/agents/`, `~/.claude/agents/` or a plugin. Frontmatter sets `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `isolation: worktree`, `skills`, `mcpServers`, `hooks`. Built-ins include Explore and Plan (read-only). Nesting goes 3 levels deep by default, and 20 subagents can run at once by default (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`). Frontmatter `effort` overrides the session's effort while the subagent runs. Plugin-supplied agents ignore `hooks`, `mcpServers` and `permissionMode`. |
-| Big fan-outs | Dynamic workflows | Claude writes a JavaScript script that runs dozens to hundreds of subagents. Intermediate results stay in script variables, not the context window. A workflow can include verifier agents; in `/deep-research` they cross-check claims and list what they could not verify. Up to 16 agents at once by default and 1,000 per run, with no mid-run user input: a run pauses only for permission prompts and usage limits. `/workflows`, `/deep-research`. Paid plans (Pro turns it on in `/config`), and with Anthropic API, Bedrock, Google Agent Platform or Foundry access. |
+| Workers | Subagents | Markdown files in `.claude/agents/`, `~/.claude/agents/` or a plugin. Frontmatter sets `tools`, `disallowedTools`, `model`, `permissionMode`, `maxTurns`, `isolation: worktree`, `skills`, `mcpServers`, `hooks`. Built-ins include Explore and Plan (read-only). Nesting goes 3 levels deep by default, and 20 subagents can run at once by default (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`). Frontmatter `effort` overrides the session's effort while the subagent runs, and the Agent tool takes an `effort` parameter (as of v2.1.292). `autoCompactWindow` (as of v2.1.296, 100K minimum) lowers the compaction window for a long run. Plugin-supplied agents ignore `hooks`, `mcpServers` and `permissionMode`. |
+| Big fan-outs | Dynamic workflows | Claude writes a JavaScript script that runs dozens to hundreds of subagents. Intermediate results stay in script variables, not the context window. A workflow can include verifier agents; in `/deep-research` they cross-check claims and list what they could not verify. Up to 16 agents at once by default, 1,000 per run and 4,096 items per call, with no mid-run user input: a run pauses only for permission prompts and usage limits. A large-workflow warning appears above 25 agents or 1.5M projected tokens. From `-p`, a workflow needs one of five approval routes: an allow rule, auto mode, a PreToolUse hook that returns allow, `--permission-prompt-tool`, or an SDK `canUseTool` callback. The `ultracode` keyword does not trigger from `-p` or scheduled prompts. `/workflows`, `/deep-research`. Paid plans (Pro turns it on in `/config`), and with Anthropic API, Bedrock, Google Agent Platform or Foundry access. |
 | Peer agents | Agent teams (experimental) | A lead and teammates share a task list and message each other. Off by default; no worktree isolation, so partition files; not available under `-p`. About 7x the tokens of a standard session when teammates run in plan mode, so keep teams small. |
 | Overview | Agent view (preview) | `claude agents` shows background sessions as running, needs input or done; peek, reply, attach. |
 | Session to session | Cross-session messaging | `ListAgents` and `SendMessage` pass text between your own sessions. On one machine they use a local socket on every provider; reaching sessions on other machines needs Remote Control and a claude.ai sign-in. A message never counts as consent, so it cannot answer a permission prompt. |
@@ -310,28 +323,30 @@ Checked against code.claude.com on 2026-10-24, and the subagent, workflow, agent
 | Recipes | Skills | `SKILL.md` loads on demand; `disable-model-invocation: true` keeps side-effect workflows manual. Bundled: `/batch` (5 to 30 worktree subagents, each opening a PR), `/loop`, `/verify`, `/run`, `/code-review`. Every enabled skill's name and description costs context on every turn, unless `disable-model-invocation: true` keeps the description out or `skillOverrides` shows the name only or hides the skill. |
 | Distribution | Plugins and marketplaces | Bundle skills, agents, hooks and MCP servers; install with `/plugin install name@marketplace`. Enabled plugins run hooks and MCP servers as you. |
 | Isolation | Worktrees | `claude -w <name>` creates `.claude/worktrees/<name>` on a new branch; `.worktreeinclude` copies gitignored files in. |
-| Must-happen rules | Hooks | 33 events, among them PreToolUse, PermissionRequest, PermissionDenied, PostToolUse, SubagentStop, TaskCompleted, Stop, StopFailure, PreCompact, Notification, SessionStart and SessionEnd. Handlers: command, HTTP, MCP tool, prompt, subagent. |
-| Goal pursuit | `/goal <condition>` | A small evaluator checks the transcript after each turn and keeps Claude going until the condition is met, judged impossible, or an error stops it. It runs no commands itself, so write a condition that the session's output can prove. |
-| Repeat in session | `/loop` | Fixed interval (1-minute minimum) or self-paced; recurring tasks expire after 7 days; missed runs are not caught up; ends with the session, though `--resume` or `--continue` restores unexpired fixed-interval tasks (not self-paced ones). |
-| Repeat on a schedule | Cloud scheduled tasks (`/schedule`, formerly "routines", preview); desktop scheduled tasks | Cloud tasks run on a schedule, an API call or a GitHub event, with a 1-hour minimum interval. They start in auto mode and can still stop and wait for an answer (ask rules, repeated auto-mode blocks), so design for a paused run. Each run starts from a fresh clone of the default branch (a run triggered by a PR event starts from the PR head) and pushes to a `claude/` branch unless the prompt says otherwise, so files it writes don't reach the next run unless merged; keep loop state in a ticket, a PR comment or a named branch. The 1-hour minimum applies to timed triggers. Desktop tasks run locally and need the app open and the machine awake. |
+| Must-happen rules | Hooks | 33 events, among them PreToolUse, PermissionRequest, PermissionDenied, PostToolUse, SubagentStop, TaskCompleted, Stop, StopFailure, PreCompact, Notification, SessionStart and SessionEnd; none was added from v2.1.280 to v2.1.328. Handlers: command, HTTP, MCP tool, prompt, subagent. `onFailure: "block"` is available on command and HTTP hooks (as of v2.1.295), on `mcp_tool` hooks (v2.1.328) and in SDK callbacks (v2.1.317). Up to 12 prompt or agent hooks run at once. A Stop hook is overridden after 8 consecutive blocks (§9.5). |
+| Goal pursuit | `/goal <condition>` | A small evaluator checks the transcript after each turn and keeps Claude going until the condition is met, judged impossible, or an error stops it. It runs no commands and reads no files itself, so write a condition that the session's output can prove, with a turn bound in it ("or stop after 20 turns"). A usage limit pauses it; auth, credit and context-overflow errors clear it. |
+| Repeat in session | `/loop` | Fixed interval (1-minute minimum) or self-paced; up to 50 tasks per session; recurring tasks expire after 7 days; missed runs are not caught up; as of v2.1.319 a self-paced loop ends when a turn finishes without rescheduling, and the old fallback wakeup needs `CLAUDE_CODE_LOOP_KEEPALIVE=1` (the scheduled-tasks page still describes the fallback); ends with the session, though `--resume` or `--continue` restores unexpired fixed-interval tasks (not self-paced ones). |
+| Repeat on a schedule | Cloud scheduled tasks (`/schedule`, formerly "routines", preview); desktop scheduled tasks | Cloud tasks run on a schedule, an API call or a GitHub event, with a 1-hour minimum interval. They start in auto mode and can still stop and wait for an answer (ask rules, repeated auto-mode blocks), so design for a paused run. As of v2.1.325 a scheduled task or `/loop` asks before running a skill that declares `allowed-tools` or hooks, unless `Skill(name)` is in `permissions.allow` (changelog only). Each run starts from a fresh clone of the default branch (a run triggered by a PR event starts from the PR head) and pushes to a `claude/` branch unless the prompt says otherwise, so files it writes don't reach the next run unless merged; keep loop state in a ticket, a PR comment or a named branch. The 1-hour minimum applies to timed triggers. Desktop tasks run locally and need the app open and the machine awake. |
 | Watch | Monitor tool | Streams a background process's output into the session line by line. |
-| Headless | `claude -p`; Agent SDK | `--output-format text/json/stream-json`, `--allowedTools`, `--permission-mode dontAsk`, `--max-budget-usd`. `--bare` skips hooks, skills, MCP and CLAUDE.md discovery, so your Stop gate does not run, and it needs an API key or cloud-provider credentials rather than your subscription login. Since v2.1.302, `-p` starts in Manual mode when nothing sets a mode, so actions that need approval are denied. The Agent SDK (Python, TypeScript) runs the same loop in your code. |
+| Headless | `claude -p`; Agent SDK | `--output-format text/json/stream-json`, `--allowedTools`, `--permission-mode dontAsk`, `--max-budget-usd`. `--bare` skips hooks, skills, MCP and CLAUDE.md discovery, so your Stop gate does not run, and it needs an API key or cloud-provider credentials rather than your subscription login. With no mode set, `-p` starts in Manual mode and actions that need approval are denied: the permission-modes page states this without conditions, while the changelog (v2.1.302) limits it to third-party providers, telemetry off or a fresh install; the logged-in, telemetry-on case is not stated. `--permission-mode auto` keeps auto mode, and in `-p` auto mode denies a blocked action and keeps going. `--max-budget-usd` (or a spend limit) is the cost ceiling. `--max-turns` is a turn bound that the best-practices page lists under "What stops it?"; the headless page does not document its semantics. The Agent SDK (Python, TypeScript) runs the same loop in your code. |
 | Off the machine | Claude Code on the web; Remote Control; Channels | `claude --cloud` runs a cloud VM from your GitHub repo, or uploads a local bundle when there's no GitHub remote or the Claude GitHub App isn't installed; you create the PR afterwards. In the CLI, `--teleport` pulls the result back one way; the desktop app can also send a local session to the cloud. Remote Control drives a local session from claude.ai or the phone. Channels push outside events (chat apps) into an open session through MCP. |
 | Team chat | Slack, Claude Tag | Claude Tag (beta, Team and Enterprise) runs @Claude as a shared org identity in an ephemeral sandbox. |
-| Safety | Permission modes; sandbox; managed settings | Modes: default, acceptEdits, plan, auto, dontAsk, bypassPermissions. Deny rules hold in every mode. Bash sandbox: Seatbelt on macOS, bubblewrap on Linux and WSL2. |
-| Memory | CLAUDE.md, imports, auto memory | Managed, user, project and local CLAUDE.md; `@path` imports; the first 200 lines or 25 KB of auto memory load each session. All advisory: enforcement belongs in hooks. |
+| Safety | Permission modes; sandbox; managed settings | Modes: default, acceptEdits, plan, auto, dontAsk, bypassPermissions. Deny rules hold in every mode. Auto mode is the interactive default as of v2.1.283 (third-party providers or telemetry off) and v2.1.284 (every plan and provider); HIPAA sessions use it from v2.1.326. It pauses and resumes prompting after 3 consecutive or 20 total blocks. Bash sandbox: Seatbelt on macOS, bubblewrap on Linux and WSL2. As of v2.1.325, sandboxed Bash follows the normal permission flow, so silent sandboxed commands are an opt-in (`sandbox.autoAllowBashIfSandboxed`). `sandbox.failIfUnavailable` has existed since v2.1.83. |
+| Memory | CLAUDE.md, imports, auto memory | Managed, user, project and local CLAUDE.md; `@path` imports; the first 200 lines or 25 KB of auto memory load each session. All advisory: enforcement belongs in hooks. Compaction keeps the system prompt, root CLAUDE.md, auto memory, the plan-mode plan, up to five recent files, and invoked skills (5,000 tokens each, 25,000 in total); path-scoped rules are dropped and reload on demand. Auto-compaction triggers at about 967K tokens, with a 100K minimum for `autoCompactWindow`. |
+| Removed or experimental | Changes to plan around | Removed: `subagentStatusLine` (v2.1.323), `pluginDigests` (v2.1.325), the plugin `agent` setting (v2.1.323); `claude project purge` is now `claude purge` (v2.1.288); Opus 4.8 fast mode is removed on 2026-11-30. Code Mode is an experimental opt-in (v2.1.323). Mods arrived in v2.1.287, with no status label in the docs. |
 | Observability | OpenTelemetry | `CLAUDE_CODE_ENABLE_TELEMETRY=1` plus OTLP exporters: session and cost metrics; events for API requests, tool results and tool decisions. Repo files cannot turn it on. |
 
-**The official best-practices page, condensed** [P]:
-1. Give Claude a pass/fail check so it can iterate without you.
-2. Explore, plan, implement, commit; skip the plan for a one-sentence diff.
-3. Point at specific files, sources and existing patterns.
-4. Keep CLAUDE.md short.
-5. Pre-approve safe tools and use the sandbox; hooks for must-happen rules; skills for procedures; subagents to keep research out of the main context.
-6. Have Claude interview you, write a spec, then implement in a fresh session.
-7. Correct course early; `/clear` after repeated failed corrections; `/compact` with a focus.
-8. Add an adversarial review subagent in a fresh context; act only on correctness findings.
-9. Scale out with `claude -p` loops, writer/reviewer sessions and `/batch`.
+**The official best-practices page, condensed** [P: re-read on 2026-11-18; the page has changed since the 2026-10-24 reading]:
+1. Give Claude a pass/fail check so it can iterate without you, and ask it to report the command it ran and the output.
+2. Point at specific files, sources and existing patterns.
+3. Keep CLAUDE.md short; hooks for must-happen rules.
+4. Pre-approve safe tools and use the sandbox; skills for procedures. The page treats forty hooks as a smell.
+5. Have Claude interview you, write a spec, then implement in a fresh session.
+6. Correct course early; `/clear` after repeated failed corrections; `/compact` with a focus.
+7. Review in a fresh context. A reviewer asked to find problems "will always find something", so tell it to skip style, and act only on correctness findings.
+8. Scale out with `claude -p` loops, writer/reviewer sessions and `/batch`, and bound them with `--max-budget-usd` as the cost ceiling and `--max-turns` as a turn bound.
+
+The page now lists "old advice" you can stop following: IMPORTANT and ALL CAPS emphasis, and "Use subagents to protect your context window". It no longer has an "Explore, plan, implement, commit" heading. Items 3, 4, 5, 6 and 8 carry over from the 2026-10-24 reading and were not re-read line by line on 2026-11-18.
 
 ---
 
@@ -476,6 +491,16 @@ The "cost and risk" column is our advice [D]; the source column names where each
 
 Two versions of "Ralph" exist. Huntley's original restarts a fresh process each pass. Anthropic's ralph-wiggum plugin re-feeds the prompt inside one session through a Stop hook. Dex Horthy (HumanLayer) has argued the plugin misses the key point of Ralph, a fresh context each pass. [S] One user's plugin loop set to `max_iterations: 0` ran 6,239 iterations over about 11.7 hours. Always set an iteration cap. [P: GitHub issue #1699]
 
+**One writer by default.** [D, built on the P and R sources below] One agent writes; helpers read, search or review. Parallel writers fit only when all of these hold: each writer works in an isolated checkout; the work splits into independent failing tests; a strong verifier grades the result; and a lock or claim mechanism stops two writers taking the same task. Carlini's 16 agents in separate containers claimed tasks by writing lock files, ran about 2,000 sessions and cost under $20,000, and the post gives no single-agent baseline. [P, vendor: Anthropic, 2026-02-05] The evidence for the default:
+- Anthropic's research-system post says most coding tasks have fewer parallelizable parts than research, and that work needing shared context is a poor fit. [P: 2025-06-13]
+- Cognition (2026-04-22): "writes stay single-threaded"; helpers read and review. [P, vendor]
+- Google Research and MIT, paper version 3 (8 Apr 2026): returns turn negative once the single-agent baseline exceeds 45% (a fitted estimate, not a cutoff), and independent agents amplified errors 17.2x against 4.4x with central coordination (CI 14.3 to 20.1), both relative to one agent. [R: preprint, arXiv 2512.08296]
+- MAST, a failure taxonomy built from 1,600+ multi-agent traces. [R: NeurIPS 2025 poster, arXiv 2503.13657]
+
+**Planner and worker, with written handoffs, is the scaled pattern.** Cursor reports that flat coordination through a shared lock file collapsed (January 2026), and that it moved to a planner-and-worker hierarchy (February 2026): each worker returns a handoff (what was done, deviations, concerns), the planner's scratchpad is rewritten rather than appended, and the judge and integrator roles were dropped. [P, vendor: Cursor, one setting, no replication]
+
+**Route by model, and measure cost per task.** In Cursor's July 2026 post a hybrid run built on Opus 4.8 cost $1,339 for one task, against $10,565 for GPT-5.5 alone. [P, vendor: one task; model names are that post's era] Measure cost per task on your own work before you standardize a routing. [D]
+
 ```mermaid
 flowchart TD
   A[New task] --> B{"One call with good context enough?"}
@@ -546,6 +571,8 @@ artifacts: paths written
 - Reviewers get the artifact and the criteria only.
 - A helper's report is a claim, not proof. The lead re-checks any claim that drives a decision.
 - Never forward raw transcripts between agents; forward summaries and file paths.
+- **Reviewer rule.** A reviewer is read-only (for example `tools: Read, Grep, Glob`), starts in a clean context, is anchored to the spec, and runs once per artifact version (§9.2). Tell it to skip style: a reviewer asked to find problems "will always find something". [P: best practices, checked 2026-11-18] When every reviewer is an agent, add one independent final check: a gate that reruns the checks, or a human. Agent-to-agent review loops are one team's report (§11.5). [D]
+- Briefs carry the objective, the output format, the tools and the boundaries; helpers return summaries or file references, not transcripts. [P: Anthropic research system]
 
 ---
 
@@ -576,7 +603,17 @@ artifacts: paths written
 
 **Large tool sets.** Expose MCP servers as code the agent imports on demand rather than loading every definition up front. [P]
 
-**Build for agents.** Karpathy argues docs should be machine-readable (Markdown, `llms.txt`), since agents are now a primary reader. [S: talk summary]
+**Build for agents.** Karpathy argues docs should be machine-readable: a Markdown file for agents (the auto-captions spell it "lm.txt"; read it as an llms.txt-style file) and Markdown docs, since agents are now a primary reader. [P: talk transcript, 34:18 and 35:01]
+
+**Keep context small through structure, not vigilance.** [D, built on the P and R sources named in each line]
+- State lives in files and git (the spec, the plan, a progress file, commits as checkpoints), so a session can end at any point.
+- The entry file is a map of about 100 lines into a docs tree. OpenAI's team found that one big AGENTS.md "failed in predictable ways", and moved to a roughly 100-line map. The line count is theirs, not a measured threshold. [P, vendor: Lopopolo, 2026-02-11]
+- Give each unit of work a fresh session or worktree. Use `/clear` between unrelated tasks and after repeated failed corrections. [P: best practices]
+- Isolation, strongest first: workflow script variables (the parent sees only the final answer), then a fresh background subagent (a summary returns), then a fork (it inherits the parent's context, so it isolates only new work), then working in-session. The ranking is our reading of the sub-agents and workflows pages. [D]
+- On a long run, lower `autoCompactWindow` (as of v2.1.296, 100K minimum). The default auto-compaction point is about 967K tokens, and the right lower value is a judgment call, not documented advice. [P for the setting; D for the value]
+- Know what compaction keeps (§3A, Memory row), and keep anything the run needs afterwards in the repo.
+- Retired as the headline: "Use subagents to protect your context window" is now in the docs' old-advice table. [P: best practices, 2026-11-18] Boris Cherny's tip 8 of 31 Jan 2026 still offloads tasks "to keep your main agent's context window clean". [P, dated; read from X search results; quoted wording checked 2026-11-18] Keep subagents for parallel, noisy or independent-review work.
+- Why not rely on a big window: Chroma evaluated 18 LLMs and found "significantly higher performance on focused prompts": about 300 tokens beat the full LongMemEval input of about 113,000. [vendor report: Chroma, Context Rot] Accuracy is highest when the relevant text sits at the start or end of the input. [R: Lost in the Middle, TACL 2024] Neither study is about coding agents.
 
 ---
 
@@ -584,6 +621,15 @@ artifacts: paths written
 *Read when: you are defining "done", wiring gates, or deciding who checks the work.*
 
 **Page terms.** Verification stack (the page's "Make Claude prove its own work", Lesson 9, "Self-checks").
+
+**Check order, cheapest and most deterministic first.** [D, built on the P sources named; checked 2026-11-18]
+1. Deterministic checks: types, lint, tests, build.
+2. A Stop hook that reruns them. It is overridden after 8 consecutive blocks (§9.5).
+3. Runtime verification: run the app and look at the result. Tan: runtime verification is "giving your agent a way to run the code for itself" and use the debugging tools human developers use, such as the Chrome DevTools protocol (talk, 10:02); she adds a feature map of user-facing features and CLIs inside skills (9:48 to 10:45). [P: transcript; her results are self-reported] OpenAI's team puts the Chrome DevTools Protocol in the agent's runtime. [P, vendor]
+4. `/goal` with a turn bound in the condition. Its evaluator "doesn't run commands or read files", so the condition must name output the session shows. [P: goal docs]
+5. A fresh reviewer (§7, reviewer rule).
+
+Keep the done check where the agent can't edit it (§9.3). Review the verification artifacts (screenshots, videos, diagrams, command output), not only the diff. Karpathy: "we as humans are doing the verification". [P: talk transcript, 22:16] Formal methods (TLA+, Lean) are optional: Tan uses them and calls them "not a silver bullet". [P: 10:50]
 
 ### 9.1 From criterion to gate
 
@@ -621,6 +667,8 @@ criterion  →  scenario            →  automated check   →  gate            
 - An LLM judge needs a rubric. The research system scored factual accuracy, citation accuracy, completeness, source quality and tool efficiency from 0.0 to 1.0 with a pass/fail. [P] The Agent SDK guidance calls an LLM judge not very robust and slower, though sometimes worth the cost. [P] Our advice: never make it the only gate. [D] A judge favours its own outputs [R: NeurIPS 2024], and open-weight judges disagreed with themselves across runs. [R: Findings of EMNLP 2025] When an LLM judge scores work, use a different model family or an execution check, and repeat and aggregate. This is about scoring: a fresh reviewer from the same family (Law 7, §9.2) still beats self-review but can share the bias. [D]
 - A loop's tests can pass while the spec is still violated; one practitioner's Ralph run passed 28 tests and then failed a fresh review on a real spec breach. Keep a fresh-eyes review even when tests are green. [S]
 - Watch your own drift. Simon Willison wrote in May 2026 that he no longer reviews every line of agent output, even for production work, and named the risk himself: normalization of deviance. Decide on purpose which tiers get line-by-line human review. [P]
+- Instructions don't stop reward hacking. METR found 30.4% of RE-Bench runs (39 of 128) hacked the task and 0.7% of HCAST runs, and that telling the model not to cheat had a "nearly negligible effect". [R: METR report, 2025-06-05] Back the rule with a check. [D]
+- Ground self-correction in an external signal. Self-correction without one lowered reasoning accuracy [R: ICLR 2024], and Reflexion's coding gain (91% against 80% pass@1 on HumanEval) rests on test results. [R: NeurIPS 2023, per search]
 - For unattended runs, measure **pass^k** (all k runs succeed), not just pass@k (at least one succeeds). At 75% per-run success, three runs in a row all succeed only about 42% of the time. [P: Demystifying evals]
 
 ### 9.4 Receipt format
@@ -633,6 +681,8 @@ criterion 3: NOT RUN  needs Excel; checked CSV opens in Numbers instead
 not done:   header row bug; Excel check
 next step:  fix header writer, rerun criterion 2
 ```
+
+**Write the report in plain English.** Ask the agent to report in short, active sentences with one meaning per word, close to ASD-STE100, the controlled-English standard for aircraft maintenance documents (Issue 9, January 2025, made it an international standard). [P: ASD-STE100 news page] Karpathy (2 Oct 2026) suggests asking a model for an explanation in that style, then for diagrams or an HTML page; for a large change, add a diagram or an HTML page as the review artifact. [P, opinion: X post] Older studies found Simplified English improved comprehension of a complex procedure, most for non-native speakers. [R: 1995 and 1996, human readers; none tested LLM output] This is one person's practice, not a measured result, and his video tip is not a default. [D]
 
 ### 9.5 Hooks that enforce it (Claude Code)
 
@@ -655,6 +705,8 @@ Premise: prompt-level guardrails are not reliable. Put controls at the tool, OS 
 
 ### 10.1 Facts to design around
 - **Lethal trifecta** (Simon Willison): an agent with private data, exposure to untrusted content, and a channel to send data out can be steered by injected text into exfiltration. Mixing your own MCP tools can recreate it. [P]
+- **Trifecta check, before you grant a tool or an MCP server:** ask which of the three legs the session now has. If it has all three, remove one: no private data, no untrusted content, or no outbound channel. [P: Willison, "The lethal trifecta for AI agents", 2025-06-16; D for the checklist step]
+- **Approval fatigue:** Anthropic reports that about 93% of permission prompts were approved. [P: How we contain Claude, 2026-05-25] That approval fatigue is a reason to prefer auto mode and deny rules over prompts. [D]
 - **Permission rules** evaluate deny, then ask, then allow; the first match wins, and an allow cannot carve an exception out of a deny. [P: permissions docs]
 - **Auto mode's classifier** sees user messages and tool calls, not tool outputs, so text in files or web pages can't address it directly. It also can't see what the agent read. Entering auto mode drops blanket allows such as `Bash(*)`. After 3 consecutive or 20 total blocks it falls back to prompting; in non-interactive `-p` runs a blocked action simply doesn't run. [P: auto mode post and docs]
 - **Independent stress test of auto mode:** 81% end-to-end false negatives (115 of 142 dangerous actions, in a set of 253) in deliberately ambiguous scenarios. Anthropic's own figure is a 17% false-negative rate on 52 curated overeager actions; its 10,000-call sample of real traffic measured false positives (0.4%), not misses. about 37% of state-changing actions were in-project edits that the classifier doesn't gate. Treat auto mode as convenience, not a security boundary. [R: arXiv preprint]
@@ -755,6 +807,32 @@ Sandboxes for unattended loops: dev containers or Docker locally. Matt Pocock's 
 - Teleport forks history silently. [P]
 - A cloud scheduled task can stop and wait for an answer. Check for paused runs, not only failed ones. [P]
 - An uncapped loop will run all night. [P: bug report, 6,239 iterations]
+- "No human review", auto-merge and minimal merge gates are single-team self-reports, not defaults. Tan describes release fuzzing that opens and auto-merges fix PRs, and says there is "nothing left to review" (9:10); at 16:44 she says "most product code that we land no longer really requires deep human review". [P for the words; S for the effect: self-reported, no independent audit; talk, 9:10 and 16:21] OpenAI's team describes "minimal blocking merge gates" and agent-to-agent review, and says the setup "should not be assumed to generalize". [P, vendor: Lopopolo, 2026-02-11] No independent study shows that removing human diff review is safe (§19.4).
+
+### 11.6 End to end with minimal supervision
+*Read when: you want to run a whole task from spec to merged PR with as little watching as the checks allow.*
+
+[D, built on the P sources named; no study tests this stack as a whole. Checked 2026-11-18.] The human supplies two things: an approved spec at the start and a sign-off on the verification artifacts at the end. Checks decide everything between.
+
+1. **Orchestrate first.** Start an orchestration session that reads and decides, not builds. Interview to a written spec, get it approved, then build from it in a fresh session (§5.3).
+2. **Answer five questions on paper** before any automation: what done means, how the agent checks itself, what it may touch, what stops it, and who signs off. The official best-practices page asks these five before a run goes unattended. [P: code.claude.com/docs/en/best-practices, "Let Claude run without you", checked 2026-11-18] (§11.3 and Template B.)
+3. **Check the precondition.** Tan: "automating that loop just produces more slop". If your inner loop produces slop, fix that first, with a lint rule that stops new slop before you clean old. [P: talk, 15:32; the advice is D]
+4. **Write the plan to a file, and let the lead schedule.** The lead saves its plan and each worker returns a file reference (§7); Cursor's agents rewrite a shared scratchpad rather than appending to it (§6).
+5. **Route each piece by task shape.** Read-only research and review go to subagents with tight briefs. Mechanical, independent changes go to `/batch` (5 to 30 units) or a workflow. Coupled edits stay on one writer (§6).
+6. **Keep context small through structure** (§8): state in files and git, a fresh session or worktree per unit.
+7. **Verify in layers** (§9): deterministic checks, a Stop hook, runtime verification, `/goal` with a turn bound, a fresh reviewer. Keep the done check out of the agent's reach. Calibrate any model evaluator against your own judgments before you trust it unattended. [D]
+8. **Set the controls.** Auto mode, or `dontAsk` with explicit allow rules; an isolated worktree; `--max-budget-usd` (or a spend limit) as the cost ceiling and `--max-turns` as a turn bound; and a branch rule on the default branch that the task can't bypass. [P: best practices, headless docs; D]
+9. **Know what pauses a run.** In interactive auto mode: 3 consecutive or 20 total blocks (in `-p` the action is denied and the run goes on). An unlisted tool in Manual or default mode. A permission prompt in a workflow. A usage limit, which pauses `/goal`; auth, credit and context-overflow errors, which clear it. Eight consecutive Stop-hook blocks. A scheduled task that asks before running a skill with `allowed-tools` or hooks (as of v2.1.325). The 7-day `/loop` expiry. [P: permission modes, goal, workflows, hooks and scheduled-tasks docs]
+10. **Sign off on artifacts and receipts.** The human gate is the PR: the diff or, following Tan, the verification artifacts, plus a receipt for every check (§9.4). Give reviewers files and a brief, never the builder's report. [D]
+
+**Cost evidence.** [P, vendor, one task each]
+- A planner, generator and evaluator harness cost "over 20x" more than a solo run, and the solo run's core feature was broken. [Rajasekaran, 2026-03-24] Use it only for work beyond what the model does reliably alone.
+- Carlini's compiler run cost under $20,000. [Anthropic, 2026-02-05]
+- Anthropic's multi-agent research used about 15x the tokens of a chat. [2025-06-13]
+
+**Stage autonomy.** Hashimoto's agents run first on research and triage near the end of the day, not on shipped code. Move to code runs only after the research runs earn trust. [P, opinion: 2026-02-05; D for the staging]
+
+**Re-test at each model upgrade.** "Every component ... encodes an assumption" about what the model can't do. Rajasekaran needed context resets on Sonnet 4.5 and not on Opus 4.5. Re-run your evals with a component removed at every upgrade (Law 1). [P, vendor: 2026-03-24]
 
 ---
 
@@ -884,6 +962,19 @@ sequenceDiagram
 - **Mined lessons need an outcome signal.** In an online finance setting without reliable feedback, self-evolving context could fall below the base model [R: ICLR 2026], and an unguided LLM judge was near chance at picking the better of two skills. [R: preprint, skill extraction, 2026] Keep a mined rule only if re-running the eval set shows it helps, and never let one pass rewrite the whole rules file. [D]
 - **Reviewed skills beat self-written ones.** In SkillsBench, curated skills reviewed by maintainers raised pass rates, skills a model wrote for itself before the task did worse than none, and focused sets of at most three skills beat larger or exhaustive bundles. [R: preprint, SkillsBench v4, 2026; earlier versions report a smaller loss, so cite the version]
 
+### 13.1 Build an eval set from real failures
+*Read when: you are starting an eval set for your own harness and repo.*
+
+[D, built on the P and R sources named; checked 2026-11-18.]
+1. **Start with 20 to 50 tasks drawn from real failures** you have already seen. Grade outcomes, not paths. [P: Demystifying evals, 2026-01-09]
+2. **Do error analysis before you build judges.** Read traces, open-code 30 to 50 of them, group the failures into a counted taxonomy, and keep reading until new traces stop showing new kinds (at least 100). Then build a judge only for a failure you observed. [P, practitioner method: Husain and Shankar, 2026-09-18]
+3. **Give each trial a clean environment.** Claude exploited leftover git history from earlier trials. [P: Demystifying evals]
+4. **Prefer a code grader; calibrate any model grader** against human labels. Read the transcripts.
+5. **Report pass^k and cost per task**, not one good run. At 75% per-trial success, three in a row is about 42%.
+6. **Prefer tasks from your own repo over public leaderboards.** OpenAI audited 138 SWE-bench Verified problems and found 59.4% flawed, and stopped reporting the benchmark. [P, vendor: 2026-02-23] SWE-Bench+ found solution leakage in 32.67% of one agent's successful patches and weak tests in 31.08%, and filtering cut its resolution rate from 12.47% to 3.97%. [R: preprint] CORE-Bench moved from 42% to 95% after grader bugs were fixed. [P, vendor: Demystifying evals]
+
+Template J holds the task record. Version the eval set with the harness.
+
 ---
 
 ## 14. Model failure modes and countermeasures
@@ -893,20 +984,26 @@ sequenceDiagram
 
 | Behaviour | Evidence | Countermeasure |
 |---|---|---|
-| Acts on wrong assumptions without checking | [S] Karpathy notes | A discovery interview up front; "state your assumptions" in the plan; plan approval |
+| Acts on wrong assumptions without checking | [P] Karpathy, 26 Jan 2026 | A discovery interview up front; "state your assumptions" in the plan; plan approval |
 | Doesn't ask when confused | [S] | An explicit stop-and-ask list; a confidence field in receipts |
 | Hides trade-offs and inconsistencies | [S] | Plans must list options and trade-offs; a critic pass |
-| Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
-| Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
+| Sycophancy, no pushback | [P] Karpathy, 26 Jan 2026 | Independent reviewers without the author's reasoning; anonymized councils |
+| Overbuilds, bloats, leaves dead code, and makes edits orthogonal to the task | [P] Karpathy, 26 Jan 2026 (it persisted despite CLAUDE.md instructions) | A diff-size budget; a lint rule or test, not another prose line (Law 8); a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
 | Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |
 | Forgets between sessions | [P] Karpathy (no continual learning) | CLAUDE.md, memory, progress files |
-| Context rot | [P] Anthropic | Subagents, compaction, notes on disk |
+| Context rot | [P] Anthropic; [R] Lost in the Middle (TACL 2024); vendor report: Chroma | Fresh sessions, state in files, compaction, subagents for noisy reading (§8) |
 | Weak on genuinely novel code (Karpathy's October 2025 view, softened by December) | [P] Dwarkesh; [S] later reports | More human design, smaller steps, closer collaboration |
 | Upfront specs miss edge cases | [P] Matt Pocock | A QA loop whose findings become new issues |
+| Copies anti-patterns and old workarounds, because they look like the established pattern | [P] Tan, Nov 2026 (self-reported) | Keep the codebase clean; ban the pattern with a lint rule |
+| Writes Markdown justifications for not doing the right thing | [P] Tan, Nov 2026 (6:56, 8:20; self-reported) | Limit comments by lint; make the lint error say to fix the root cause |
+| Games the check, and instructions don't stop it | [R] METR report, 2025-06-05 (30.4% of RE-Bench runs) | Put the check out of its reach (§9.3) |
+| Code erodes over a long run | [R, preprint] SlopCodeBench v2 (erosion in 77% of trajectories; no agent solved a problem end to end) | Scheduled cleanup PRs; a lint rule that stops new instances |
+| Flat multi-agent coordination collapses | [P, vendor] Cursor, Jan 2026 | Planner and worker with written handoffs (§6) |
+| Multi-agent runs fail in system design, misalignment between agents or missing verification | [R, NeurIPS 2025 poster] MAST | A verifier step; clearer role specs (§19.1 item 3) |
 
 ---
 
@@ -917,8 +1014,15 @@ sequenceDiagram
 - Fanning out tightly coupled edits to many agents.
 - The builder grading its own work.
 - Goals with no "done when".
-- A giant CLAUDE.md that restates what the model already does.
+- A giant CLAUDE.md or AGENTS.md that restates what the model already does. OpenAI's one big AGENTS.md "failed in predictable ways" (§8). [P, vendor]
 - Must-happen checks that live only in prose.
+- A prose rule where a lint rule, a type or a test would work (Law 8).
+- IMPORTANT and ALL CAPS emphasis to make a rule stick. [P: best practices, old advice]
+- Forty hooks. The best-practices page treats that many as a smell. [P]
+- Multi-agent by default for coupled code (§6).
+- Picking tools or models by leaderboard score instead of your own evals (§13.1).
+- Automating a loop that produces slop. [P: Tan, 15:32]
+- Unbounded review loops. A reviewer "will always find something" (§7).
 - Bypassing permissions on a machine with real credentials.
 - Loops with no iteration, time or cost cap.
 - Agents passing transcripts to each other instead of files and summaries.
@@ -1358,14 +1462,14 @@ These came out of the independent review. Most are design advice [D]; facts carr
 - **Monorepos, multiple repos and teams.** Nested CLAUDE.md per package; gates that run only affected tests; one plan file per task (`docs/plans/<task>.md`) so parallel work doesn't collide; a named owner who reviews changes to hooks, agents and skills; cross-repo order written into the plan. [D]
 - **Discovery artifacts.** Store them as `docs/discovery/<id>.md`, `docs/specs/<id>.md` and `docs/adr/<n>.md`, each linked from its issue. Mark replaced documents "superseded by …". Give the outcome readout an owner and a date. Move grill questions still open at the question cap into the spec's Open Questions. Park unbet pitches in a dated list you're free to delete; don't let it become a backlog. [D]
 
-**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions.
+**Still unconfirmed after the fact-check:** Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions. Unconfirmed in 0.7: the `-p` default for a logged-in, telemetry-on user; the Mods status; `--max-turns` semantics (the headless page does not document them); the $9 against $200 and 20 minutes against 6 hours figures in Anthropic's harness-design post; and every figure Tan reports about her own team, which is self-reported.
 
 ---
 
 ## 19. Proven orchestration: what the evidence says
 *Read when: you are choosing between one agent and many, or need numbers behind a design choice.*
 
-Gathered on 2026-10-24 by research subagents whose transcripts were not kept, then re-checked against the papers and posts in the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md). Counts only peer-reviewed or well-cited studies, research reports, and engineering write-ups from large teams that publish measurements. YouTube, social posts and product marketing were excluded; a company reporting on its own product is marked vendor. Most figures come from abstracts and paper text, so spot-check a number against its source before quoting it. The findings added on 2026-10-27 were checked claim by claim against their sources ([research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md)); several are preprints.
+Gathered on 2026-10-24 by research subagents whose transcripts were not kept, then re-checked against the papers and posts in the [v0.3 fact-check review](../issues/reviews/playbook-factcheck-v0.3.md). Counts only peer-reviewed or well-cited studies, research reports, and engineering write-ups from large teams that publish measurements. YouTube, social posts and product marketing were excluded; a company reporting on its own product is marked vendor. Most figures come from abstracts and paper text, so spot-check a number against its source before quoting it. The findings added on 2026-10-27 were checked claim by claim against their sources ([research/mega-workshop-evidence.md](../research/mega-workshop-evidence.md)); several are preprints. Version 0.7 (2026-11-18) adds dated findings and a record of what they supersede in [§19.5](#195-dated-findings-and-what-they-supersede), each checked against its primary page ([research/agentic-practices-2026-11.md](../research/agentic-practices-2026-11.md)); vendor numbers are marked vendor.
 
 ### 19.1 Findings that hold up
 **Page terms.** Findings that hold up (the page's "Six findings that hold up", Lesson 17). The page shows findings 1 to 6.
@@ -1375,7 +1479,7 @@ Gathered on 2026-10-24 by research subagents whose transcripts were not kept, th
 3. **External verification beats self-critique.** MAST (1,600+ traces, 7 frameworks): adding a high-level verifier raised success by 15.6 points, and clearer role specs by 9.4 points, on ChatDev over 32 ProgramDev tasks. [R: NeurIPS 2025] Self-correction without external feedback lowers reasoning accuracy. [R: ICLR 2024] Reflexion's coding gains depend on test feedback. [R] Meta's TestGen-LLM keeps only tests that build, pass reliably and add coverage; engineers accepted 73% of those. [R: FSE 2024]
 4. **Interface design and simplicity beat framework complexity.** SWE-agent's purpose-built file tools added 10.7 points over a raw shell. [R: NeurIPS 2024] Agentless, a fixed localize-repair-validate pipeline, solved 32% of SWE-bench Lite at about $0.70 per issue (the FSE 2025 abstract reports 32.67%; 27.3% was Agentless's own earlier v1 result, not an independent reproduction). [R: FSE 2025] A simple retry baseline (its "warming" variant) scored 93.2% for $2.45 where a complex agent scored 88.0% for $134.50. [R: TMLR 2025] Code as the action space raised success by up to 20%. [R: ICML 2024]
 5. **Measure reliability and cost, not one good run.** On tau-bench's retail tasks, GPT-4o passed about 61% once but under 25% eight times in a row. [R: ICLR 2025] 7.8% of SWE-bench patches marked resolved fail the project's full test suite. [R] UTBoost's added tests and a fixed log parser exposed 345 SWE-bench patches wrongly marked as passing, which changed many leaderboard rankings. [R: ACL 2025] Sampling and voting help at a price: self-consistency added 17.9 points on GSM8K. [R]
-6. **Human review is the bottleneck, and perception misleads.** METR's randomized trial (16 experienced developers, 246 issues): 19% slower with early-2025 AI tools, while believing they were 20% faster. [R] METR's 2026 follow-up couldn't produce a clean new estimate. [P] DORA 2025 (about 5,000 respondents): 90% use AI; adoption now goes with higher throughput and still with higher instability. [P, survey] Google throttled batch sizes for reviewers; Spotify calls reviewing bad PRs expensive. [P] After Cursor adoption in 806 open-source repos, velocity gains faded within about two months while static-analysis warnings and complexity stayed up. [R: MSR 2026] In one pre-registered trial with 52 participants on a 35-minute task, the AI-assisted group scored 17% lower on a quiz about the library they used (the authors' figure); for code you will own, ask the agent to explain it. [R: preprint, Anthropic, 2026; D for the advice]
+6. **Human review is the bottleneck, and perception misleads.** METR's randomized trial (16 experienced developers, 246 issues): 19% slower with early-2025 AI tools, while believing they were 20% faster. [R] METR's February 2026 update put the estimate at -18% for the original developers (CI -38 to +9) and -4% for new ones (CI -15 to +9), and METR calls it "only very weak evidence". [R: METR report, 2026-02-24] DORA 2025 (about 5,000 respondents): 90% use AI; adoption now goes with higher throughput and still with higher instability. [P, survey] Google throttled batch sizes for reviewers; Spotify calls reviewing bad PRs expensive. [P] After Cursor adoption in 806 open-source repos, velocity gains faded within about two months while static-analysis warnings and complexity stayed up. [R: MSR 2026] In one pre-registered trial with 52 participants on a 35-minute task, the AI-assisted group scored 17% lower on a quiz about the library they used (the authors' figure); for code you will own, ask the agent to explain it. [R: preprint, Anthropic, 2026; D for the advice]
 7. **Search loops need a machine grader.** DeepMind's AlphaEvolve (models propose, automated evaluators score, a program database evolves the best) found a scheduling heuristic that recovers 0.7% of Google's fleet compute and has run in production for over a year. It only works where output can be graded automatically. [P]
 8. **Short instructions: a map, not a manual.** OpenAI's Codex team (about 1M lines and 1,500 merged PRs in about 5 months, with 3–7 engineers) describes AGENTS.md as a short map pointing into docs, not a manual. Uncontrolled and self-reported. [P; the post returned HTTP 403 at the 2026-10-24 check, and secondary coverage confirms only the volume and team size] Thoughtworks lists agent instruction bloat under caution. [P] The map should hold what the agent can't discover, not a generated overview (§8). [D]
 10. **Reviews converge in a round or two; after that they invent work.** Self-correction without an outside signal lowered GPT-4's GSM8K accuracy from 95.5 to 89.0 over two rounds, while tool-grounded critique got most of its benefit in 2 to 3 rounds. [R: ICLR 2024, both] A second LLM review round produced 62% more false positives. [R: preprint] In 2,269 real-world multi-round review tasks, the largest share of false positives re-flagged defects already resolved (32.5%), and the largest cause of misses was forgetting findings across rounds (25.1%). [R: ISSTA 2026] Human practice points the same way: over 80% of changes at Google need at most one iteration of comments [R: ICSE-SEIP 2018], and formal external change approval brought no evidence of fewer failed changes. [P: DORA 2019] Scope notes for each figure: [research/bounded-review-evidence.md](../research/bounded-review-evidence.md). The rule built on it is in §9.2.
@@ -1387,6 +1491,7 @@ Gathered on 2026-10-24 by research subagents whose transcripts were not kept, th
 - **Planning.** Andrew Ng calls planning the least predictable pattern; Chip Huyen and Lilian Weng treat it as core and validate plans before running them.
 - **Humans in the loop.** OpenAI's Codex team moved most review agent-to-agent. Microsoft's Magentic-UI study raised task success from 30.3% to 51.9% with human co-planning (a simulated user), and Thoughtworks keeps humans at approval points. Intercom reports auto-approving a share of PRs with no human reviewer: its approving agent won't approve large or broad PRs, every approval is logged, and any engineer can ask for a human review. [P, vendor: Intercom, 2026]
 - **Fresh or same-session review.** Claude Code's best practices say a fresh context improves code review. [P] One preprint's revised analysis found a single same-session review not significantly worse than a fresh one, though a second pass in the same session was. [R: preprint, arXiv 2603.12123 v2] Keep the fresh reviewer, and never rerun a review in the session that wrote the code.
+- **How far human review can shrink.** Tan reports a team where the verification artifacts are the review and there is "nothing left to review" (self-reported); Karpathy says humans do the verification; Anthropic's docs ask for an independent reviewer and a human sign-off. No independent study shows that removing diff review is safe.
 - **Decentralized hand-offs.** OpenAI's guide presents them as a main pattern without data; Google found them helpful only for web navigation and weakest at containing errors.
 
 ### 19.3 What this changes in the playbook
@@ -1403,7 +1508,31 @@ Gathered on 2026-10-24 by research subagents whose transcripts were not kept, th
 
 ### 19.4 Evidence gaps
 
-There's no peer-reviewed, cost-matched comparison of orchestration topologies on real coding work with current frontier models. The industry cases publish almost no post-merge defect or revert rates, most speed-ups are self-reported, and the newest productivity study (METR 2026) has selection bias. No study measures the prior-art rule in §5.4. Agents weakening tests has been measured only on benchmarks, not in real repositories. The flag, canary and rollback evidence in §18 covers human-authored changes only.
+There's no peer-reviewed, cost-matched comparison of orchestration topologies on real coding work with current frontier models. The industry cases publish almost no post-merge defect or revert rates, most speed-ups are self-reported, and the newest productivity study (METR 2026) has selection bias. No study measures the prior-art rule in §5.4. Agents weakening tests has been measured only on benchmarks, not in real repositories. The flag, canary and rollback evidence in §18 covers human-authored changes only. No independent study shows that human diff review can safely shrink, and no same-budget comparison of one agent against a swarm on real coding work exists; the cost figures from Anthropic and Cursor are vendor numbers from one task each. Every figure Lauren Tan reports about her own team is self-reported.
+
+### 19.5 Dated findings and what they supersede
+*Read when: you want the date of a claim, or need to know whether newer evidence overrides an older one.*
+
+Added in 0.7. The last column says what a row replaces, or what replaced it. Types: P primary, R research, vendor means a company reporting on its own product, self-reported means the speaker's own figures. Sources are in §20 and the research file ([research/agentic-practices-2026-11.md](../research/agentic-practices-2026-11.md)).
+
+| Date | Finding | Type and venue | Supersedes, or superseded by |
+|---|---|---|---|
+| 2026-11-14 | Corrections go to a deterministic check and prose comes last; 3,000 PRs in a month, about 0.5% reverts (Tan) | P for her words; figures self-reported, one team, Cursor | Adds rungs above the CLAUDE.md-first habit in Law 8; the ladder itself is D |
+| 2 Jan 2026 | "give Claude a way to verify its work", about 2-3x the quality (Cherny) | P, his own estimate | Was [S] in 0.6 |
+| 2 and 31 Jan 2026 | Start in plan mode (Cherny; the 31 Jan thread was read from search results); "Things get better in plan mode" (Karpathy, 26 Jan) | P, dated | Superseded as the default by auto mode (v2.1.283 to v2.1.284); plan mode stays for non-trivial work |
+| 2026-11-18 | The best-practices page lists "Use subagents to protect your context window" and IMPORTANT/ALL CAPS emphasis as old advice, and has no "Explore, plan, implement, commit" heading | P, docs | Supersedes the 0.6 condensation of the page and subagents-for-context as a headline (§3A, §8) |
+| 2026-11-18 | With no mode set, `-p` starts in Manual: stated without conditions in the permission-modes page; limited to third-party providers, telemetry off or a fresh install in the changelog (v2.1.302) | P, docs and changelog | Supersedes 0.6's unconditional "Since v2.1.302" sentence |
+| 2026-04-08 | Google/MIT v3: planning -39% to -70%; +80.8% on Finance Agent only; negative returns above a 45% single-agent baseline; errors amplified 17.2x against 4.4x | R, preprint | v1 said +80.9%; §19.1 item 1 quotes version 1 figures and labels them so |
+| 2026-01-29 | METR time horizon: doubling about every 7 months over 2019 to 2025; the since-2024 fit alone gives 89 days (TH1.1 overall: 196.5 days); Opus 4.5 about 320 minutes (CI 170 to 729) | R: METR report | Corrects any reading of 89 days as the long-run rate |
+| 2026-02-24 | METR productivity update: -18% and -4%, "only very weak evidence" | R: METR report | Updates the 2025 trial (19% slower) in §19.1 item 6 |
+| 2025-06-05 | METR: 30.4% of RE-Bench runs (39 of 128) hacked; HCAST 0.7%; telling the model not to cheat had a "nearly negligible effect" | R: METR report | A recap's "o3 1 to 2%" figure was not on the page and is not used |
+| 2026-02-23 | OpenAI: 59.4% of 138 audited SWE-bench Verified problems flawed; Verified no longer reported | P, vendor audit | |
+| 2026-03-24 | A full harness cost over 20x a solo run, whose core feature was broken | P, vendor, one task | The post's $9 against $200 figures are unverified |
+| 2026-02-05 | Carlini: 16 agents, about 2,000 sessions, under $20,000, no single-agent baseline | P, vendor, one run | |
+| 2026-02-11 | OpenAI harness engineering: about 100-line AGENTS.md map, custom linters, minimal merge gates; "should not be assumed to generalize" | P, vendor, one repo | §19.1 item 8 stays; the 100 lines are theirs, not a threshold |
+| Jan, Feb, Jul 2026 | Cursor: flat lock coordination collapsed; planner and worker with handoffs; $1,339 against $10,565 on one task | P, vendor | Each claim cites its own post (§6) |
+| 2026 (v2) | SlopCodeBench: erosion in 77% of trajectories; no end-to-end solve | R, preprint | Version 1 said 80% |
+| 2026-09-18 | Error analysis: open-code 30 to 50 traces, read at least 100 until saturation | P, practitioner method | |
 
 ---
 
@@ -1547,7 +1676,7 @@ Grades as in §0. Dates are publication dates where known.
 - SWE-agent [R]: https://arxiv.org/abs/2405.15793 · Agentless https://arxiv.org/abs/2407.01489 · CodeAct https://arxiv.org/abs/2402.01030
 - AI Agents That Matter [R]: https://arxiv.org/abs/2407.01502
 - tau-bench [R]: https://arxiv.org/abs/2406.12045 · SWE-bench patch validity https://arxiv.org/abs/2503.15223 · self-consistency https://arxiv.org/abs/2203.11171
-- METR randomized trial [R]: https://arxiv.org/abs/2507.09089 · 2026 update [P] https://metr.org/blog/2026-02-24-uplift-update/ · time horizons [R] https://arxiv.org/abs/2503.14499
+- METR randomized trial [R]: https://arxiv.org/abs/2507.09089 · 2026 update [R] https://metr.org/blog/2026-02-24-uplift-update/ · time horizons [R] https://arxiv.org/abs/2503.14499
 - DORA 2025 [P]: https://dora.dev/research/2025/dora-report/
 - DeepMind AlphaEvolve [P]: https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/
 - OpenAI, harness engineering [P]: https://openai.com/index/harness-engineering/ · A practical guide to building agents https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
@@ -1577,6 +1706,23 @@ Grades as in §0. Dates are publication dates where known.
 - He et al., Cursor adoption, development velocity and code quality (MSR 2026) [R]: https://arxiv.org/abs/2511.04427
 - Shen and Tamkin, How AI impacts skill formation (preprint, Anthropic, 2026) [R]: https://arxiv.org/abs/2601.20245
 - Intercom, AI is approving our pull requests (Apr 2026) [P, vendor]: https://intercom.com/blog/ai-is-approving-our-pull-requests-heres-how-we-made-it-safe
+
+**Added in 0.7 (checked 2026-11-18), by person or organisation.** Full detail, timestamps and quotes are in [research/agentic-practices-2026-11.md](../research/agentic-practices-2026-11.md).
+- Boris Cherny, 2 Jan 2026 thread [P]: root https://x.com/bcherny/status/2007179832300581177 · posts 1/ https://x.com/bcherny/status/2007179833990885678 · 2/ https://x.com/bcherny/status/2007179836704600237 · 3/ https://x.com/bcherny/status/2007179838864666847 · 4/ https://x.com/bcherny/status/2007179840848597422 · 5/ https://x.com/bcherny/status/2007179842928947333 · 6/ https://x.com/bcherny/status/2007179845336527000 · 7/ https://x.com/bcherny/status/2007179847949500714 · 8/ https://x.com/bcherny/status/2007179850139000872 · 9/ https://x.com/bcherny/status/2007179852047335529 · 10/ https://x.com/bcherny/status/2007179854077407667 · 11/ https://x.com/bcherny/status/2007179856266789204 · 12/ https://x.com/bcherny/status/2007179858435281082 · 13/ https://x.com/bcherny/status/2007179861115511237
+- Boris Cherny, 31 Jan 2026 team tips [P: read from X search results; quoted wording checked 2026-11-18]: root https://x.com/bcherny/status/2017742741636321619 · tips 1 https://x.com/bcherny/status/2017742743125299476 · 2 https://x.com/bcherny/status/2017742745365057733 · 3 https://x.com/bcherny/status/2017742747067945390 · 4 https://x.com/bcherny/status/2017742748984742078 · 5 https://x.com/bcherny/status/2017742750473720121 · 6 https://x.com/bcherny/status/2017742752566632544 · 7 https://x.com/bcherny/status/2017742753971769626 · 8 https://x.com/bcherny/status/2017742755737555434 · 9 https://x.com/bcherny/status/2017742757666902374 · 10 https://x.com/bcherny/status/2017742759218794768
+- Andrej Karpathy [P]: notes of 26 Jan 2026 https://x.com/karpathy/status/2015883857489522876 · context engineering, 25 Jun 2025 https://x.com/karpathy/status/1937902205765607626 · understanding the outputs of language models, 2 Oct 2026 https://x.com/karpathy/status/2105819303471976479 · "Software Is Changing (Again)", YC, 18 Jun 2025 (auto-captions) https://www.youtube.com/watch?v=LCEmiRjPEtQ
+- Lauren Tan, "All Code Is Slop (Except Mine)", AI Engineer, 14 Nov 2026 [P: talk transcript; figures self-reported]: https://www.youtube.com/watch?v=O_zcc6Xl12g
+- ASD-STE100 and plain-language evidence for §9.4: history [P] https://asd-europe.org/news-media/news-events/news/simplified-technical-english-asd-ste100-issue-9 · Holmback, Shubert and Spyridakis, CLAW 1996 [R] https://aclanthology.org/www.mt-archive.info/90/CLAW-1996-Holmback.pdf · plain-language LLM text, randomized preprint [R] https://arxiv.org/abs/2505.01980 · CodeMap, ICPC 2026 [R] https://arxiv.org/abs/2504.04553
+- Anthropic engineering and research [P, vendor]: harness design (Rajasekaran, 2026-03-24) https://www.anthropic.com/engineering/harness-design-long-running-apps · C compiler with parallel Claudes (Carlini, 2026-02-05) https://www.anthropic.com/engineering/building-c-compiler · components of agent memory (Lance Martin, 2026-11-06) https://www.anthropic.com/engineering/components-of-agent-memory · how we contain Claude (2026-05-25) https://www.anthropic.com/research/how-we-contain-claude · redesigning source control (2026-10-13; cite its narrow wording only) https://www.anthropic.com/research/redesigning-source-control
+- Claude Code docs, added in 0.7 [P]: changelog https://code.claude.com/docs/en/changelog · context window https://code.claude.com/docs/en/context-window
+- OpenAI [P, vendor]: Why we no longer evaluate SWE-bench Verified (2026-02-23) https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/
+- Cursor, Wilson Lin [P, vendor]: scaling agents (Jan 2026) https://cursor.com/blog/scaling-agents · self-driving codebases (Feb 2026) https://cursor.com/blog/self-driving-codebases · swarm economics (Jul 2026) https://cursor.com/blog/agent-swarm-model-economics
+- GitHub, Tyler McGoffin, agent-driven development (2026-03-31) [P, vendor]: https://github.blog/2026-03-31-agent-driven-development-in-copilot-applied-science/
+- Simon Willison, "The lethal trifecta for AI agents" (2025-06-16) [P]: https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/
+- Mitchell Hashimoto, My AI adoption journey (2026-02-05) [P]: https://mitchellh.com/writing/my-ai-adoption-journey
+- Hamel Husain and Shreya Shankar, evals FAQ (2026-09-18) [P]: https://hamel.dev/blog/posts/evals-faq/
+- METR [R]: time horizon 1.1 (2026-01-29) https://metr.org/blog/2026-01-29-time-horizon-1-1/ · productivity trial (2025-07-10) https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/ · update (2026-02-24) https://metr.org/blog/2026-02-24-uplift-update/ · reward hacking (2025-06-05) https://metr.org/blog/2025-06-05-recent-reward-hacking/
+- Research added in 0.7 [R unless marked]: Google/MIT scaling paper, version 3 https://arxiv.org/abs/2512.08296v3 · SWE-Bench+ (preprint) https://arxiv.org/abs/2410.06992 · SlopCodeBench (preprint) https://arxiv.org/abs/2603.24755 · Lost in the Middle (TACL 2024) https://arxiv.org/abs/2307.03172 · Chroma, Context Rot [vendor report] https://www.trychroma.com/research/context-rot
 
 **Other background agents** [P]
 - OpenAI Codex cloud: https://developers.openai.com/codex/cloud · Codex GitHub integration https://developers.openai.com/codex/integrations/github · OpenAI on harness engineering https://openai.com/index/harness-engineering/

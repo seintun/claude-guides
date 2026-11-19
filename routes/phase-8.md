@@ -28,15 +28,33 @@ Sections and templates this route names, in order: 13, law-8, 15, I, J. Runbook,
 - **Mined lessons need an outcome signal.** In an online finance setting without reliable feedback, self-evolving context could fall below the base model [R: ICLR 2026], and an unguided LLM judge was near chance at picking the better of two skills. [R: preprint, skill extraction, 2026] Keep a mined rule only if re-running the eval set shows it helps, and never let one pass rewrite the whole rules file. [D]
 - **Reviewed skills beat self-written ones.** In SkillsBench, curated skills reviewed by maintainers raised pass rates, skills a model wrote for itself before the task did worse than none, and focused sets of at most three skills beat larger or exhaustive bundles. [R: preprint, SkillsBench v4, 2026; earlier versions report a smaller loss, so cite the version]
 
+### 13.1 Build an eval set from real failures
+*Read when: you are starting an eval set for your own harness and repo.*
+
+[D, built on the P and R sources named; checked 2026-11-18.]
+1. **Start with 20 to 50 tasks drawn from real failures** you have already seen. Grade outcomes, not paths. [P: Demystifying evals, 2026-01-09]
+2. **Do error analysis before you build judges.** Read traces, open-code 30 to 50 of them, group the failures into a counted taxonomy, and keep reading until new traces stop showing new kinds (at least 100). Then build a judge only for a failure you observed. [P, practitioner method: Husain and Shankar, 2026-09-18]
+3. **Give each trial a clean environment.** Claude exploited leftover git history from earlier trials. [P: Demystifying evals]
+4. **Prefer a code grader; calibrate any model grader** against human labels. Read the transcripts.
+5. **Report pass^k and cost per task**, not one good run. At 75% per-trial success, three in a row is about 42%.
+6. **Prefer tasks from your own repo over public leaderboards.** OpenAI audited 138 SWE-bench Verified problems and found 59.4% flawed, and stopped reporting the benchmark. [P, vendor: 2026-02-23] SWE-Bench+ found solution leakage in 32.67% of one agent's successful patches and weak tests in 31.08%, and filtering cut its resolution rate from 12.47% to 3.97%. [R: preprint] CORE-Bench moved from 42% to 95% after grader bugs were fixed. [P, vendor: Demystifying evals]
+
+Template J holds the task record. Version the eval set with the harness.
+
 ---
 
 <!-- id: law-8 -->
 ### Law 8. Turn every correction into a rule
-- **Build it:** a short retro after real tasks; each lesson becomes a rule, a skill, a hook, a test or a tool fix. Review a skill before it lands, and keep a mined rule only if re-running the evals shows it helps (§13). Prune rules that never fire. [D]
-- Boris Cherny, as quoted in recaps: after a correction, tell Claude to update CLAUDE.md so the mistake doesn't repeat; his team keeps one shared CLAUDE.md in git. [S]
+- **Build it:** fix a repeated mistake at the highest layer that works. This is the correction ladder, from the top rung down: (1) change the architecture or API so the mistake can't be written; (2) add a lint rule, a type or a test; (3) add runtime verification (run the app and check the result); (4) only then add a skill or CLAUDE.md line. After real tasks hold a short retro; each lesson goes on the highest rung that works. The ladder is design advice built on the sources below; the docs do not state it. Review a skill before it lands, and keep a mined rule only if re-running the evals shows it helps (§13). Prune rules that never fire. [D]
+- Lauren Tan (Nov 2026) puts deterministic layers first and prose last, and turns a correction into a deterministic check: she bans `useEffect` in product code and enforces module boundaries by directory structure. Her results are self-reported, and her tool is Cursor. [P: talk transcript, 2:03, 3:08, 5:26, 6:10 and 9:10; adopting the method is D]
+- OpenAI's harness team enforces invariants with custom linters and structural tests, which it calls "taste invariants". [P, vendor: Lopopolo, 2026-02-11]
+- Karpathy, 26 Jan 2026: bloat and orthogonal edits persisted "despite a few simple attempts to fix it via instructions in CLAUDE.md". [P: X post]
+- Claude Code's best-practices page splits deterministic from non-deterministic instructions and keeps hooks for rules with "zero exceptions", and it lists IMPORTANT and ALL CAPS emphasis among old advice. It does not state a ladder. [P: best practices, "Deterministic and non-deterministic instructions", checked 2026-11-18]
+- GitHub's Copilot team describes guardrails "akin to contract testing that can only be updated by humans". [P, vendor: McGoffin, 2026-03-31]
+- The last rung, dated: Boris Cherny, 2 Jan 2026: "Anytime we see Claude do something incorrectly we add it to the CLAUDE.md". On 31 Jan 2026 his tip 3 asks Claude to update CLAUDE.md after each correction. His team keeps one shared CLAUDE.md in git. [P: 2 Jan thread, post 4/; 31 Jan thread, tip 3, read from X search results; quoted wording checked 2026-11-18] Tan (Nov 2026) puts prose last.
 - Anthropic: start with a minimal prompt and add instructions from observed failures. [P]
 - Every's "compound engineering" makes this a phase: plan, work, review, then compound, writing learnings into CLAUDE.md and `docs/solutions/`. [P]
-- The tension: Claude Code's best practices warn that a bloated CLAUDE.md gets ignored, and say to cut any line whose removal would not cause a mistake. [P] Resolve it by keeping detailed learnings in `docs/solutions/` or skills, and promoting to CLAUDE.md only the rules that stop a repeated mistake. [D]
+- The tension: Claude Code's best practices warn that a bloated CLAUDE.md gets ignored, and say to cut any line whose removal would not cause a mistake. [P] Resolve it by keeping detailed learnings in `docs/solutions/` or skills, and promoting to CLAUDE.md only the rules that stop a repeated mistake a check can't catch. [D]
 
 <!-- id: 15 -->
 ## 15. Anti-patterns
@@ -46,8 +64,15 @@ Sections and templates this route names, in order: 13, law-8, 15, I, J. Runbook,
 - Fanning out tightly coupled edits to many agents.
 - The builder grading its own work.
 - Goals with no "done when".
-- A giant CLAUDE.md that restates what the model already does.
+- A giant CLAUDE.md or AGENTS.md that restates what the model already does. OpenAI's one big AGENTS.md "failed in predictable ways" (§8). [P, vendor]
 - Must-happen checks that live only in prose.
+- A prose rule where a lint rule, a type or a test would work (Law 8).
+- IMPORTANT and ALL CAPS emphasis to make a rule stick. [P: best practices, old advice]
+- Forty hooks. The best-practices page treats that many as a smell. [P]
+- Multi-agent by default for coupled code (§6).
+- Picking tools or models by leaderboard score instead of your own evals (§13.1).
+- Automating a loop that produces slop. [P: Tan, 15:32]
+- Unbounded review loops. A reviewer "will always find something" (§7).
 - Bypassing permissions on a machine with real credentials.
 - Loops with no iteration, time or cost cap.
 - Agents passing transcripts to each other instead of files and summaries.

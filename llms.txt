@@ -16,13 +16,14 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 ## Reference
 
-- [playbook/agent-harness-playbook.md](playbook/agent-harness-playbook.md): the canonical reference (version 0.6, last updated 2026-10-27). Laws, architecture, lifecycle, patterns, delegation, context, verification, guardrails, unattended runs, toolchain, evals, failure modes, Templates A–M, roadmap, evidence and sources. Every claim is graded P, S, R or D
+- [playbook/agent-harness-playbook.md](playbook/agent-harness-playbook.md): the canonical reference (version 0.7, last updated 2026-11-18). Laws, architecture, lifecycle, patterns, delegation, context, verification, guardrails, unattended runs, toolchain, evals, failure modes, Templates A–M, roadmap, evidence and sources. Every claim is graded P, S, R or D
 - [playbook/claude-cheat-sheet.md](playbook/claude-cheat-sheet.md): Claude Code surfaces, commands, stuck signs, a prompt template
 - [research/thin-scenarios.md](research/thin-scenarios.md): sourced recipes proposed for the seven thin router scenarios; not yet in the playbook
 - [research/prompt-skill-sources.md](research/prompt-skill-sources.md): Anthropic guidance and research on writing prompts for agents, each checked against its source
 - [research/prompt-skill-review.md](research/prompt-skill-review.md): /prompt v7 scored against the playbook, Anthropic's guidance and research, with the findings v8 acts on
 - [research/google-scaling-check.md](research/google-scaling-check.md): a primary-source fact-check of the Google agent-scaling study
 - [research/mega-workshop-evidence.md](research/mega-workshop-evidence.md): which workshop advice on running coding agents holds up, a verdict per claim with sources, behind the playbook's evidence on context files, tests, evals, review load and delivery
+- [research/agentic-practices-2026-11.md](research/agentic-practices-2026-11.md): the record behind playbook 0.7 (checked 2026-11-18): expert roster, verification ledger, per-post URL indexes with timestamps, discrepancies, and a map from each finding to its playbook section
 
 ## Runbooks
 
@@ -67,7 +68,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 - [docs/decision-log.md](docs/decision-log.md): 27 decisions, with the reason and the decider for each
 - [docs/session-log.md](docs/session-log.md): every request in the build session and its outcome
-- [docs/version-history.md](docs/version-history.md): page versions 1–17, playbook versions 0.1–0.6
+- [docs/version-history.md](docs/version-history.md): page versions 1–17, playbook versions 0.1–0.7
 - [archive/README.md](archive/README.md): read-only snapshots of earlier versions (playbook 0.6, page v17) and the superseded-conventions table. History only, never a route for current advice
 - [research/bounded-review-evidence.md](research/bounded-review-evidence.md): primary-source evidence for bounded review (playbook §9.2): when LLM review rounds help and hurt, what multi-round review misses, human review and gates, risk-based security
 - [docs/proposals/bounded-review.md](docs/proposals/bounded-review.md): bounded review: only blockers with evidence reopen a review, re-reviews read the fix diff and decision log, two rounds then a human; global light, strict per repo

@@ -74,6 +74,32 @@ Sandboxes for unattended loops: dev containers or Docker locally. Matt Pocock's 
 - Teleport forks history silently. [P]
 - A cloud scheduled task can stop and wait for an answer. Check for paused runs, not only failed ones. [P]
 - An uncapped loop will run all night. [P: bug report, 6,239 iterations]
+- "No human review", auto-merge and minimal merge gates are single-team self-reports, not defaults. Tan describes release fuzzing that opens and auto-merges fix PRs, and says there is "nothing left to review" (9:10); at 16:44 she says "most product code that we land no longer really requires deep human review". [P for the words; S for the effect: self-reported, no independent audit; talk, 9:10 and 16:21] OpenAI's team describes "minimal blocking merge gates" and agent-to-agent review, and says the setup "should not be assumed to generalize". [P, vendor: Lopopolo, 2026-02-11] No independent study shows that removing human diff review is safe (§19.4).
+
+### 11.6 End to end with minimal supervision
+*Read when: you want to run a whole task from spec to merged PR with as little watching as the checks allow.*
+
+[D, built on the P sources named; no study tests this stack as a whole. Checked 2026-11-18.] The human supplies two things: an approved spec at the start and a sign-off on the verification artifacts at the end. Checks decide everything between.
+
+1. **Orchestrate first.** Start an orchestration session that reads and decides, not builds. Interview to a written spec, get it approved, then build from it in a fresh session (§5.3).
+2. **Answer five questions on paper** before any automation: what done means, how the agent checks itself, what it may touch, what stops it, and who signs off. The official best-practices page asks these five before a run goes unattended. [P: code.claude.com/docs/en/best-practices, "Let Claude run without you", checked 2026-11-18] (§11.3 and Template B.)
+3. **Check the precondition.** Tan: "automating that loop just produces more slop". If your inner loop produces slop, fix that first, with a lint rule that stops new slop before you clean old. [P: talk, 15:32; the advice is D]
+4. **Write the plan to a file, and let the lead schedule.** The lead saves its plan and each worker returns a file reference (§7); Cursor's agents rewrite a shared scratchpad rather than appending to it (§6).
+5. **Route each piece by task shape.** Read-only research and review go to subagents with tight briefs. Mechanical, independent changes go to `/batch` (5 to 30 units) or a workflow. Coupled edits stay on one writer (§6).
+6. **Keep context small through structure** (§8): state in files and git, a fresh session or worktree per unit.
+7. **Verify in layers** (§9): deterministic checks, a Stop hook, runtime verification, `/goal` with a turn bound, a fresh reviewer. Keep the done check out of the agent's reach. Calibrate any model evaluator against your own judgments before you trust it unattended. [D]
+8. **Set the controls.** Auto mode, or `dontAsk` with explicit allow rules; an isolated worktree; `--max-budget-usd` (or a spend limit) as the cost ceiling and `--max-turns` as a turn bound; and a branch rule on the default branch that the task can't bypass. [P: best practices, headless docs; D]
+9. **Know what pauses a run.** In interactive auto mode: 3 consecutive or 20 total blocks (in `-p` the action is denied and the run goes on). An unlisted tool in Manual or default mode. A permission prompt in a workflow. A usage limit, which pauses `/goal`; auth, credit and context-overflow errors, which clear it. Eight consecutive Stop-hook blocks. A scheduled task that asks before running a skill with `allowed-tools` or hooks (as of v2.1.325). The 7-day `/loop` expiry. [P: permission modes, goal, workflows, hooks and scheduled-tasks docs]
+10. **Sign off on artifacts and receipts.** The human gate is the PR: the diff or, following Tan, the verification artifacts, plus a receipt for every check (§9.4). Give reviewers files and a brief, never the builder's report. [D]
+
+**Cost evidence.** [P, vendor, one task each]
+- A planner, generator and evaluator harness cost "over 20x" more than a solo run, and the solo run's core feature was broken. [Rajasekaran, 2026-03-24] Use it only for work beyond what the model does reliably alone.
+- Carlini's compiler run cost under $20,000. [Anthropic, 2026-02-05]
+- Anthropic's multi-agent research used about 15x the tokens of a chat. [2025-06-13]
+
+**Stage autonomy.** Hashimoto's agents run first on research and triage near the end of the day, not on shipped code. Move to code runs only after the research runs earn trust. [P, opinion: 2026-02-05; D for the staging]
+
+**Re-test at each model upgrade.** "Every component ... encodes an assumption" about what the model can't do. Rajasekaran needed context resets on Sonnet 4.5 and not on Opus 4.5. Re-run your evals with a component removed at every upgrade (Law 1). [P, vendor: 2026-03-24]
 
 ---
 
@@ -85,6 +111,8 @@ Premise: prompt-level guardrails are not reliable. Put controls at the tool, OS 
 
 ### 10.1 Facts to design around
 - **Lethal trifecta** (Simon Willison): an agent with private data, exposure to untrusted content, and a channel to send data out can be steered by injected text into exfiltration. Mixing your own MCP tools can recreate it. [P]
+- **Trifecta check, before you grant a tool or an MCP server:** ask which of the three legs the session now has. If it has all three, remove one: no private data, no untrusted content, or no outbound channel. [P: Willison, "The lethal trifecta for AI agents", 2025-06-16; D for the checklist step]
+- **Approval fatigue:** Anthropic reports that about 93% of permission prompts were approved. [P: How we contain Claude, 2026-05-25] That approval fatigue is a reason to prefer auto mode and deny rules over prompts. [D]
 - **Permission rules** evaluate deny, then ask, then allow; the first match wins, and an allow cannot carve an exception out of a deny. [P: permissions docs]
 - **Auto mode's classifier** sees user messages and tool calls, not tool outputs, so text in files or web pages can't address it directly. It also can't see what the agent read. Entering auto mode drops blanket allows such as `Bash(*)`. After 3 consecutive or 20 total blocks it falls back to prompting; in non-interactive `-p` runs a blocked action simply doesn't run. [P: auto mode post and docs]
 - **Independent stress test of auto mode:** 81% end-to-end false negatives (115 of 142 dangerous actions, in a set of 253) in deliberately ambiguous scenarios. Anthropic's own figure is a 17% false-negative rate on 52 curated overeager actions; its 10,000-call sample of real traffic measured false positives (0.4%), not misses. about 37% of state-changing actions were in-project edits that the classifier doesn't gate. Treat auto mode as convenience, not a security boundary. [R: arXiv preprint]

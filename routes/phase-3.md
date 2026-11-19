@@ -6,8 +6,9 @@ Sections and templates this route names, in order: law-6, 5.4, 14, D. Runbook, i
 <!-- id: law-6 -->
 ### Law 6. Plan before building
 - **Build it:** a plan file with slices, each naming its test. Humans approve the plan, not every edit. [D]
-- Recaps of Boris Cherny's workflow: most sessions start in Plan mode; once the plan is good, implementation often lands in one shot. [S]
-- Claude Code's best-practices page: explore, plan, code, commit. [P: current docs]
+- Boris Cherny, 2 Jan 2026: "Most sessions start in Plan mode", and once the plan is good Claude "can usually 1-shot it"; on 31 Jan 2026: "Start every complex task in plan mode". Dated advice: the 2 Jan thread names Opus 4.5. [P: 2 Jan thread, post 6/; 31 Jan thread, tip 2, read from X search results; quoted wording checked 2026-11-18] Reports say that by June 2026 he worked mostly in auto mode. [S]
+- Karpathy, 26 Jan 2026: "Things get better in plan mode". [P: X post]
+- Claude Code's current docs make auto mode the interactive default (v2.1.283 to v2.1.284) and no longer headline "Explore, plan, implement, commit"; plan mode is still a permission mode. Plan anything non-trivial, through plan mode or a written spec, and skip the plan for a one-sentence diff. [P: best practices and permission modes, checked 2026-11-18; D for the advice]
 - HumanLayer: research, then plan, then implement, with human review on research and plans, because one bad line in a plan costs more than one bad line of code. [P: author post]
 
 <!-- id: 5.4 -->
@@ -40,20 +41,26 @@ Scale the lifecycle to the risk. A typo is Build and Verify. A normal feature ru
 
 | Behaviour | Evidence | Countermeasure |
 |---|---|---|
-| Acts on wrong assumptions without checking | [S] Karpathy notes | A discovery interview up front; "state your assumptions" in the plan; plan approval |
+| Acts on wrong assumptions without checking | [P] Karpathy, 26 Jan 2026 | A discovery interview up front; "state your assumptions" in the plan; plan approval |
 | Doesn't ask when confused | [S] | An explicit stop-and-ask list; a confidence field in receipts |
 | Hides trade-offs and inconsistencies | [S] | Plans must list options and trade-offs; a critic pass |
-| Sycophancy, no pushback | [S] | Independent reviewers without the author's reasoning; anonymized councils |
-| Overbuilds, bloats, leaves dead code | [S] | A diff-size budget; a simplifier pass; reviewer flags scope creep |
+| Sycophancy, no pushback | [P] Karpathy, 26 Jan 2026 | Independent reviewers without the author's reasoning; anonymized councils |
+| Overbuilds, bloats, leaves dead code, and makes edits orthogonal to the task | [P] Karpathy, 26 Jan 2026 (it persisted despite CLAUDE.md instructions) | A diff-size budget; a lint rule or test, not another prose line (Law 8); a simplifier pass; reviewer flags scope creep |
 | Declares victory early | [P] long-running harness | A JSON feature list, end-to-end tests, a Stop hook |
 | Edits, disables or deletes tests to make them pass | [P] harness rule; Kent Beck | A test-immutability rule plus a hook or CODEOWNERS on test paths; one acceptance check the builder can't read or edit (§9.3) |
 | Loops on the same failing approach | [P] Kent Beck | A retry cap and a second opinion from a fresh agent |
 | Adds features nobody asked for | [P] Kent Beck | No-gos in the issue; the reviewer flags scope creep |
 | Jagged competence | [P] Karpathy year in review | Verify everything; don't infer skill in one area from another |
 | Forgets between sessions | [P] Karpathy (no continual learning) | CLAUDE.md, memory, progress files |
-| Context rot | [P] Anthropic | Subagents, compaction, notes on disk |
+| Context rot | [P] Anthropic; [R] Lost in the Middle (TACL 2024); vendor report: Chroma | Fresh sessions, state in files, compaction, subagents for noisy reading (§8) |
 | Weak on genuinely novel code (Karpathy's October 2025 view, softened by December) | [P] Dwarkesh; [S] later reports | More human design, smaller steps, closer collaboration |
 | Upfront specs miss edge cases | [P] Matt Pocock | A QA loop whose findings become new issues |
+| Copies anti-patterns and old workarounds, because they look like the established pattern | [P] Tan, Nov 2026 (self-reported) | Keep the codebase clean; ban the pattern with a lint rule |
+| Writes Markdown justifications for not doing the right thing | [P] Tan, Nov 2026 (6:56, 8:20; self-reported) | Limit comments by lint; make the lint error say to fix the root cause |
+| Games the check, and instructions don't stop it | [R] METR report, 2025-06-05 (30.4% of RE-Bench runs) | Put the check out of its reach (§9.3) |
+| Code erodes over a long run | [R, preprint] SlopCodeBench v2 (erosion in 77% of trajectories; no agent solved a problem end to end) | Scheduled cleanup PRs; a lint rule that stops new instances |
+| Flat multi-agent coordination collapses | [P, vendor] Cursor, Jan 2026 | Planner and worker with written handoffs (§6) |
+| Multi-agent runs fail in system design, misalignment between agents or missing verification | [R, NeurIPS 2025 poster] MAST | A verifier step; clearer role specs (§19.1 item 3) |
 
 ---
 

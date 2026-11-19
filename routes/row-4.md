@@ -32,6 +32,8 @@ They agree on: a readable plan before code; a machine-checkable gate as the cont
 - An LLM judge needs a rubric. The research system scored factual accuracy, citation accuracy, completeness, source quality and tool efficiency from 0.0 to 1.0 with a pass/fail. [P] The Agent SDK guidance calls an LLM judge not very robust and slower, though sometimes worth the cost. [P] Our advice: never make it the only gate. [D] A judge favours its own outputs [R: NeurIPS 2024], and open-weight judges disagreed with themselves across runs. [R: Findings of EMNLP 2025] When an LLM judge scores work, use a different model family or an execution check, and repeat and aggregate. This is about scoring: a fresh reviewer from the same family (Law 7, §9.2) still beats self-review but can share the bias. [D]
 - A loop's tests can pass while the spec is still violated; one practitioner's Ralph run passed 28 tests and then failed a fresh review on a real spec breach. Keep a fresh-eyes review even when tests are green. [S]
 - Watch your own drift. Simon Willison wrote in May 2026 that he no longer reviews every line of agent output, even for production work, and named the risk himself: normalization of deviance. Decide on purpose which tiers get line-by-line human review. [P]
+- Instructions don't stop reward hacking. METR found 30.4% of RE-Bench runs (39 of 128) hacked the task and 0.7% of HCAST runs, and that telling the model not to cheat had a "nearly negligible effect". [R: METR report, 2025-06-05] Back the rule with a check. [D]
+- Ground self-correction in an external signal. Self-correction without one lowered reasoning accuracy [R: ICLR 2024], and Reflexion's coding gain (91% against 80% pass@1 on HumanEval) rests on test results. [R: NeurIPS 2023, per search]
 - For unattended runs, measure **pass^k** (all k runs succeed), not just pass@k (at least one succeeds). At 75% per-run success, three runs in a row all succeed only about 42% of the time. [P: Demystifying evals]
 
 <!-- id: 15 -->
@@ -42,8 +44,15 @@ They agree on: a readable plan before code; a machine-checkable gate as the cont
 - Fanning out tightly coupled edits to many agents.
 - The builder grading its own work.
 - Goals with no "done when".
-- A giant CLAUDE.md that restates what the model already does.
+- A giant CLAUDE.md or AGENTS.md that restates what the model already does. OpenAI's one big AGENTS.md "failed in predictable ways" (§8). [P, vendor]
 - Must-happen checks that live only in prose.
+- A prose rule where a lint rule, a type or a test would work (Law 8).
+- IMPORTANT and ALL CAPS emphasis to make a rule stick. [P: best practices, old advice]
+- Forty hooks. The best-practices page treats that many as a smell. [P]
+- Multi-agent by default for coupled code (§6).
+- Picking tools or models by leaderboard score instead of your own evals (§13.1).
+- Automating a loop that produces slop. [P: Tan, 15:32]
+- Unbounded review loops. A reviewer "will always find something" (§7).
 - Bypassing permissions on a machine with real credentials.
 - Loops with no iteration, time or cost cap.
 - Agents passing transcripts to each other instead of files and summaries.
@@ -71,7 +80,7 @@ These came out of the independent review. Most are design advice [D]; facts carr
 - **Monorepos, multiple repos and teams.** Nested CLAUDE.md per package; gates that run only affected tests; one plan file per task (`docs/plans/<task>.md`) so parallel work doesn't collide; a named owner who reviews changes to hooks, agents and skills; cross-repo order written into the plan. [D]
 - **Discovery artifacts.** Store them as `docs/discovery/<id>.md`, `docs/specs/<id>.md` and `docs/adr/<n>.md`, each linked from its issue. Mark replaced documents "superseded by …". Give the outcome readout an owner and a date. Move grill questions still open at the question cap into the spec's Open Questions. Park unbet pitches in a dated list you're free to delete; don't let it become a backlog. [D]
 
-**Still unconfirmed after the fact-check:** Boris Cherny's X threads (all [S]); the exact wording of Karpathy's January 2026 notes and the Software 3.0 talk (summaries only); Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions.
+**Still unconfirmed after the fact-check:** Huntley's own view of the Anthropic plugin; any independent evaluation of Kiro or compound engineering; Linear's default GitHub status mapping for PR open and review; whether Codex cloud strips secrets before the agent phase. The 2026-10-27 additions that rest on preprints (context files, ImpossibleBench, SkillsBench, skill extraction, skill formation) may change in later versions. Unconfirmed in 0.7: the `-p` default for a logged-in, telemetry-on user; the Mods status; `--max-turns` semantics (the headless page does not document them); the $9 against $200 and 20 minutes against 6 hours figures in Anthropic's harness-design post; and every figure Tan reports about her own team, which is self-reported.
 
 ---
 
