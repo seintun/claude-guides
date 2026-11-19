@@ -68,7 +68,7 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 
 - [docs/decision-log.md](docs/decision-log.md): 27 decisions, with the reason and the decider for each
 - [docs/session-log.md](docs/session-log.md): every request in the build session and its outcome
-- [docs/version-history.md](docs/version-history.md): page versions 1–17, playbook versions 0.1–0.7
+- [docs/version-history.md](docs/version-history.md): page versions 1–18, playbook versions 0.1–0.7
 - [archive/README.md](archive/README.md): read-only snapshots of earlier versions (playbook 0.6, page v17) and the superseded-conventions table. History only, never a route for current advice
 - [research/bounded-review-evidence.md](research/bounded-review-evidence.md): primary-source evidence for bounded review (playbook §9.2): when LLM review rounds help and hurt, what multi-round review misses, human review and gates, risk-based security
 - [docs/proposals/bounded-review.md](docs/proposals/bounded-review.md): bounded review: only blockers with evidence reopen a review, re-reviews read the fix diff and decision log, two rounds then a human; global light, strict per repo

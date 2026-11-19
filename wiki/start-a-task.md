@@ -1,5 +1,7 @@
 # Start a task
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when you have a pain point or an idea and need a goal Claude can check and an issue an
 agent can finish.
 

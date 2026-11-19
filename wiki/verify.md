@@ -1,5 +1,7 @@
 # Verify
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when you need to make "done" provable: what to check, who checks it, and what proof the
 agent hands back.
 

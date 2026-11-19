@@ -69,6 +69,51 @@ class Generated(unittest.TestCase):
         html = (ROOT / "docs" / "orchestrating-claude-compendium.html").read_text(encoding="utf-8")
         self.assertNotRegex(html, r"<(script|link)[^>]+(src|href)=\"https?://", "the compendium must load nothing from the network")
 
+    def test_compendium_is_one_long_page_in_the_page_parts(self):
+        """The compendium goes back to embedding the page in a frame, drops a lesson, a runbook or a mapped playbook section, or groups the lessons differently from the page."""
+        html = (ROOT / "docs" / "orchestrating-claude-compendium.html").read_text(encoding="utf-8")
+        self.assertNotIn("<iframe", html, "the compendium must show the lessons inline, not embed the page in a frame")
+        m = re.search(r'<script type="application/json" id="compendium-map">(.*?)</script>', html, re.S)
+        self.assertTrue(m, "the compendium lost its embedded map of parts, lessons and sections")
+        cmap = json.loads(m.group(1))
+        page = (ROOT / "site" / "orchestrating-claude.html").read_text(encoding="utf-8")
+        page_parts = [(pid, re.findall(r'<li><a href="#([a-z]+)">', body))
+                      for pid, body in re.findall(r'<div class="part-head" id="(part-[a-z]+)">(.*?)\n</div>', page, re.S)]
+        self.assertEqual([(p["id"], [l["id"] for l in p["lessons"]]) for p in cmap["parts"]], page_parts,
+                         "the compendium groups the lessons differently from the page's six parts: rebuild with python3 -I tools/build_compendium.py")
+        # Every playbook section the page map names appears in its lesson, once as text and elsewhere as a pointer.
+        pb = (ROOT / "playbook" / "agent-harness-playbook.md").read_text(encoding="utf-8")
+        table = pb.split("**Page map: lesson to playbook section**", 1)[1].split("\n---", 1)[0]
+        lessons = [l for _, ls in page_parts for l in ls]
+        by_lesson = {l["id"]: l for p in cmap["parts"] for l in p["lessons"]}
+        rows = re.findall(r"^\| (\d+|Sources) \| [^|]*\| ([^|]*) \|$", table, re.M)
+        self.assertEqual(len(rows), len(lessons), "the playbook's page map must have one row per lesson, Sources included; the loop below would otherwise pass without checking them")
+        self.assertGreaterEqual(len(rows), 18)
+        for num, cell in rows:
+            sid = "sources" if num == "Sources" else lessons[int(num) - 1]
+            want = [(m2.group(1) or m2.group(2)).upper() for m2 in re.finditer(r"\[(?:§(\S+?)|Template (\w))\]\(#", cell)]
+            got = by_lesson[sid]["pb"] + by_lesson[sid]["pb_refs"]
+            self.assertEqual(sorted(want), sorted(got), f"lesson {sid}: the compendium's playbook sections differ from the playbook's page map")
+            for key in want:
+                self.assertEqual(html.count(f'id="pb-sec-{key}"'), 1, f"playbook section {key} must appear in the compendium exactly once")
+        runbooks = sorted(w for p in cmap["parts"] for l in p["lessons"] for w in l["wiki"])
+        shipped = sorted(p.stem for p in (ROOT / "wiki").glob("*.md") if p.name != "README.md")
+        self.assertEqual(runbooks, shipped, "a wiki runbook is missing from the compendium, or is shown twice")
+        # The banner carries the same as-of line as the page.
+        asof = re.search(r"v\d+ · updated \d{4}-\d{2}-\d{2} · evidence checked \d{4}-\d{2}-\d{2} \(Claude Code v[\d.]+\)", page).group(0)
+        self.assertIn(f'<p class="asof">{asof}</p>', html, "the compendium banner lacks the page's as-of line")
+
+    def test_only_known_links_become_plain_text_in_the_compendium(self):
+        """A Markdown link loses its target and the build quietly turns it into text, so a broken link ships."""
+        src = (ROOT / "tools" / "build_compendium.py").read_text(encoding="utf-8")
+        m = re.search(r"^KNOWN_DEGRADED = (set\(\)|\{[^}]*\})", src, re.M)
+        self.assertTrue(m, "tools/build_compendium.py lost its KNOWN_DEGRADED allowlist")
+        allowed = set(eval(m.group(1), {"__builtins__": {}, "set": set}))
+        html = (ROOT / "docs" / "orchestrating-claude-compendium.html").read_text(encoding="utf-8")
+        degraded = set(re.findall(r'<span class="file-ref" title="#([^"]+)"', html))
+        self.assertEqual(degraded, allowed, "the compendium's links that became text differ from KNOWN_DEGRADED in tools/build_compendium.py")
+        self.assertIn("unexpected = sorted(set(degraded) - KNOWN_DEGRADED)", src, "the build no longer stops on a link that lost its target")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,10 +1,15 @@
-"""Build docs/orchestrating-claude-compendium.html: one self-contained, searchable, offline file.
+"""Build docs/orchestrating-claude-compendium.html: one long, self-contained, searchable, offline page.
+
+The page is grouped into the teaching page's six parts. Each lesson shows its text inline, with its wiki runbook and
+its playbook sections (from the playbook's page-map table) folded in <details>. Nothing is listed by hand: the parts
+come from the page source, the sections from the playbook's page map.
 
 Usage (from the repository root): python3 -I tools/build_compendium.py
 Reads the Markdown and HTML sources in this repository, needs no third-party packages, and
 writes a single HTML file with inline CSS and JavaScript and no network requests.
 """
 import html
+import json
 import os
 import re
 import sys
@@ -52,10 +57,20 @@ DOC_LINKS = {
     "ENTRY.md": ("entry", "entry"),
     "orchestration-index.md": ("oi", "index"),
     "claude-cheat-sheet.md": ("cs", "cs"),
-    "SKILL.md": ("skill-brief", "skill-brief"),
     "harness-reset-proposal.md": ("prop", "prop"),
+    "agentic-practices-2026-11.md": ("ap", "ap"),
+    "mega-workshop-evidence.md": ("mw", "mw"),
     "playbook-factcheck-v0.3.md": ("rev-fc", "rev-fc"),
 }
+# Markdown links whose target is not in the compendium and that may become plain text. Empty today: every link a
+# document writes resolves. A new entry needs a reason; any other link that loses its target fails the build.
+KNOWN_DEGRADED = set()
+# Links to a file whose name is not unique are resolved by the path from the linking document.
+PATH_LINKS = {
+    "skills/grill/SKILL.md": ("skill-grill", "skill-grill"),
+    "skills/prompt/SKILL.md": ("skill-prompt", "skill-prompt"),
+}
+CUR_DIR = ""   # folder of the Markdown file being rendered, so relative links can be resolved
 for _name, _label in WIKI:
     _key = "wiki-" + _name[:-3]
     DOC_LINKS[_name] = (_key, _key)
@@ -88,15 +103,17 @@ def inline(text, prefix):
     def link(m):
         label, url = m.group(1), m.group(2).strip()
         if url.startswith("#"):
-            return f'<a href="#{prefix}-{url[1:]}">{label}</a>'
+            return f'<a href="#{prefix}-{url[1:]}" data-doc="1">{label}</a>'
         if re.match(r"https?://", url):
             return f'<a href="{html.escape(url)}" target="_blank" rel="noopener">{label}</a>'
         # Links between this repository's documents point inside the compendium.
         target, _, anchor = url.partition("#")
-        mapped = DOC_LINKS.get(os.path.basename(target))
+        resolved = os.path.normpath(os.path.join(CUR_DIR, target)).replace(os.sep, "/")
+        mapped = PATH_LINKS.get(resolved) or (None if os.path.basename(target) == "SKILL.md" else DOC_LINKS.get(os.path.basename(target)))
         if mapped:
             anchor_prefix, section_id = mapped
-            return f'<a href="#{anchor_prefix}-{anchor}">{label}</a>' if anchor else f'<a href="#{section_id}">{label}</a>'
+            return (f'<a href="#{anchor_prefix}-{anchor}" data-doc="1">{label}</a>' if anchor
+                    else f'<a href="#{section_id}" data-doc="1">{label}</a>')
         return f'<span class="file-ref" title="{html.escape(url)}">{label}</span>'
 
     text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", link, text)
@@ -115,9 +132,10 @@ def split_row(line):
 LIST_RE = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.*)$")
 
 
-def md_to_html(md, prefix, drop_title=True):
+def md_to_html(md, prefix, drop_title=True, seen=None):
     lines = md.replace("\r\n", "\n").split("\n")
-    out, seen, i, first_h1 = [], set(), 0, drop_title
+    out, i, first_h1 = [], 0, drop_title
+    seen = set() if seen is None else seen
 
     def flush_para(buf):
         if buf:
@@ -176,7 +194,7 @@ def md_to_html(md, prefix, drop_title=True):
             while i < len(lines) and lines[i].startswith(">"):
                 quote.append(lines[i][1:].lstrip() if lines[i][1:2] == " " else lines[i][1:])
                 i += 1
-            out.append(f"<blockquote>{md_to_html(chr(10).join(quote), prefix, drop_title=False)}</blockquote>")
+            out.append(f"<blockquote>{md_to_html(chr(10).join(quote), prefix, drop_title=False, seen=seen)}</blockquote>")
             continue
         if LIST_RE.match(line):
             flush_para(para)
@@ -222,14 +240,10 @@ def render_list(items, prefix):
 
 # ---------------------------------------------------------------- the teaching page
 PAGE = read("site/orchestrating-claude.html")
-# The page shows its own version in its footer; read it there, never hard-code it.
-PAGE_VERSION, PAGE_UPDATED = re.search(r"Version (\d+), last updated (\d{4}-\d{2}-\d{2})\.", PAGE).groups()
-
-
-def page_document(src):
-    # No web fonts inside the compendium: the page falls back to system fonts, so nothing loads over the network.
-    src = re.sub(r'<link rel="(?:preconnect|stylesheet)" href="https://fonts\.[^"]+"[^>]*>\n?', "", src)
-    return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>' + src + "</body></html>"
+# The page shows its as-of line in its header and footer; read it there, never hard-code it.
+ASOF = re.search(r"v(\d+) · updated (\d{4}-\d{2}-\d{2}) · evidence checked (\d{4}-\d{2}-\d{2}) \(Claude Code v(\d+\.\d+\.\d+)\)", PAGE)
+PAGE_VERSION, PAGE_UPDATED, PAGE_CHECKED, CC_VERSION = ASOF.groups()
+ASOF_LINE = ASOF.group(0)
 
 
 def page_text_blocks(src):
@@ -265,6 +279,48 @@ def page_sources(src):
     return rows
 
 
+BLOCKS = page_text_blocks(PAGE)
+BLOCK = {b[0]: b for b in BLOCKS}
+LESSON_IDS = [b[0] for b in BLOCKS]
+UPDATED = dict(re.findall(r'<section id="([^"]+)"[^>]*data-updated="([^"]+)"', PAGE))
+
+# The six parts, read from the page's part headers.
+PARTS = []
+for m in re.finditer(r'<div class="part-head" id="(part-[a-z]+)">(.*?)\n</div>', PAGE, re.S):
+    pid, body = m.groups()
+    PARTS.append((pid, html.unescape(re.search(r'<h2 class="part-title">(.*?)</h2>', body).group(1)),
+                  html.unescape(re.search(r'<p class="part-why">(.*?)</p>', body).group(1)),
+                  re.findall(r'<li><a href="#([a-z]+)">', body)))
+assert len(PARTS) == 6 and sorted(i for p in PARTS for i in p[3]) == sorted(LESSON_IDS), "the page's parts must list every lesson once"
+
+WHATS_NEW = re.search(r'<div class="whatsnew" id="whatsnew">(.*?)\n  </div>', PAGE, re.S).group(1)
+WHATS_NEW = re.sub(r'href="#([a-z]+)"', lambda m: f'href="#lesson-{m.group(1)}"' if m.group(1) in LESSON_IDS else m.group(0), WHATS_NEW)
+
+# ---------------------------------------------------------------- playbook sections and runbooks per lesson
+PB_LINES, PB_FOUND = playbook_sections.index(playbook_sections.PLAYBOOK)
+_pm = read("playbook/agent-harness-playbook.md").split("**Page map: lesson to playbook section**", 1)[1].split("\n---", 1)[0]
+PAGE_MAP = {}   # lesson id -> playbook section ids, in the table's order
+for num, cell in re.findall(r"^\| (\d+|Sources) \| [^|]*\| ([^|]*) \|$", _pm, re.M):
+    sid = "sources" if num == "Sources" else LESSON_IDS[int(num) - 1]
+    ids = []
+    for label in re.findall(r"\[([^\]]+)\]\(#", cell):
+        mm = re.match(r"§(\S+)", label) or re.match(r"Template (\w)$", label)
+        ids.append(mm.group(1).upper() if mm else label)
+    PAGE_MAP[sid] = ids
+assert sorted(PAGE_MAP) == sorted(LESSON_IDS), "the playbook's page map must cover every lesson"
+for _ids in PAGE_MAP.values():
+    for _i in _ids:
+        assert _i in PB_FOUND, f"page map names {_i}, which section.py does not know"
+
+# Which runbook belongs to which lesson (the wiki README's phase table is the basis). Each runbook appears once.
+LESSON_WIKI = {
+    "loop": ["case-study"], "discovery": ["grill"], "goals": ["start-a-task"], "phases": ["records"],
+    "orchestration": ["orchestrate"], "toolbox": ["build-a-harness"], "selfcheck": ["verify"],
+    "guardrails": ["guardrails"], "running": ["run-unattended"], "growing": ["improve"], "failures": ["unstick"],
+}
+_wiki_names = {n[:-3]: l for n, l in WIKI}
+assert sorted(w for ws in LESSON_WIKI.values() for w in ws) == sorted(_wiki_names), "every runbook must belong to exactly one lesson"
+
 # ---------------------------------------------------------------- sections
 GRADE = {"P": "Primary", "S": "Second-hand", "R": "Research", "D": "Design advice"}
 
@@ -277,6 +333,8 @@ def code_listing(rel, note):
 
 
 def doc(rel, prefix, label=None):
+    global CUR_DIR
+    CUR_DIR = os.path.dirname(rel)
     body = md_to_html(read(rel), prefix)
     src = f'<p class="src-path">Source: <code>{html.escape(rel)}</code></p>'
     if label:
@@ -284,109 +342,163 @@ def doc(rel, prefix, label=None):
     return src + body
 
 
-sections = []
+PB_SEEN = set()   # heading ids stay unique across the playbook pieces
+SHOWN = {}        # playbook section id -> lesson id where its text appears
 
 
-def section(sid, title, lead, body):
-    sections.append((sid, title, lead, body))
+def top_level(key):
+    """A playbook section that is a '## ' heading (not a subsection or a template)."""
+    return re.fullmatch(r"\d+[A-Z]?", key) is not None and PB_LINES[PB_FOUND[key][1]].startswith("## ")
 
+
+EXTRA_KEYS = []
+
+
+def pb_details(key):
+    global CUR_DIR
+    CUR_DIR = "playbook"
+    title, i, end = PB_FOUND[key]
+    body = md_to_html("\n".join(PB_LINES[i:end]), "pb", drop_title=False, seen=PB_SEEN)
+    return (f'<details class="pb-sec" id="pb-sec-{key}" data-pb="{key}"><summary>Playbook {html.escape(key)} · {html.escape(title)} '
+            f'<span class="muted">· {end - i} lines</span></summary>{body}</details>')
+
+
+def lesson_block(sid):
+    _, head, h2, paras = BLOCK[sid]
+    upd = UPDATED.get(sid)
+    tag = f' <span class="upd">Updated {upd}</span>' if upd else ""
+    out = [f'<section class="lesson" id="lesson-{sid}" data-lesson="{sid}" data-title="{html.escape(head)}">',
+           f'<p class="kick">{html.escape(head)}{tag}</p><h3>{html.escape(h2 or head)}</h3>']
+    if sid == "sources":
+        out.append(f'<div class="lesson-text">{SOURCES_HTML}</div>')
+    else:
+        out.append('<div class="lesson-text">' + "".join(f"<p>{html.escape(p)}</p>" for p in paras) + "</div>")
+    for w in LESSON_WIKI.get(sid, []):
+        out.append(f'<details class="rb" id="rb-{w}" data-wiki="{w}"><summary>Runbook: {html.escape(_wiki_names[w])}</summary>'
+                   + doc(f"wiki/{w}.md", f"wiki-{w}", _wiki_names[w]) + "</details>")
+    for key in PAGE_MAP[sid]:
+        if key in SHOWN:
+            out.append(f'<p class="pb-ref" data-pb-ref="{key}">Playbook {html.escape(key)} is shown under '
+                       f'<a href="#lesson-{SHOWN[key]}">{html.escape(BLOCK[SHOWN[key]][1])}</a>: <a href="#pb-sec-{key}">go to it</a>.</p>')
+        else:
+            SHOWN[key] = sid
+            out.append(pb_details(key))
+    out.append("</section>")
+    return "".join(out)
+
+
+sections = []   # (id, title, lead, body, eyebrow, children, extra_class)
+
+
+def section(sid, title, lead, body, eyebrow="", children=None, cls=""):
+    sections.append((sid, title, lead, body, eyebrow, children or [], cls))
+
+
+# Sources the page cites (also the Sources lesson's text)
+src_rows = page_sources(PAGE)
+_groups = {}
+for g, t, u, gr in src_rows:
+    _groups.setdefault(g, []).append((t, u, gr))
+SOURCES_HTML = "".join(
+    f"<h4>{html.escape(g)}</h4><ul class='sources'>" + "".join(
+        f'<li><span class="grade g-{gr.lower()}" title="{GRADE[gr]}">{gr}</span> <a href="{html.escape(u)}" target="_blank" rel="noopener">{html.escape(t)}</a></li>'
+        for t, u, gr in items) + "</ul>" for g, items in _groups.items())
 
 # About
 layout = [
     ("site/orchestrating-claude.html", f"The teaching page, version {PAGE_VERSION}, last updated {PAGE_UPDATED} (artifact body: no doctype; the viewer wraps it)"),
-    ("site/history/orchestrating-claude-v11.html", "The version 11 baseline the UX issue was written against"),
+    ("site/history/", "Earlier versions of the page, kept as they were"),
     ("playbook/agent-harness-playbook.md", f"The agent harness playbook, version {PB_VERSION}, last updated {PB_UPDATED}"),
-    ("research/google-scaling-check.md", "Primary-source fact-check of the Google agent-scaling study"),
-    ("issues/orchestrating-claude-ux.md", "The UX issue: parent, 13 children, plan and task contract"),
-    ("issues/reviews/", "Every review report: UX, learning, charts, playbook, chart, post-launch, final"),
-    ("issues/drafts/", "Drafts that subagents wrote and the lead spliced in"),
-    ("docs/", "Decision log, session log, version history, and this compendium"),
-    ("checks/", "Static and browser checks, the v11 baseline, the URL baseline"),
-    ("tools/", "Build and maintenance scripts; tools/provenance holds the one-off edit scripts"),
+    ("wiki/", "Short runbooks distilled from the playbook"),
+    ("research/", "Fact-checks and evidence notes behind the playbook"),
+    ("archive/", "Read-only snapshots of earlier playbook and page versions"),
+    ("checks/, tests/, tools/", "Static and browser checks, the offline test suite, and the build scripts"),
 ]
 about = f"""
-<p>This file collects everything from one working session on 24 October 2026. The session built and reviewed
-<strong>Orchestrating Claude</strong>, a 17-lesson teaching page about goals, checks, helper agents and unattended runs,
-and the <strong>Agent Harness Playbook</strong> that the page summarises. It includes the research, every review, every
-decision, the issue that drove the rework, and the scripts that check and rebuild the work.</p>
-<p>It is one HTML file with no network requests, so it reads offline. Press <kbd>/</kbd> to search: results come from every
-section, including the full text of the page and the playbook. The page itself is embedded in the
-<a href="#page">Teaching page</a> section, and the live version is at <a href="{ARTIFACT_URL}" target="_blank" rel="noopener">claude.ai</a>
-(private to its owner until shared).</p>
+<p>This file is the whole guide on one page, grouped like the teaching page into six parts: <a href="#part-foundations">Foundations</a>,
+<a href="#part-plan">Plan</a>, <a href="#part-build">Build</a>, <a href="#part-check">Check</a>, <a href="#part-operate">Operate</a> and
+<a href="#part-reference">Reference</a>. Each lesson shows its text, then its wiki runbook and the playbook sections it maps to, folded
+away until you open them. The records of how the guide was built are in the <a href="#appendix">appendix</a>.</p>
+<p>It is one HTML file with no network requests, so it reads offline. Press <kbd>/</kbd> to search: results come from every section, including
+the full text of the lessons, the runbooks and the playbook. The live teaching page is at
+<a href="{ARTIFACT_URL}" target="_blank" rel="noopener">claude.ai</a> (private to its owner until shared).</p>
 <div class="tw"><table><thead><tr><th>Path in the repository</th><th>What it is</th></tr></thead><tbody>
 {''.join(f'<tr><td><code>{html.escape(p)}</code></td><td>{html.escape(d)}</td></tr>' for p, d in layout)}
 </tbody></table></div>
 <h3 id="about-reproduce">Rebuild and check</h3>
 <pre><code>python3 -I tools/build_compendium.py        # rebuild this file
 checks/static.sh                            # static checks; also writes build/preview.html
-# then run checks/run-dom.js with Playwright's run_code tool (see checks/README.md)
+# then run checks/run-dom.js and checks/compendium-check.js with Playwright's run_code tool (see checks/README.md)
 python3 -I tools/lesson_meta.py site/orchestrating-claude.html   # refresh reading times</code></pre>
 <p class="muted">Built {date.today().isoformat()} from the repository's sources by <code>tools/build_compendium.py</code>.</p>
 """
 section("about", "About this compendium", "What is here and how to use it offline.", about)
 
-# Guides: the wiki runbooks, in reading order
-wiki_present = [(n, l) for n, l in WIKI if os.path.exists(os.path.join(ROOT, "wiki", n))]
-if wiki_present:
-    guide_index = "<ul class='guide-list'>" + "".join(
-        f'<li><a href="#wiki-{n[:-3]}">{html.escape(l)}</a></li>' for n, l in wiki_present) + "</ul>"
-    guides = ("<p>Short runbooks distilled from the playbook. Each one gives steps, a checklist, the templates to copy, "
-              "the pitfalls, and links to the detail.</p>" + guide_index
-              + "".join(doc(f"wiki/{n}", f"wiki-{n[:-3]}", l) for n, l in wiki_present)
-              + doc("playbook/claude-cheat-sheet.md", "cs", "Claude Code cheat sheet"))
-    section("entry", "Start here (ENTRY.md)", "The entry point for a session in another project: the scenario router and the phase table.", doc("ENTRY.md", "entry"))
-    section("index", "Orchestration index", "The phase index: eight phases, what to read in each, and review checklists.", doc("orchestration-index.md", "oi"))
-    section("guides", "Guides", "Runbooks for building, orchestrating and guiding agents.", guides)
-section("status", "Where it stands", "The final independent review, with what changed after it.", doc("issues/reviews/final-review-v15.md", "status"))
-section("session", "Session log", "Every request in the session and its outcome.", doc("docs/session-log.md", "session"))
-section("decisions", "Decisions", "What was decided, why, and by whom, plus one open proposal.",
-        doc("docs/decision-log.md", "decisions")
-        + doc("docs/proposals/harness-reset-proposal.md", "prop", "Proposal (draft): reset a personal harness to a lean baseline"))
-section("versions", "Version history", f"Page versions 1–{PAGE_VERSION} and playbook versions 0.1–{PB_VERSION}.", doc("docs/version-history.md", "versions"))
+# The six parts
+for i, (pid, ptitle, why, lessons) in enumerate(PARTS):
+    chips = "".join(f'<li><a href="#lesson-{sid}">{html.escape(BLOCK[sid][1].split(" · ")[0])}</a></li>' for sid in lessons)
+    body = f'<ol class="part-lessons" aria-label="Lessons in {html.escape(ptitle)}">{chips}</ol>' + "".join(lesson_block(sid) for sid in lessons)
+    children = [(f"lesson-{sid}", BLOCK[sid][1].split(" · ")[0] + ": " + (BLOCK[sid][2] or "")) for sid in lessons]
+    if pid == "part-reference":
+        # Playbook sections no lesson maps to, then the research notes behind the evidence.
+        EXTRA_KEYS[:] = [k for k in PB_FOUND if top_level(k) and k not in SHOWN
+                         and not any(c in SHOWN for c in PB_FOUND if c.startswith(k + "."))]
+        extra_pb = "".join(pb_details(k) for k in EXTRA_KEYS)
+        body += ('<section class="extra" id="ref-playbook" data-title="More playbook sections"><h3>More playbook sections</h3>'
+                 "<p>Sections of the playbook that no lesson maps to.</p>" + extra_pb + "</section>")
+        children.append(("ref-playbook", "More playbook sections"))
+        research = (
+            '<section class="extra" id="ref-research" data-title="Research"><h3>Research</h3>'
+            "<p>Research ran through subagents using Firecrawl, Exa and web search, with <code>doc-checker</code> for primary-source checks. "
+            "These notes hold the verdicts and the corrections behind the page's evidence tags. "
+            'Evidence grades: <span class="grade g-p">P</span> primary, <span class="grade g-s">S</span> second-hand, '
+            '<span class="grade g-r">R</span> research, <span class="grade g-d">D</span> design advice.</p>'
+            + doc("research/agentic-practices-2026-11.md", "ap", "Evidence for playbook 0.7: agentic practices, November 2026")
+            + doc("research/mega-workshop-evidence.md", "mw", "Evidence for playbook 0.6: a workshop's advice, checked")
+            + doc("research/google-scaling-check.md", "gsc", "Fact-check: Google's agent-scaling study")
+            + doc("research/bounded-review-evidence.md", "bre", "Evidence: how agent reviews should end")
+            + "</section>")
+        body += research
+        children.append(("ref-research", "Research"))
+    section(pid, ptitle, why, body, eyebrow=f"Part {i + 1} of 6", children=children, cls="part")
+    PARTS[i] = (pid, ptitle, why, lessons, children)
 
-# The page: embedded, plus its text
-blocks = page_text_blocks(PAGE)
-page_text = []
-for sid, head, h2, paras in blocks:
-    page_text.append(f'<details class="lesson" id="page-{sid}"><summary><span class="kick">{html.escape(head)}</span> {html.escape(h2)}</summary>'
-                     + "".join(f"<p>{html.escape(p)}</p>" for p in paras) + "</details>")
-page_body = f"""
-<p>The page as published (version {PAGE_VERSION}, last updated {PAGE_UPDATED}), running inside this file. Its links open in a new tab. It starts dark,
-and its sun and moon button switches between dark and light. This copy uses system fonts, so it needs no network.</p>
-<p><button type="button" class="btn" id="open-page">Open the page on its own</button>
-<a class="btn ghost" href="{ARTIFACT_URL}" target="_blank" rel="noopener">Open the live artifact</a></p>
-<iframe class="page-frame" title="Orchestrating Claude, version {PAGE_VERSION}" loading="lazy" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" srcdoc="{html.escape(page_document(PAGE), quote=True)}"></iframe>
-<h3 id="page-text">The page as text</h3>
-<p class="muted">Every lesson's text, so search can reach it. Open a lesson to read it.</p>
-{''.join(page_text)}
-"""
-section("page", "Teaching page", "Orchestrating Claude: 17 lessons and Sources, embedded and as text.", page_body)
-section("playbook", "Agent Harness Playbook", f"The build reference behind the page, version {PB_VERSION}, last updated {PB_UPDATED}.", doc("playbook/agent-harness-playbook.md", "pb"))
+# Appendix: how the guide was built and the files that ship with it
+appendix_children = []
 
-# Research
-src_rows = page_sources(PAGE)
-groups = {}
-for g, t, u, gr in src_rows:
-    groups.setdefault(g, []).append((t, u, gr))
-src_html = "".join(
-    f"<h4>{html.escape(g)}</h4><ul class='sources'>" + "".join(
-        f'<li><span class="grade g-{gr.lower()}" title="{GRADE[gr]}">{gr}</span> <a href="{html.escape(u)}" target="_blank" rel="noopener">{html.escape(t)}</a></li>'
-        for t, u, gr in items) + "</ul>" for g, items in groups.items())
-research = f"""
-<p>Research ran through subagents using Firecrawl, Exa and web search, with <code>doc-checker</code> for primary-source checks.
-Its findings live in the page (Lesson 17 and the evidence tags) and in playbook §19 and §20. This section adds the
-fact-check that corrected the Lesson 17 chart and the list of sources the page cites.</p>
-<p>Evidence grades: <span class="grade g-p">P</span> primary (the person's own words or official docs),
-<span class="grade g-s">S</span> second-hand reports, <span class="grade g-r">R</span> research papers,
-<span class="grade g-d">D</span> design advice built from the sources.</p>
-{doc("research/google-scaling-check.md", "gsc", "Fact-check: Google's agent-scaling study")}
-{doc("research/bounded-review-evidence.md", "bre", "Evidence: how agent reviews should end")}
-<section class="sub" id="sources-cited"><h3 class="subhead">Sources the page cites ({len(src_rows)})</h3>{src_html}</section>
-"""
-section("research", "Research and sources", "Fact-checks and every source the page cites.", research)
-section("issue", "The UX issue and plan", "Parent issue, 13 children, plan table and builder contract.", doc("issues/orchestrating-claude-ux.md", "issue"))
 
-reviews = "".join([
+def appendix(sid, title, lead, body):
+    section(sid, title, lead, body)
+    appendix_children.append((sid, title))
+
+
+section("appendix", "Appendix: project records", "How the guide was built, the decisions behind it, and the files that ship with the repository.", "", cls="appendix-head")
+appendix("entry", "Start here (ENTRY.md)", "The entry point for a session in another project: the scenario router and the phase table.", doc("ENTRY.md", "entry"))
+appendix("index", "Orchestration index", "The phase index: eight phases, what to read in each, and review checklists.", doc("orchestration-index.md", "oi"))
+appendix("cs", "Claude Code cheat sheet", "Commands, surfaces and a prompt template.", doc("playbook/claude-cheat-sheet.md", "cs"))
+_idx_rows = []
+for k, (title, i0, end) in PB_FOUND.items():
+    if not top_level(k):
+        continue
+    where = SHOWN.get(k)
+    if where:
+        loc = f'<a href="#pb-sec-{k}">Lesson: {html.escape(BLOCK[where][2] or BLOCK[where][1])}</a>'
+    elif any(c in SHOWN for c in PB_FOUND if c.startswith(k + ".")):
+        loc = "By subsection: " + ", ".join(f'<a href="#pb-sec-{c}">§{c}</a>' for c in PB_FOUND if c.startswith(k + ".") and c in SHOWN)
+    elif k in EXTRA_KEYS:
+        loc = f'<a href="#pb-sec-{k}">More playbook sections</a>'
+    else:
+        loc = "Not shown"
+    _idx_rows.append(f"<tr><td>{html.escape(k)}</td><td>{html.escape(title)}</td><td>{loc}</td></tr>")
+appendix("playbook", "Playbook index", f"Where each section of the Agent Harness Playbook (version {PB_VERSION}, last updated {PB_UPDATED}) appears in this file.",
+         '<div class="tw"><table><thead><tr><th>Section</th><th>Title</th><th>Shown under</th></tr></thead><tbody>' + "".join(_idx_rows) + "</tbody></table></div>")
+appendix("status", "Where it stands", "The final independent review, with what changed after it.", doc("issues/reviews/final-review-v15.md", "status"))
+appendix("session", "Session log", "Every request in the session and its outcome.", doc("docs/session-log.md", "session"))
+appendix("decisions", "Decisions", "What was decided, why, and by whom, plus one open proposal.",
+         doc("docs/decision-log.md", "decisions") + doc("docs/proposals/harness-reset-proposal.md", "prop", "Proposal (draft): reset a personal harness to a lean baseline"))
+appendix("versions", "Version history", f"Page versions 1–{PAGE_VERSION} and playbook versions 0.1–{PB_VERSION}.", doc("docs/version-history.md", "versions"))
+appendix("issue", "The UX issue and plan", "Parent issue, 13 children, plan table and builder contract.", doc("issues/orchestrating-claude-ux.md", "issue"))
+appendix("reviews", "Reviews", "Every independent review, in order. The final review is under Where it stands.", "".join([
     doc("issues/reviews/ux.md", "rev-ux", "UI/UX and accessibility review (v11)"),
     doc("issues/reviews/lx.md", "rev-lx", "Learning-psychology review (v11)"),
     doc("issues/reviews/vz.md", "rev-vz", "Charts and diagrams review (v11)"),
@@ -394,52 +506,107 @@ reviews = "".join([
     doc("issues/reviews/playbook-review.md", "rev-pb", "Playbook navigation review"),
     doc("issues/reviews/chart-review-v12.md", "rev-chart", "Chart review (v12)"),
     doc("issues/reviews/post-launch-review-v12.md", "rev-post", "Post-launch re-review (v12)"),
-])
-section("reviews", "Reviews", "Every independent review, in order. The final review is under Where it stands.", reviews)
+]))
 
-drafts = "".join(
+_drafts = "".join(
     f'<details class="draft"><summary>{label} <span class="muted">· <code>{rel}</code></span></summary>{md_to_html(read(rel), pfx)}</details>'
     for rel, pfx, label in [
         ("issues/drafts/glossary.md", "dr-gl", "Glossary and first-use definitions"),
         ("issues/drafts/density.md", "dr-dn", "Takeaways, starter sets, grouping and disclosures"),
         ("issues/drafts/running-example.md", "dr-rx", "Running example, recall items, quiz and try-now"),
     ])
-drafts = "<p>Subagents wrote these drafts in parallel while the lead edited the page. The lead applied them with the changes noted in the decision log (D17, D18).</p>" + drafts
-section("drafts", "Drafts", "Content the drafting agents produced.", drafts)
+appendix("drafts", "Drafts", "Content the drafting agents produced.",
+         "<p>Subagents wrote these drafts in parallel while the lead edited the page. The lead applied them with the changes noted in the decision log (D17, D18).</p>" + _drafts)
 
-skills = ("<p>Skills are reusable Claude Code procedures. To install one, copy its folder into <code>~/.claude/skills/</code> "
-          "or a project's <code>.claude/skills/</code>.</p>"
-          + doc("skills/grill/SKILL.md", "skill-grill", "/grill: SKILL.md")
-          + doc("skills/prompt/SKILL.md", "skill-prompt", "/prompt: SKILL.md")
-          + f'<details class="code"><summary>How /grill and /prompt were tested together</summary>'
-          + md_to_html(read("tests/live/grill-prompt/results.md"), "skill-grill-prompt-results")
-          + "</details>")
-section("skills", "Skills", "Claude Code skills built along the way.", skills)
+CUR_DIR = "skills"
+_skills = ("<p>Skills are reusable Claude Code procedures. To install one, copy its folder into <code>~/.claude/skills/</code> "
+           "or a project's <code>.claude/skills/</code>.</p>"
+           + doc("skills/grill/SKILL.md", "skill-grill", "/grill: SKILL.md")
+           + doc("skills/prompt/SKILL.md", "skill-prompt", "/prompt: SKILL.md")
+           + '<details class="code"><summary>How /grill and /prompt were tested together</summary>'
+           + md_to_html(read("tests/live/grill-prompt/results.md"), "skill-grill-prompt-results")
+           + "</details>")
+appendix("skills", "Skills", "Claude Code skills built along the way.", _skills)
 
-repro = (doc("tests/README.md", "tests", "Tests: what each feature is tested by")
-         + doc("checks/README.md", "chk")
-         + f"<h3 id='chk-baseline'>Version 11 baseline</h3><pre><code>{html.escape(read('checks/baseline-v11.txt'), quote=False)}</code></pre>"
-         + f"<h3 id='chk-final'>Version {PAGE_VERSION} result</h3><p>27 of 27 page checks pass in 8 views (320, 375 light and dark, 414, 768, 1024, 1280 light and dark): dom-1 to dom-13, phase-explorer keyboard (kbd-1 to kbd-3), phone menu (nav-1, nav-2), quiz keyboard (quiz-1), theme toggle (theme-1 to theme-5), unique ids and no script errors. Static checks 1 to 6 pass.</p>"
-         + "<h3 id='chk-code'>Scripts</h3>"
-         + code_listing("checks/static_checks.py", "static checks on the page source")
-         + code_listing("checks/static.sh", "runs the static checks and writes build/preview.html")
-         + code_listing("checks/dom-checks.js", "in-page checks, injected into each view")
-         + code_listing("checks/run-dom.js", "Playwright runner: eight views and the keyboard scenarios")
-         + code_listing("checks/shots.js", "screenshots of every figure")
-         + code_listing("tools/lesson_meta.py", "writes levels, reading times and path totals")
-         + code_listing("tools/splice_figs.py", "splices redrawn figures from a draft into the page")
-         + code_listing("tools/check_links.py", "checks every Markdown link and anchor")
-         + code_listing("checks/compendium-check.js", "browser check for this file")
-         + code_listing("tools/build_compendium.py", "builds this file"))
-section("reproduce", "Reproduce and verify", "How the checks work, their results, and the scripts.", repro)
-section("agents", "Working on this repository", "The agent instructions that ship with the repository.", doc("AGENTS.md", "agents"))
-
-
+_repro = (doc("tests/README.md", "tests", "Tests: what each feature is tested by")
+          + doc("checks/README.md", "chk")
+          + f"<h3 id='chk-baseline'>Version 11 baseline</h3><pre><code>{html.escape(read('checks/baseline-v11.txt'), quote=False)}</code></pre>"
+          + f"<h3 id='chk-final'>Version {PAGE_VERSION} result</h3><p>All page checks pass in 8 views (320, 375 light and dark, 414, 768, 1024, 1280 light and dark): dom-1 to dom-16, phase-explorer keyboard (kbd-1 to kbd-3), phone menu (nav-1, nav-2), every contents link (nav-3, at 1280 and 375), quiz keyboard (quiz-1), theme toggle (theme-1 to theme-5), unique ids and no script errors. Static checks 1 to 7 pass.</p>"
+          + "<h3 id='chk-code'>Scripts</h3>"
+          + code_listing("checks/static_checks.py", "static checks on the page source")
+          + code_listing("checks/static.sh", "runs the static checks and writes build/preview.html")
+          + code_listing("checks/dom-checks.js", "in-page checks, injected into each view")
+          + code_listing("checks/run-dom.js", "Playwright runner: eight views and the keyboard scenarios")
+          + code_listing("checks/shots.js", "screenshots of every figure")
+          + code_listing("tools/lesson_meta.py", "writes levels, reading times and path totals")
+          + code_listing("tools/splice_figs.py", "splices redrawn figures from a draft into the page")
+          + code_listing("tools/check_links.py", "checks every Markdown link and anchor")
+          + code_listing("checks/compendium-check.js", "browser check for this file")
+          + code_listing("tools/build_compendium.py", "builds this file"))
+appendix("reproduce", "Reproduce and verify", "How the checks work, their results, and the scripts.", _repro)
+appendix("agents", "Working on this repository", "The agent instructions that ship with the repository.", doc("AGENTS.md", "agents"))
 # ---------------------------------------------------------------- assemble
-toc = "".join(f'<li><a href="#{sid}">{html.escape(t)}</a></li>' for sid, t, _, _ in sections)
-main = "".join(
-    f'<section class="sec" id="{sid}" data-title="{html.escape(t)}"><header class="sec-head"><p class="eyebrow">{i + 1:02d}</p><h2>{html.escape(t)}</h2><p class="lead">{html.escape(lead)}</p></header>{body}</section>'
-    for i, (sid, t, lead, body) in enumerate(sections))
+_appx = {sid for sid, _ in appendix_children}
+toc_items = []
+for sid, t, lead, body, eyebrow, children, cls in sections:
+    if sid in _appx:
+        continue
+    if sid == "appendix":
+        children = appendix_children
+    sub = ("<ol>" + "".join(f'<li><a href="#{c}">{html.escape(l)}</a></li>' for c, l in children) + "</ol>") if children else ""
+    toc_items.append(f'<li><a href="#{sid}">{html.escape(t)}</a>{sub}</li>')
+toc = "".join(toc_items)
+
+
+def render(sec):
+    sid, t, lead, body, eyebrow, _children, cls = sec
+    eb = f'<p class="eyebrow">{html.escape(eyebrow)}</p>' if eyebrow else ""
+    return (f'<section class="sec {cls}" id="{sid}" data-title="{html.escape(t)}"><header class="sec-head">{eb}<h2>{html.escape(t)}</h2>'
+            f'<p class="lead">{html.escape(lead)}</p></header>{body}</section>')
+
+
+main = "".join(render(sec) for sec in sections)
+
+# The map of what is where, for the browser check. The static test compares it with the page and the playbook.
+COMPENDIUM_MAP = {
+    "asof": ASOF_LINE,
+    "parts": [{"id": pid, "lessons": [{"id": sid, "wiki": LESSON_WIKI.get(sid, []),
+                                         "pb": [k for k in PAGE_MAP[sid] if SHOWN[k] == sid],
+                                         "pb_refs": [k for k in PAGE_MAP[sid] if SHOWN[k] != sid]} for sid in lessons]}
+              for pid, _t, _w, lessons, _c in PARTS],
+    "extra_pb": EXTRA_KEYS,
+    "appendix": [sid for sid, _ in appendix_children],
+}
+
+
+def finish(markup):
+    """Every #link must resolve. A link that a Markdown document wrote and that has no target here (the playbook's own
+    Contents, say) becomes plain text; any other dangling link is a bug in this build, so it stops the build."""
+    live = re.sub(r"<(pre|script)\b.*?</\1>", " ", markup, flags=re.S)   # code listings quote ids; they are not elements
+    ids = re.findall(r'\sid="([^"]+)"', live)
+    dup = sorted({i for i in ids if ids.count(i) > 1})
+    if dup:
+        sys.exit(f"duplicate ids in the compendium: {dup[:10]}")
+    known = set(ids)
+    degraded = []
+
+    def doc_link(m):
+        if m.group(1) in known:
+            return f'<a href="#{m.group(1)}">'
+        degraded.append(m.group(1))
+        return '<span class="file-ref" title="#' + m.group(1) + '">'
+    markup = re.sub(r'<a href="#([^"]+)" data-doc="1">(.*?)</a>',
+                    lambda m: (doc_link(m) + m.group(2) + ("</a>" if m.group(1) in known else "</span>")), markup, flags=re.S)
+    unexpected = sorted(set(degraded) - KNOWN_DEGRADED)
+    if unexpected:
+        sys.exit(f"Markdown link(s) lost their target and would become plain text: {unexpected[:10]}. "
+                 "Fix the link, or add the id to KNOWN_DEGRADED in tools/build_compendium.py with a reason.")
+    bad = sorted({h for h in re.findall(r'<a href="#([^"]+)"', re.sub(r"<(pre|script)\b.*?</\1>", " ", markup, flags=re.S)) if h not in known})
+    if bad:
+        sys.exit(f"dangling links in the compendium: {bad[:10]}")
+    if degraded:
+        print(f"note: {len(degraded)} Markdown link(s) had no target here and became text: {sorted(set(degraded))[:6]}")
+    return markup
 
 CSS = r"""
 /* Layout: a reading column with a sticky contents rail and a search bar; every colour is a token. */
@@ -537,7 +704,26 @@ details[open] > summary{margin-bottom:8px}
 details.lesson .kick{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-right:6px}
 details.lesson p{font-size:15px;margin:6px 0}
 details.code pre{max-height:640px}
-.page-frame{display:block;width:100%;height:min(82vh,900px);border:1px solid var(--rule);border-radius:10px;background:var(--surface);margin:12px 0 4px}
+.toc ol ol{margin:2px 0 8px 18px;gap:0}
+.toc ol ol li{counter-increment:none}
+.toc ol ol a{font-size:13.5px;padding:3px 10px}
+.toc ol ol a::before{content:none}
+.whatsnew{border:1.5px solid var(--accent);border-radius:10px;background:var(--surface);padding:14px 18px;margin:16px 0 0}
+.wn-label{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+.whatsnew ul{margin:0;padding-left:1.2em;display:grid;gap:5px;font-size:15px}
+.asof{font-family:var(--f-mono);font-size:12.5px;color:var(--ink-2);margin:12px 0 0}
+.sec.part{border-top:3px solid var(--ink)}
+.sec.appendix-head{border-top:3px solid var(--ink)}
+.part-lessons{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.part-lessons a{display:inline-block;font-size:14px;padding:5px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--rule);color:var(--ink);text-decoration:none}
+section.lesson,section.extra{margin-top:30px;padding-top:22px;border-top:1px solid var(--rule)}
+section.lesson > h3,section.extra > h3{margin-top:0}
+.lesson .kick{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+.upd{display:inline-block;margin-left:8px;padding:0 8px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:11px;letter-spacing:.06em}
+.lesson-text p{font-size:15.5px;margin:6px 0}
+details.rb,details.pb-sec{margin:12px 0}
+details.rb > summary,details.pb-sec > summary{font-weight:700}
+.pb-ref{font-size:14.5px;color:var(--ink-2);margin:8px 0}
 .grade{display:inline-block;font-family:var(--f-mono);font-size:11px;font-weight:700;padding:0 6px;border-radius:4px;border:1px solid currentColor;vertical-align:1px}
 .g-p{color:var(--g-p)} .g-s{color:var(--g-s)} .g-r{color:var(--g-r)} .g-d{color:var(--g-d)}
 ul.sources{list-style:none;padding:0;display:grid;gap:5px}
@@ -555,7 +741,7 @@ ul.guide-list a:hover{border-color:var(--accent)}
 @media (max-width:560px){.brand{display:none}.theme-btn{padding:6px 8px}}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.flash{animation:none;outline:3px solid var(--accent)}}
 @media print{
-  .topbar,.toc,.to-top,.page-frame,#open-page{display:none!important}
+  .topbar,.toc,.to-top{display:none!important}
   .shell{display:block;padding:0}
   details{border:0;padding:0}
   pre{max-height:none;white-space:pre-wrap}
@@ -583,7 +769,7 @@ JS = r"""
 
   /* ---------- contents rail: mark the section in view ---------- */
   var tocLinks = document.querySelectorAll('.toc a');
-  var secs = Array.prototype.slice.call(document.querySelectorAll('main .sec'));
+  var secs = Array.prototype.slice.call(document.querySelectorAll('main .sec, main .lesson'));
   function markToc(){
     var line = window.innerHeight * 0.25, cur = secs[0];
     secs.forEach(function(s){ if(s.getBoundingClientRect().top <= line) cur = s; });
@@ -598,7 +784,7 @@ JS = r"""
 
   /* ---------- open whatever hides an element, then show it ---------- */
   function reveal(el){
-    for(var p = el.parentElement; p; p = p.parentElement){ if(p.tagName === 'DETAILS') p.open = true; }
+    for(var p = el; p; p = p.parentElement){ if(p.tagName === 'DETAILS') p.open = true; }
   }
   function show(el){
     reveal(el);
@@ -616,9 +802,9 @@ JS = r"""
   var SEL = 'h3,h4,h5,p,li,tr,pre,summary,blockquote';
   var index = [];
   document.querySelectorAll('main .sec').forEach(function(sec){
-    var title = sec.getAttribute('data-title');
     sec.querySelectorAll(SEL).forEach(function(el){
       if(el.querySelector(SEL)) return;
+      var title = el.closest('[data-title]').getAttribute('data-title');
       var raw = el.tagName === 'TR' ? Array.prototype.map.call(el.cells, function(c){ return c.textContent; }).join(' · ') : el.textContent;
       var text = raw.replace(/\s+/g, ' ').trim();
       if(text.length > 1) index.push({el: el, text: text, low: text.toLowerCase(), sec: title});
@@ -706,17 +892,6 @@ JS = r"""
   });
   document.addEventListener('click', function(e){ if(!e.target.closest('.search')) list.hidden = true; });
 
-  /* ---------- the embedded page, on its own ---------- */
-  var openPage = document.getElementById('open-page');
-  if(openPage){
-    openPage.addEventListener('click', function(){
-      var frame = document.querySelector('.page-frame');
-      var url = URL.createObjectURL(new Blob([frame.getAttribute('srcdoc')], {type: 'text/html'}));
-      var w = window.open(url, '_blank', 'noopener');
-      if(!w) location.href = url;
-    });
-  }
-
   /* ---------- print everything, not only the open parts ---------- */
   window.addEventListener('beforeprint', function(){ document.querySelectorAll('details').forEach(function(d){ d.open = true; }); });
 })();
@@ -729,7 +904,7 @@ doc_html = f"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Orchestrating Claude Compendium</title>
-<meta name="description" content="Everything from the Orchestrating Claude session: the teaching page, the agent harness playbook, research, reviews, decisions and checks, in one searchable offline file.">
+<meta name="description" content="The Orchestrating Claude guide on one page: 17 lessons in six parts, each with its runbook and playbook sections, plus the research and project records, in one searchable offline file.">
 <style>{CSS}</style>
 </head>
 <body>
@@ -747,20 +922,25 @@ doc_html = f"""<!doctype html>
   <nav class="toc" aria-label="Contents"><p>Contents</p><ol>{toc}</ol></nav>
   <main>
     <header class="hero">
-      <h1>Orchestrating Claude: what we built, checked and decided</h1>
-      <p>A 17-lesson teaching page and an agent harness playbook, with the research behind them, three expert reviews,
-      a 13-part rework, four more independent reviews, and the checks that gate every change. One file, offline, searchable.</p>
-      <div class="stats"><span><b>{len(sections)}</b> sections</span><span><b>{words:,}</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>{len(src_rows)}</b> sources</span><span>Page <b>v{PAGE_VERSION}</b>, {PAGE_UPDATED}</span><span>Playbook <b>v{PB_VERSION}</b>, {PB_UPDATED}</span></div>
+      <h1>Orchestrating Claude: the whole guide on one page</h1>
+      <p>Seventeen lessons in six parts. Each lesson carries its runbook and the playbook sections behind it, folded away until you open them.
+      The research and the project records follow. One file, offline, searchable.</p>
+      <p class="asof">{ASOF_LINE}</p>
+      <div class="whatsnew" id="whatsnew">{WHATS_NEW}
+      </div>
+      <div class="stats"><span><b>{len(PARTS)}</b> parts</span><span><b>{len(LESSON_IDS) - 1}</b> lessons</span><span><b>{words:,}</b> words</span><span><b id="stat-blocks">0</b> searchable blocks</span><span><b>{len(src_rows)}</b> sources</span><span>Page <b>v{PAGE_VERSION}</b>, {PAGE_UPDATED}</span><span>Playbook <b>v{PB_VERSION}</b>, {PB_UPDATED}</span></div>
     </header>
     {main}
   </main>
 </div>
 <a class="btn ghost to-top" href="#about">↑ Top</a>
+<script type="application/json" id="compendium-map">{json.dumps(COMPENDIUM_MAP)}</script>
 <script>{JS}</script>
 </body>
 </html>
 """
+doc_html = finish(doc_html)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 with open(OUT, "w", encoding="utf-8") as f:
     f.write(doc_html)
-print(f"wrote {os.path.relpath(OUT, ROOT)}: {len(doc_html) / 1024:.0f} KB, {len(sections)} sections, {words:,} words, {len(src_rows)} sources")
+print(f"wrote {os.path.relpath(OUT, ROOT)}: {len(doc_html) / 1024:.0f} KB, {len(sections)} sections, {len(LESSON_IDS)} lessons, {words:,} words, {len(src_rows)} sources")

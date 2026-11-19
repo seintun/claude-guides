@@ -1,5 +1,7 @@
 # Claude Code cheat sheet
 
+Checked against playbook 0.7 (2026-11-18).
+
 Companion to `agent-harness-playbook.md`. Command names change between releases; type `/` or `/help` to see what your version supports. Limits and versions below follow playbook §3A, checked 2026-11-18 against Claude Code through v2.1.328.
 
 ## 1. Which surface

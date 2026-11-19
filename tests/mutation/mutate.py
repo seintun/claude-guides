@@ -109,6 +109,15 @@ MUTATIONS = [
     ("The evals row points to a section that doesn't exist", "ENTRY.md", sub_once(r"`13\.1 13 law-8`", "`13.9 13 law-8`")),
     ("guide-index.json reports a stale playbook version", "guide-index.json", sub_once(r'"playbook_version": "0\.7"', '"playbook_version": "0.6"')),
     ("The archive index stops listing a snapshot", "archive/README.md", sub_once(r"\| \[v0\.6\]\(v0\.6/\)", "| v0.6")),
+    ("A runbook's as-of line names the previous playbook", "wiki/verify.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.$", "Checked against playbook 0.6 (2026-10-27).")),
+    ("The cheat sheet loses its as-of line", "playbook/claude-cheat-sheet.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.\n\n", "")),
+    ("ENTRY.md's as-of line goes stale", "ENTRY.md", sub_once(r"^Checked against playbook 0\.7 \(2026-11-18\)\.$", "Checked against playbook 0.7 (2026-10-27).")),
+    ("The page header keeps an old evidence date", "site/orchestrating-claude.html", sub_once(r"evidence checked 2026-11-18", "evidence checked 2026-10-27")),
+    ("A contents link points at a lesson that doesn't exist", "site/orchestrating-claude.html", sub_once(r'<li><a href="#rules">Ten rules</a></li>', '<li><a href="#ten-rules">Ten rules</a></li>')),
+    ("A part header drops a lesson", "site/orchestrating-claude.html", sub_once(r'<li><a href="#growing">13 Growing</a></li>', "")),
+    ("A lesson's data-updated date drifts from the what's-new panel", "site/orchestrating-claude.html", sub_once(r'<section id="rules" class="prose" data-updated="2026-11-18">', '<section id="rules" class="prose" data-updated="2026-11-17">')),
+    ("A duplicate id is injected into the compendium's build input", "site/orchestrating-claude.html", sub_once(r'<section id="sources" class="prose"', '<div id="loop"></div>\n<section id="sources" class="prose"')),
+    ("The compendium embeds the page in a frame again", "docs/orchestrating-claude-compendium.html", sub_once(r"<main>", '<main><iframe title="page" srcdoc=""></iframe>')),
 ]
 
 

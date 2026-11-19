@@ -1,5 +1,7 @@
 # Guardrails
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when you set permissions, a sandbox or an allowlist, or let an agent read untrusted
 input.
 

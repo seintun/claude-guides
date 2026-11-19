@@ -1,5 +1,7 @@
 # Orchestrate
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when a task is big enough that you must decide whether the lead agent should hand part
 of it to helper agents.
 

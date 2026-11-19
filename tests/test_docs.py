@@ -23,6 +23,7 @@ RUNBOOKS = ["start-a-task", "grill", "orchestrate", "verify", "run-unattended",
             "guardrails", "build-a-harness", "unstick", "improve"]
 REQUIRED_SECTIONS = ["Steps", "Checklist", "Templates", "Watch out for", "Go deeper"]
 TOP_DIRS = ["site", "playbook", "wiki", "docs", "issues", "research", "checks", "tools", "skills", "tests", "archive"]
+ASOF_RE = r"v(\d+) · updated (\d{4}-\d{2}-\d{2}) · evidence checked (\d{4}-\d{2}-\d{2}) \(Claude Code v(\d+\.\d+\.\d+)\)"
 CHANGED_ON_PURPOSE = "If the change is intended, update the expectation in tests/test_docs.py in the same commit."
 
 
@@ -106,7 +107,8 @@ class Runbooks(unittest.TestCase):
             with self.subTest(runbook=name):
                 rel, text = self.runbook(name)
                 after_title = text.split("\n", 1)[1] if text.startswith("# ") else text
-                first = next((ln for ln in after_title.splitlines() if ln.strip()), "")
+                # The "Checked against playbook ..." as-of line sits right under the title; the opening sentence follows it.
+                first = next((ln for ln in after_title.splitlines() if ln.strip() and not ln.startswith("Checked against playbook ")), "")
                 self.assertRegex(first, r"^Use this page (when|before|after) ",
                                  f"{rel} opens with {first[:60]!r}. The first line under the title must start \"Use this page when\" "
                                  "(or \"before\" / \"after\", as run-unattended and improve do), so a reader knows in one sentence whether "
@@ -185,9 +187,12 @@ class Maps(unittest.TestCase):
 
     def test_page_version_mentions_match_the_footer(self):
         """The page or playbook moves to a new version or date, but a README, the version history or the compendium banner keeps the old one."""
-        m = re.search(r"Version (\d+), last updated (\d{4}-\d{2}-\d{2})\.", read("site/orchestrating-claude.html"))
-        self.assertTrue(m, "site/orchestrating-claude.html lost its footer line 'Version N, last updated YYYY-MM-DD.'")
-        version, updated = m.groups()
+        page = read("site/orchestrating-claude.html")
+        asof = re.findall(ASOF_RE, page)
+        self.assertEqual(len(asof), 2, "site/orchestrating-claude.html must show the as-of line 'vN · updated YYYY-MM-DD · evidence checked YYYY-MM-DD (Claude Code vX.Y.Z)' "
+                         f"in its header and its footer; found {len(asof)}.")
+        self.assertEqual(asof[0], asof[1], f"The page's header and footer as-of lines differ: {asof}")
+        version, updated, checked, cc_version = asof[0]
         want = f"version {version}, last updated {updated}"
         stale = []
         for rel, needle in (("README.md", "**Page:**"), ("site/README.md", "`orchestrating-claude.html`"), ("checks/README.md", "passes all")):
@@ -197,6 +202,12 @@ class Maps(unittest.TestCase):
         sys.path.insert(0, str(ROOT / "tools"))
         import section
         pb_version, pb_updated = section.version()
+        if checked != pb_updated:
+            stale.append(f"page as-of line says evidence checked {checked}; the playbook Version line says {pb_updated}")
+        through = re.search(r"checked through v(\d+\.\d+\.\d+)", read(PLAYBOOK_REL))
+        self.assertTrue(through, "the playbook's Version line must say 'checked through vX.Y.Z', so the page's Claude Code version can be compared")
+        if through.group(1) != cc_version:
+            stale.append(f"page as-of line names Claude Code v{cc_version}; the playbook says it was checked through v{through.group(1)}")
         for rel in ("docs/README.md", "llms.txt"):
             text = read(rel)
             if f"versions 1–{version}" not in text:
@@ -215,11 +226,43 @@ class Maps(unittest.TestCase):
             if not row.startswith(f"| {v} | {d} |"):
                 stale.append(f"docs/version-history.md {heading}: newest row starts {row[:24]!r}, want '| {v} | {d} |'")
         banner = read("docs/orchestrating-claude-compendium.html")
-        for text in (f"Page <b>v{version}</b>, {updated}", f"Playbook <b>v{pb_version}</b>, {pb_updated}"):
+        for text in (f"Page <b>v{version}</b>, {updated}", f"Playbook <b>v{pb_version}</b>, {pb_updated}",
+                     f"v{version} · updated {updated} · evidence checked {checked} (Claude Code v{cc_version})"):
             if text not in banner:
                 stale.append(f"compendium banner lacks {text!r}: rebuild with python3 -I tools/build_compendium.py")
         self.assertFalse(stale, f"These disagree with the page footer ({want}) or the playbook Version line "
                          f"(version {pb_version}, last updated {pb_updated}):" + short(stale))
+
+    def test_updated_lessons_match_the_whats_new_panel(self):
+        """A lesson's data-updated date drifts from the what's-new date and the as-of line, so its visible Updated tag says another day."""
+        page = read("site/orchestrating-claude.html")
+        asof = re.search(ASOF_RE, page)
+        self.assertTrue(asof, "the page has no as-of line")
+        updated = asof.group(2)
+        label = re.search(r'<p class="wn-label">What\'s new · v(\d+) · (\d{4}-\d{2}-\d{2})</p>', page)
+        self.assertTrue(label, "the what's-new panel lost its 'v18 · date' label")
+        self.assertEqual((label.group(1), label.group(2)), (asof.group(1), updated), "the what's-new label differs from the as-of line")
+        panel = re.search(r'<div class="whatsnew" id="whatsnew">(.*?)\n  </div>', page, re.S).group(1)
+        tagged = re.findall(r'<section id="([a-z]+)"[^>]*data-updated="([^"]+)"', page)
+        self.assertTrue(tagged, "no lesson carries data-updated")
+        for sid, date in tagged:
+            self.assertEqual(date, updated, f"#{sid} data-updated is {date}, but the what's-new panel and as-of line say {updated}")
+            self.assertIn(f'href="#{sid}"', panel, f"the what's-new panel does not link #{sid}, which is marked updated")
+
+    def test_reader_files_say_which_playbook_they_were_checked_against(self):
+        """The playbook moves to a new version or date, but a runbook, the cheat sheet or ENTRY.md still says it was checked against the old one."""
+        sys.path.insert(0, str(ROOT / "tools"))
+        import section
+        pb_version, pb_updated = section.version()
+        want = f"Checked against playbook {pb_version} ({pb_updated})."
+        files = [f"wiki/{n}.md" for n in RUNBOOKS + ["records", "case-study"]] + ["playbook/claude-cheat-sheet.md", "ENTRY.md"]
+        stale = []
+        for rel in files:
+            head = read(rel).splitlines()[:6]
+            if want not in head:
+                stale.append(f"{rel}: first lines lack {want!r}")
+        self.assertFalse(stale, "These files do not carry the as-of line under their title:" + short(stale) +
+                         f"\nAdd '{want}' under the title, or rerun the refresh that updates them.")
 
     def test_tools_readme_names_every_script(self):
         """A script is added to tools/ but tools/README.md never mentions it."""

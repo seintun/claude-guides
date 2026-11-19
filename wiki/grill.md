@@ -1,5 +1,7 @@
 # Grill before you plan
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when a request is bigger than a one-line fix and you and the agent don't yet share the design. The grill runs before any plan, spec or code. The `/grill` skill in [skills/grill](../skills/grill/README.md) packages these rules. It runs only when you type `/grill`, never on its own.
 
 ## Steps

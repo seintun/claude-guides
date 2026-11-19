@@ -1,5 +1,7 @@
 # Where records live
 
+Checked against playbook 0.7 (2026-11-18).
+
 Use this page when agent work produces decisions, plans or state that must outlive one chat: a grill, a plan, a long run, delegated helpers, a ticket.
 
 ## Why not the chat
