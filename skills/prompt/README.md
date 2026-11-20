@@ -11,6 +11,17 @@
 | [tests/live/prompt/score.py](../../tests/live/prompt/score.py) | A 21-check rubric drawn from the playbook (Law 3, §7, §9.1, §9.3, §9.4, Templates B, C and H) |
 | [tests/live/prompt/interview.sh](../../tests/live/prompt/interview.sh) | Checks that a vague request gets one question, recommendation first, after looking things up |
 
+## Playbook 0.7 update (2026-11-18)
+
+Rules added from playbook 0.7, each guarded by a test and a mutation:
+
+- A rule that must hold every time becomes a check or a gate, and prompts carry no IMPORTANT or ALL-CAPS emphasis (Law 8).
+- Parallel writers only under the four conditions in §6; the done check sits where the builder cannot edit it (§9.3).
+- Unattended prompts put the cost ceiling in the launch (`--max-budget-usd` on an API key, the usage-credits spend limit on a subscription), give `/goal` a turn bound, and answer the five unattended-run questions (§11.6).
+- The report is plain sentences (§9.4), and each prompt opens with `Guide: playbook <version>, <date>` so a later reader can see which playbook it came from.
+
+These changes were not battle-tested against v7; the live A/B in `tests/live/prompt/` has not been rerun.
+
 ## Where prompts go
 
 `<guide>/prompts/<project>/<YYYY-MM-DD>-<short-name>.md`. The `prompts/` folder is git-ignored apart from its README, so a prompt never reaches the guide's repository or the project's. The skill finds the guide with `git -C "${CLAUDE_SKILL_DIR}" rev-parse --show-toplevel`, the same way `/guide` does. Installed with `npx skills add` (a copy, not a clone), it saves to `~/.claude-guides/prompts/<project>/` instead, still outside every repository. See [wiki/records.md](../../wiki/records.md).

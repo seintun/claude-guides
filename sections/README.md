@@ -39,12 +39,12 @@ One file per playbook section, law, template and cheat-sheet section, so an agen
 | [`10.1`](10.1.md) | 10.1 Facts to design around | 15 |
 | [`10.2`](10.2.md) | 10.2 Layered model | 8 |
 | [`10.3`](10.3.md) | 10.3 Top mistakes | 11 |
-| [`11`](11.md) | 11. Continuous and unattended operation | 99 |
+| [`11`](11.md) | 11. Continuous and unattended operation | 102 |
 | [`11.1`](11.1.md) | 11.1 The long-running harness recipe | 9 |
 | [`11.2`](11.2.md) | 11.2 The hill-climbing recipe | 10 |
 | [`11.3`](11.3.md) | 11.3 Guardrails for any loop | 14 |
 | [`11.4`](11.4.md) | 11.4 Operating model: terminal, cloud, phone | 23 |
-| [`11.5`](11.5.md) | 11.5 Risks of running without watching | 11 |
+| [`11.5`](11.5.md) | 11.5 Risks of running without watching | 14 |
 | [`11.6`](11.6.md) | 11.6 End to end with minimal supervision | 27 |
 | [`12`](12.md) | 12. Toolchain: planning, code host and CI | 102 |
 | [`12.1`](12.1.md) | 12.1 Linear as the planning layer | 23 |

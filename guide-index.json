@@ -712,7 +712,7 @@
    "id": "3A",
    "title": "3A. Claude Code feature map",
    "lines": 45,
-   "chars": 12075,
+   "chars": 12171,
    "path": "sections/3A.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -871,8 +871,8 @@
   {
    "id": "11",
    "title": "11. Continuous and unattended operation",
-   "lines": 99,
-   "chars": 11817,
+   "lines": 102,
+   "chars": 12823,
    "path": "sections/11.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -911,8 +911,8 @@
   {
    "id": "11.5",
    "title": "11.5 Risks of running without watching",
-   "lines": 11,
-   "chars": 1566,
+   "lines": 14,
+   "chars": 2524,
    "path": "sections/11.5.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -920,7 +920,7 @@
    "id": "11.6",
    "title": "11.6 End to end with minimal supervision",
    "lines": 27,
-   "chars": 3977,
+   "chars": 4025,
    "path": "sections/11.6.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1128,7 +1128,7 @@
    "id": "18",
    "title": "18. Operating the harness: gaps to close",
    "lines": 22,
-   "chars": 5464,
+   "chars": 5630,
    "path": "sections/18.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1184,7 +1184,7 @@
    "id": "20",
    "title": "20. Sources",
    "lines": 191,
-   "chars": 25005,
+   "chars": 25143,
    "path": "sections/20.md",
    "source": "playbook/agent-harness-playbook.md"
   },
@@ -1200,7 +1200,7 @@
    "id": "cs:2",
    "title": "2. Commands",
    "lines": 23,
-   "chars": 1785,
+   "chars": 1946,
    "path": "sections/cs-2.md",
    "source": "playbook/claude-cheat-sheet.md"
   },

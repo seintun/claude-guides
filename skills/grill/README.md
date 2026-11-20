@@ -8,6 +8,10 @@ A skill that grills you about an idea or plan before any plan or spec exists. It
 | [test.sh](test.sh) | Cold test: a fresh `claude -p` session grills a fixture project, then the transcript is checked |
 | [check_transcript.py](check_transcript.py) | The 8 checks the test runs on the transcript (grill-1 to grill-8) |
 
+## Playbook 0.7 update (2026-11-18)
+
+The grill now settles how done will be checked (a command or a scenario, playbook §9.1) and, for work that will run unattended, the five questions from §11.6: what done means, how the agent checks itself, what it may touch, what stops it, and who signs off. A test and a mutation guard both.
+
 ## Install
 
 Without a clone, with the [skills CLI](https://github.com/vercel-labs/skills) (Claude Code, Codex, Cursor and other agents):

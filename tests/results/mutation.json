@@ -1,8 +1,8 @@
 {
  "date": "2026-11-19",
- "caught": 101,
+ "caught": 114,
  "not_caught": 0,
- "duration_s": 505.3,
+ "duration_s": 555.5,
  "mutations": [
   {
    "n": 1,
@@ -11,7 +11,7 @@
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
     "ENTRY.md router: size, rows, section ids (0.0s)",
-    "unit and guard tests (3.1s) \u2014 Ran 325 tests in 2.937s FAILED (failures=9, skipped=2) "
+    "unit and guard tests (3.1s) \u2014 Ran 327 tests in 2.945s FAILED (failures=9, skipped=2) "
    ]
   },
   {
@@ -20,7 +20,7 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.038s FAILED (failures=9, errors=2, skipped=2) "
+    "unit and guard tests (3.4s) \u2014 Ran 327 tests in 3.221s FAILED (failures=9, errors=2, skipped=2) "
    ]
   },
   {
@@ -29,7 +29,7 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.057s FAILED (failures=7, skipped=2) "
+    "unit and guard tests (3.7s) \u2014 Ran 327 tests in 3.473s FAILED (failures=7, skipped=2) "
    ]
   },
   {
@@ -39,7 +39,7 @@
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
     "ENTRY.md router: size, rows, section ids (0.0s)",
-    "unit and guard tests (2.5s) \u2014 Ran 325 tests in 2.387s FAILED (failures=48, errors=12, skipped=2) "
+    "unit and guard tests (2.5s) \u2014 Ran 327 tests in 2.405s FAILED (failures=48, errors=12, skipped=2) "
    ]
   },
   {
@@ -47,7 +47,7 @@
    "mutation": "A primary source URL is removed from \u00a720",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.083s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.097s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -55,7 +55,7 @@
    "mutation": "A router row is deleted (row 11)",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.114s FAILED (failures=5, errors=4, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.043s FAILED (failures=5, errors=4, skipped=2) "
    ]
   },
   {
@@ -64,7 +64,7 @@
    "caught": true,
    "failing": [
     "ENTRY.md router: size, rows, section ids (0.0s)",
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.101s FAILED (failures=5, skipped=2) "
+    "unit and guard tests (3.1s) \u2014 Ran 327 tests in 3.002s FAILED (failures=5, skipped=2) "
    ]
   },
   {
@@ -72,7 +72,7 @@
    "mutation": "ENTRY.md tells sessions to read the whole playbook",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.095s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.034s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -81,7 +81,7 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.053s FAILED (failures=10, errors=1, skipped=2) "
+    "unit and guard tests (3.1s) \u2014 Ran 327 tests in 2.980s FAILED (failures=10, errors=1, skipped=2) "
    ]
   },
   {
@@ -89,7 +89,7 @@
    "mutation": "A runbook loses its checklist",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.118s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.038s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -98,7 +98,7 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.104s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.034s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -114,7 +114,7 @@
    "mutation": "The 'playbook wins' rule is dropped from AGENTS.md",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.105s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.030s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -122,7 +122,7 @@
    "mutation": "The privacy hard rule is dropped from AGENTS.md",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.079s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.027s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -130,7 +130,7 @@
    "mutation": "/guide gets a pre-run shell line again",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.099s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.029s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -138,7 +138,7 @@
    "mutation": "The CLAUDE.md snippet becomes an @ import",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.104s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.030s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -146,7 +146,7 @@
    "mutation": "Template M lets Bash comment on the PR",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.135s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.034s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -154,7 +154,7 @@
    "mutation": "Template M loses the secret scrub",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.134s FAILED (failures=3, errors=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.085s FAILED (failures=3, errors=1, skipped=2) "
    ]
   },
   {
@@ -162,7 +162,7 @@
    "mutation": "Template F's deny rule becomes a Write rule that never matches",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.125s FAILED (failures=4, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.049s FAILED (failures=4, skipped=2) "
    ]
   },
   {
@@ -170,7 +170,7 @@
    "mutation": "The Stop hook stops blocking",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.069s FAILED (failures=4, skipped=2) "
+    "unit and guard tests (3.1s) \u2014 Ran 327 tests in 3.002s FAILED (failures=4, skipped=2) "
    ]
   },
   {
@@ -179,7 +179,7 @@
    "caught": true,
    "failing": [
     "page source: static checks, standalone copy current (0.2s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.127s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.058s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -187,7 +187,7 @@
    "mutation": "A wiki page changes without rebuilding the compendium",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.127s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.059s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -197,7 +197,7 @@
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
     "ENTRY.md router: size, rows, section ids (0.1s)",
-    "unit and guard tests (2.6s) \u2014 Ran 258 tests in 2.405s FAILED (failures=8, errors=24, skipped=2) "
+    "unit and guard tests (2.5s) \u2014 Ran 260 tests in 2.343s FAILED (failures=8, errors=24, skipped=2) "
    ]
   },
   {
@@ -206,7 +206,7 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.127s FAILED (failures=5, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.032s FAILED (failures=5, skipped=2) "
    ]
   },
   {
@@ -215,7 +215,7 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.123s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.052s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -223,7 +223,7 @@
    "mutation": "A route bundle agents fetch is deleted",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.139s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.025s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -231,7 +231,7 @@
    "mutation": "README loses the no-clone route for linked agents",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.114s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.024s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -239,7 +239,7 @@
    "mutation": "/guide loses its remote mode",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.099s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.045s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -247,7 +247,7 @@
    "mutation": "/guide loses its default repository",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.132s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.036s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -255,7 +255,7 @@
    "mutation": "ENTRY.md sends every no-clone agent to main",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.126s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.047s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -263,7 +263,7 @@
    "mutation": "/prompt takes any git root with an ENTRY.md as the guide",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.175s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.043s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -271,7 +271,7 @@
    "mutation": "GitHub Pages stops publishing the agent files",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.119s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.053s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -280,7 +280,7 @@
    "caught": true,
    "failing": [
     "privacy: no personal paths, emails or private terms (0.0s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.128s FAILED (failures=4, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.024s FAILED (failures=4, skipped=2) "
    ]
   },
   {
@@ -288,7 +288,7 @@
    "mutation": "ENTRY.md names no real address, only a placeholder",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.122s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.131s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -296,7 +296,7 @@
    "mutation": "README claims the wrong number of scenarios",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.139s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.051s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -304,7 +304,7 @@
    "mutation": "/orchestrate's router sends ordered backlogs to one session per task",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.183s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.061s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -312,7 +312,7 @@
    "mutation": "/orchestrate's runner-ups drift from SKILL.md",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.171s FAILED (failures=12, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.056s FAILED (failures=12, skipped=2) "
    ]
   },
   {
@@ -320,7 +320,7 @@
    "mutation": "/orchestrate's router stops treating high risk as needing judgment",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.128s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.072s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -328,7 +328,7 @@
    "mutation": "check_card.py stops checking the /batch run count",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.131s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.074s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -336,7 +336,7 @@
    "mutation": "check_card.py stops checking that the route follows from the card's answers",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.129s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.055s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -344,7 +344,7 @@
    "mutation": "check_card.py accepts reasoning that cites any rule",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.156s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.072s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -352,7 +352,7 @@
    "mutation": "check_card.py accepts an outcome line with no reason",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.154s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.078s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -360,7 +360,7 @@
    "mutation": "/orchestrate's router reports the wrong rule for route 3",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.185s FAILED (failures=15, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.083s FAILED (failures=15, skipped=2) "
    ]
   },
   {
@@ -368,7 +368,7 @@
    "mutation": "check_card.py accepts reasoning that skips the earlier rules",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.139s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.060s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -376,7 +376,7 @@
    "mutation": "check_card.py accepts rule numbers with no skipped clause",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.158s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.065s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -384,7 +384,7 @@
    "mutation": "check_card.py accepts a generic Plan part as the critic",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.140s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.081s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -392,7 +392,7 @@
    "mutation": "check_card.py accepts high risk without an adversarial reviewer",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.235s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.075s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -400,7 +400,7 @@
    "mutation": "check_card.py lets any part with critic in it pass high risk",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.221s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.079s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -408,7 +408,7 @@
    "mutation": "/orchestrate's workflow threshold drifts from SKILL.md",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.172s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.076s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -416,7 +416,7 @@
    "mutation": "/orchestrate's SKILL.md swaps two routing rules",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.149s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.068s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -424,7 +424,7 @@
    "mutation": "/orchestrate starts work without a yes",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.161s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.110s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -432,7 +432,7 @@
    "mutation": "check_card.py allows two writers on route 1",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.169s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.076s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -440,7 +440,7 @@
    "mutation": "check_card.py stops capping failures",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.198s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.071s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -448,7 +448,7 @@
    "mutation": "An archive snapshot loses its banner",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.145s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.065s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -456,7 +456,7 @@
    "mutation": "An archive snapshot keeps a relative link",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.224s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.084s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -464,7 +464,7 @@
    "mutation": "/guide stops telling a stale clone to pull",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.175s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.076s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -472,7 +472,7 @@
    "mutation": "/guide stops citing evidence grades",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.173s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.090s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -480,7 +480,7 @@
    "mutation": "/guide drops its fixed first line",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.168s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.081s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -488,7 +488,7 @@
    "mutation": "/guide may give superseded or archived advice as current",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.164s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.092s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -496,7 +496,7 @@
    "mutation": "/guide stops flagging an old playbook",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.185s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.071s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -504,7 +504,7 @@
    "mutation": "/guide's description stops triggering on end-to-end runs and evals",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.150s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.169s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -512,7 +512,7 @@
    "mutation": "ENTRY.md loses the end-to-end row (21)",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.153s FAILED (failures=5, errors=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.077s FAILED (failures=5, errors=2, skipped=2) "
    ]
   },
   {
@@ -521,7 +521,7 @@
    "caught": true,
    "failing": [
     "ENTRY.md router: size, rows, section ids (0.0s)",
-    "unit and guard tests (3.2s) \u2014 Ran 325 tests in 3.114s FAILED (failures=5, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.046s FAILED (failures=5, skipped=2) "
    ]
   },
   {
@@ -529,7 +529,7 @@
    "mutation": "guide-index.json reports a stale playbook version",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.167s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.077s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -537,7 +537,7 @@
    "mutation": "The archive index stops listing a snapshot",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.177s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.101s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -545,7 +545,7 @@
    "mutation": "An archived folder's README stops naming a file",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.183s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.125s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -553,7 +553,7 @@
    "mutation": "A runbook's as-of line names the previous playbook",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.240s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.078s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -561,7 +561,7 @@
    "mutation": "The cheat sheet loses its as-of line",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.199s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.080s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -569,7 +569,7 @@
    "mutation": "ENTRY.md's as-of line goes stale",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.197s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.098s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -578,7 +578,7 @@
    "caught": true,
    "failing": [
     "page source: static checks, standalone copy current (0.2s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.172s FAILED (failures=4, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.101s FAILED (failures=4, skipped=2) "
    ]
   },
   {
@@ -587,7 +587,7 @@
    "caught": true,
    "failing": [
     "page source: static checks, standalone copy current (0.2s)",
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.264s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.127s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -596,7 +596,7 @@
    "caught": true,
    "failing": [
     "page source: static checks, standalone copy current (0.2s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.170s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.039s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -605,7 +605,7 @@
    "caught": true,
    "failing": [
     "page source: static checks, standalone copy current (0.2s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.204s FAILED (failures=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.086s FAILED (failures=3, skipped=2) "
    ]
   },
   {
@@ -614,7 +614,7 @@
    "caught": true,
    "failing": [
     "page source: static checks, standalone copy current (0.2s)",
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.185s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.099s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -622,7 +622,7 @@
    "mutation": "The compendium embeds the page in a frame again",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.152s FAILED (failures=2, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.080s FAILED (failures=2, skipped=2) "
    ]
   },
   {
@@ -630,7 +630,7 @@
    "mutation": "/refresh gets disable-model-invocation, so a scheduled run sees plain text",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.194s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.096s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -638,7 +638,7 @@
    "mutation": "/refresh declares allowed-tools, so a scheduled run stalls on a prompt",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.173s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.099s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -646,7 +646,7 @@
    "mutation": "/refresh declares hooks, so a scheduled run stalls on a prompt",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.190s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.088s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -654,7 +654,7 @@
    "mutation": "/refresh loses its never-push, never-publish rule",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.212s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.119s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -662,7 +662,7 @@
    "mutation": "/refresh may commit on main",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.191s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.091s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -670,7 +670,7 @@
    "mutation": "/refresh loses its source cap",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.165s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.091s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -678,7 +678,7 @@
    "mutation": "/refresh loses its subagent cap",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.177s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.089s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -686,7 +686,7 @@
    "mutation": "/refresh loses its stop condition",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.213s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.107s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -694,7 +694,7 @@
    "mutation": "/refresh may fetch X and LinkedIn with a fetch tool",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.196s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.103s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -702,7 +702,7 @@
    "mutation": "/refresh follows instructions found in fetched pages",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.205s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.097s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -710,7 +710,7 @@
    "mutation": "/refresh may commit before the privacy check passes",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.182s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.098s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -718,7 +718,7 @@
    "mutation": "/refresh may skip a failed check",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.174s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.095s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -726,7 +726,7 @@
    "mutation": "/refresh reads a catch-up run from this week",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.194s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.108s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -734,7 +734,7 @@
    "mutation": "/refresh deep may push",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.183s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.095s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -742,7 +742,7 @@
    "mutation": "/refresh deep skips the mutation suite",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.260s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.113s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -750,7 +750,7 @@
    "mutation": "/refresh deep edits the teaching page",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.230s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.092s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -758,7 +758,7 @@
    "mutation": "news/README loses a digest field",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.187s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.123s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -766,7 +766,7 @@
    "mutation": "news/README loses the weekly task prompt",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.232s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.094s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -774,7 +774,7 @@
    "mutation": "news/README lets the scheduled task push",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.6s) \u2014 Ran 325 tests in 3.474s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.111s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -782,7 +782,7 @@
    "mutation": "news/state.json loses the changelog cursor",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.297s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.122s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -790,7 +790,7 @@
    "mutation": "news/state.json names a source that is not on the watchlist",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.275s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.177s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -798,7 +798,7 @@
    "mutation": "The watchlist reads X with a fetch tool",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.7s) \u2014 Ran 325 tests in 3.523s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.100s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -806,7 +806,7 @@
    "mutation": "An adopt item loses its passing check",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.221s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.114s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -814,7 +814,7 @@
    "mutation": "A digest is misnamed",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.3s) \u2014 Ran 325 tests in 3.213s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.104s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -822,7 +822,7 @@
    "mutation": "llms.txt stops listing /refresh",
    "caught": true,
    "failing": [
-    "unit and guard tests (3.4s) \u2014 Ran 325 tests in 3.256s FAILED (failures=1, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.103s FAILED (failures=1, skipped=2) "
    ]
   },
   {
@@ -831,7 +831,111 @@
    "caught": true,
    "failing": [
     "links and anchors in every Markdown file (0.1s)",
-    "unit and guard tests (3.6s) \u2014 Ran 325 tests in 3.434s FAILED (failures=4, errors=3, skipped=2) "
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.103s FAILED (failures=4, errors=3, skipped=2) "
+   ]
+  },
+  {
+   "n": 102,
+   "mutation": "/prompt allows emphasis words again",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.124s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 103,
+   "mutation": "/prompt forgets the playbook version stamp",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.092s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 104,
+   "mutation": "/prompt treats a turn cap as the cost ceiling",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.143s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 105,
+   "mutation": "/prompt forgets the subscription ceiling",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.110s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 106,
+   "mutation": "/orchestrate forgets the subscription ceiling",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.120s FAILED (failures=1, skipped=2) "
+   ]
+  },
+  {
+   "n": 107,
+   "mutation": "/grill stops asking how done is checked",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.108s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 108,
+   "mutation": "/prompt drops the plain-sentence report",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.133s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 109,
+   "mutation": "/prompt drops the parallel-writer conditions",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.106s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 110,
+   "mutation": "/prompt lets the builder edit the done check",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.114s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 111,
+   "mutation": "/prompt drops the five unattended questions",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.093s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 112,
+   "mutation": "/grill drops the five unattended questions",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.3s) \u2014 Ran 327 tests in 3.164s FAILED (failures=2, skipped=2) "
+   ]
+  },
+  {
+   "n": 113,
+   "mutation": "/orchestrate treats --max-turns as the cost ceiling",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.114s FAILED (failures=1, skipped=2) "
+   ]
+  },
+  {
+   "n": 114,
+   "mutation": "/orchestrate drops the /goal turn bound",
+   "caught": true,
+   "failing": [
+    "unit and guard tests (3.2s) \u2014 Ran 327 tests in 3.114s FAILED (failures=1, skipped=2) "
    ]
   }
  ]

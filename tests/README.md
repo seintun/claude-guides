@@ -12,7 +12,7 @@ This repository is a guide that other sessions call. A bad edit here misleads ev
 | Layer | Command | Cost | When |
 |---|---|---|---|
 | Offline suite | `tests/run.sh` (add `-v` for every test) | under 10 seconds, no network | Before every commit. The pre-commit hook runs it, and GitHub Actions runs it on every pull request and every push to `main` ([.github/workflows/tests.yml](../.github/workflows/tests.yml)). CI has no `.privacy-terms`, so it checks only the built-in privacy rules |
-| Mutation suites | `python3 -I tests/mutation/mutate.py --record` (101 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
+| Mutation suites | `python3 -I tests/mutation/mutate.py --record` (114 edits) and `python3 -I tests/mutation/review_edits.py --record` (75 edits from the independent review and the /prompt plans) | a few minutes each, no network | After changing a test, a check or a guarded file |
 | Live routing | `python3 -I tests/live/route_scenarios.py --record` | about $0.20 a run (3 runs by default) | After changing ENTRY.md, a skill, the snippet or the prompt |
 | Live grill | `skills/grill/test.sh` | one short session | After changing `/grill` |
 | Live orchestrate | `python3 -I tests/live/orchestrate/run.py --k 2 --record` | about $2 to $3 for the command as shown (12 cases twice, 24 sessions on Sonnet) | After changing `/orchestrate`, `route.py` or `check_card.py` |
@@ -53,7 +53,7 @@ git config core.hooksPath .githooks
 
 Two mutation suites check that the guards bite. Each starts with a control copy that must pass, then makes one damaging edit per copy and expects `tests/run.sh` to fail there. [mutation/review_edits.py](mutation/review_edits.py) holds the 75 edits from the independent review and later dry runs. It also retries each caught edit after the steps a careful editor would take: rebuilding the generated files, then regenerating the baseline. An edit only counts as caught if it still fails after both. Results are in [results/review-edits.json](results/review-edits.json).
 
-[mutation/mutate.py](mutation/mutate.py) copies the clone into `build/test-tmp/` and makes one catastrophic edit per copy. Then it runs `tests/run.sh` there and expects a failure. The 101 edits include deleting a playbook section or template, renaming a law, truncating the playbook, dropping a source, deleting or breaking a router row, telling sessions to read the whole playbook, deleting a runbook, committing a personal path, dropping the "playbook wins" or privacy rule, and reintroducing each security bug the fact-check review found. A mutation the suite misses is printed as NOT CAUGHT, which means a guardrail is missing. The clone itself is never edited.
+[mutation/mutate.py](mutation/mutate.py) copies the clone into `build/test-tmp/` and makes one catastrophic edit per copy. Then it runs `tests/run.sh` there and expects a failure. The 114 edits include deleting a playbook section or template, renaming a law, truncating the playbook, dropping a source, deleting or breaking a router row, telling sessions to read the whole playbook, deleting a runbook, committing a personal path, dropping the "playbook wins" or privacy rule, and reintroducing each security bug the fact-check review found. A mutation the suite misses is printed as NOT CAUGHT, which means a guardrail is missing. The clone itself is never edited.
 
 ## When a test fails on purpose
 

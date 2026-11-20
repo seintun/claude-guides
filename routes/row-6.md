@@ -95,7 +95,7 @@ Checked against code.claude.com on 2026-10-24, and the subagent, workflow, agent
 5. Have Claude interview you, write a spec, then implement in a fresh session.
 6. Correct course early; `/clear` after repeated failed corrections; `/compact` with a focus.
 7. Review in a fresh context. A reviewer asked to find problems "will always find something", so tell it to skip style, and act only on correctness findings.
-8. Scale out with `claude -p` loops, writer/reviewer sessions and `/batch`, and bound them with `--max-budget-usd` as the cost ceiling and `--max-turns` as a turn bound.
+8. Scale out with `claude -p` loops, writer/reviewer sessions and `/batch`, and bound them with `--max-turns` as a turn bound and a cost ceiling: `--max-budget-usd` on an API key; on a subscription, the plan's usage limits and the usage-credits spend limit (§11.5).
 
 The page now lists "old advice" you can stop following: IMPORTANT and ALL CAPS emphasis, and "Use subagents to protect your context window". It no longer has an "Explore, plan, implement, commit" heading. Items 3, 4, 5, 6 and 8 carry over from the 2026-10-24 reading and were not re-read line by line on 2026-11-18.
 
@@ -108,7 +108,7 @@ The page now lists "old advice" you can stop following: IMPORTANT and ALL CAPS e
 These came out of the independent review. Most are design advice [D]; facts carry their own tags.
 
 - **Model and effort per role.** Route by job: a cheap, fast model for scouts and summaries; the strongest model at high effort for planning, critique and security review; the default model for building. Put it in agent frontmatter (`model:`) so it's versioned, and re-run your eval set before changing it when a new model ships. [D]
-- **Cost and rate limits.** Cap fan-outs in the lead's prompt (agents per task, tool calls per agent). Set `--max-budget-usd` on headless runs. Read cost from OpenTelemetry or the Console, not the local `/usage` estimate. No per-session dollar cap for cloud sessions was found. [P for the facts; D for the caps]
+- **Cost and rate limits.** Cap fan-outs in the lead's prompt (agents per task, tool calls per agent). Set `--max-budget-usd` on headless runs, with headroom, because it is a soft cap on an estimate. On an API key, read cost from OpenTelemetry or the Console, not the local `/usage` estimate; on a subscription, set a usage-credits spend limit and read the plan bars in `/usage` (§11.5). No per-session dollar cap for cloud sessions was found. [P for the facts; D for the caps]
 - **Runs that die quietly.** API errors and rate limits fire `StopFailure` instead of `Stop`, so the Stop gate never runs. Add a `StopFailure` hook that writes a marker and notifies you. [P for the event; D for the hook]
 - **Logs and privacy.** Tool-call logs capture secrets and personal data. Redact before storing, keep logs where the agent can't edit them, set a retention period, and limit who can read them. Check your provider's data-retention terms before sending client data. [D]
 - **Kill switch.** Before the first unattended run, write a one-page runbook: disable the scheduled task or workflow, stop or archive the session, revoke the tokens it used, revert its branch. [D]

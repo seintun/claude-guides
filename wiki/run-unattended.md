@@ -26,8 +26,11 @@ verification artifacts at the end (D).
 4. **Write the stop condition and the retry cap.** Stop when every check passes, or after N
    iterations, minutes or dollars, and stop after two failures with the same cause (D). Do not lean
    on the Stop-hook continuation cap of 8, because it is a backstop (P).
-5. **Set a cost ceiling.** `--max-budget-usd` (or a spend limit) is the cost ceiling; `--max-turns`
-   is a turn bound, not a cost cap. Cap the fan-out in the lead's prompt (P, D). Read cost from OpenTelemetry or the Console, not the local `/usage` estimate (P).
+5. **Set a cost ceiling.** On an API key, `--max-budget-usd` is the cost ceiling; it is a soft cap on
+   Claude Code's estimate, so leave headroom. On a subscription, the plan's usage limits and the
+   usage-credits spend limit (`/usage-credits`) are the ceiling (P; playbook §11.5). `--max-turns` is a
+   turn bound, not a cost cap. Cap the fan-out in the lead's prompt (P, D). Read cost from OpenTelemetry
+   or the Console on an API key, or the plan bars in `/usage` on a subscription (P).
 6. **Give the results a home outside the chat.** Use a file, a ticket or a PR comment (D). Cloud runs
    start from a fresh clone, so keep loop state in a ticket, a PR comment or a named branch (P). For
    work that spans sessions, use an initializer session, a JSON feature list that starts at
@@ -59,7 +62,7 @@ verification artifacts at the end (D).
 
 - [ ] The prompt names an end condition: all checks pass, or N iterations, minutes or dollars.
 - [ ] A retry cap stops the run after two failures with the same cause.
-- [ ] A cost ceiling is set (`--max-budget-usd` or a spend limit), a turn bound is set, and I know where I read the real cost.
+- [ ] A cost ceiling is set (`--max-budget-usd` on an API key, the usage-credits spend limit on a subscription), a turn bound is set, and I know where I read the real cost.
 - [ ] I listed what pauses the run, and I know who answers when it does.
 - [ ] Results land in a file, a ticket or a PR comment, not only in the chat.
 - [ ] Running the task twice cannot send, charge or create twice.

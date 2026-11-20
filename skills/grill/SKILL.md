@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 Grill the user about: $ARGUMENTS
 
-The goal is shared understanding before any plan or spec. Follow these rules (playbook §5.2 and Template K):
+The goal is shared understanding before any plan or spec. Follow these rules (playbook §5.2, §9.1, §11.6 and Template K):
 
 1. **Look before you ask.** Read the code, docs and data first; for a wide sweep, send read-only helpers in parallel. Never ask the user a fact you can find, or one the request or an earlier answer already gives. Tell them what you found instead. If a search finds nothing, say what you searched, then ask it as a fact question.
 2. **One question per message.** Each question asks one thing, never "who, when and what it costs" at once. Settle prerequisite questions before the ones that depend on them, and keep the rest of the design tree to yourself.
@@ -18,7 +18,7 @@ The goal is shared understanding before any plan or spec. Follow these rules (pl
    - A question too big for 4 options gets split, not crammed.
    - A fact question (a number, date, duration, count or name) is asked open, with no options. No option and no question text carries a figure the user, the project or a lookup did not supply: one click would turn your guess into the user's fact.
    - Use the AskUserQuestion tool when it is available, with one question per call. Without it, ask in plain text with options lettered A to D, recommendation first.
-4. **Cover the ground:** the problem (who struggles and when, and what it costs them), where the work lives (the code, data and records it touches), the outcome metric, the appetite (time budget), no-gos, rabbit holes, failure cases, the riskiest assumption with the cheapest test of it, and open questions.
+4. **Cover the ground:** the problem (who struggles and when, and what it costs them), where the work lives (the code, data and records it touches), the outcome metric, how done will be checked (a command or a scenario someone can run, not an adjective), the appetite (time budget), no-gos, rabbit holes, failure cases, the riskiest assumption with the cheapest test of it, and open questions. If the work will run unattended, also settle the five questions: what done means, how the agent checks itself, what it may touch, what stops it, and who signs off.
 5. **Log every decision** in `docs/discovery/<topic>.md`, or in the plan's Decisions list if one exists: the date, the question, the answer and the reason. Write it as you go, not at the end, so a compacted or new session can resume from the file. Commit it with the branch, and link it from the issue if there is one; don't copy it into the ticket.
    - "I don't know" is not a decision. Log it under open questions as `UNKNOWN: <why>`, and mark anything you filled in yourself `ASSUMED: <text>`. One gap per `UNKNOWN` line: never merge gaps, or relabel an unknown as assumed, to make the list look shorter.
    - Write relative terms ("next Friday", "this quarter", "the owner") as absolute dates and named people. Ask once if one is ambiguous.

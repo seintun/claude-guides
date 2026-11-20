@@ -21,6 +21,10 @@ It is model-invocable: Claude can load it on its own when a task looks multi-ste
 
 SKILL.md is self-contained, so an installed copy works without this repository. The section numbers live here only.
 
+## Playbook 0.7 update (2026-11-18)
+
+Facts added from the 0.7 feature map (§3A, checked through Claude Code v2.1.328): the workflow warning above 25 agents or 1.5M tokens, the approval routes a workflow needs from `claude -p`, per-call subagent effort, and the rule that a `/goal` condition carries a turn bound while `--max-budget-usd`, not `--max-turns`, is the cost ceiling. A test and a mutation guard the last two.
+
 ## Files
 
 | File | What it is |

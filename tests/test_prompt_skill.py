@@ -62,6 +62,18 @@ class SkillRules(unittest.TestCase):
             "self-chosen values marked": "once at the top of the prompt as `ASSUMED: <text>`, and each gap there as `UNKNOWN: <why>`",
             "relative terms resolved": "Write relative terms (",
             "fresh review before saving": "**Get a fresh review before saving**",
+            # Playbook 0.7 (2026-11-18): Law 8, §6, §9.3, §11.6.
+            "checks over emphasis": "becomes a check or a gate",
+            "no emphasis words": "Write no IMPORTANT, CRITICAL or ALL-CAPS emphasis",
+            "parallel-writer conditions": "Parallel writers fit only when each has an isolated checkout",
+            "done check out of reach": "Put the done check where the builder cannot edit it",
+            "cost ceiling at launch": "Put the cost ceiling in the launch",
+            "subscription ceiling": "on a subscription, the plan's usage limits and the usage-credits spend limit",
+            "budget is a soft cap": "a soft cap on estimated spend",
+            "goal needs a turn bound": "it adds a turn bound",
+            "five unattended questions": "the prompt answers five questions",
+            "playbook version stamp": "Line 1 is `Guide: playbook <version>, <date>`",
+            "plain-sentence report": "Write it in short plain sentences a reviewer can read at a glance (§9.4).",
             "deterministic check before review": 'check_prompt.py" <draft> --source <decision log>',
             # Round 2 of the dry run: self-checks missed every conflict, and gaps were merged to stay under the cap.
             "no self-review in place of the fresh one": "don't review your own draft in its place",
