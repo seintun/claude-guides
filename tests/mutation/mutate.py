@@ -158,6 +158,7 @@ MUTATIONS = [
     ("/prompt drops the five unattended questions", "skills/prompt/SKILL.md", sub_once(r"the prompt answers five questions", "the prompt is reviewed")),
     ("/grill drops the five unattended questions", "skills/grill/SKILL.md", sub_once(r"run unattended, also settle the five questions", "run unattended, plan the schedule")),
     ("/orchestrate treats --max-turns as the cost ceiling", "skills/orchestrate/SKILL.md", sub_once(r"`--max-turns` bounds turns, not cost", "`--max-turns` is the cost ceiling")),
+    ("check_prompt.py crashes on a missing file", "skills/prompt/check_prompt.py", sub_once(r"        sys\.exit\(2\)", "        raise")),
     ("/orchestrate drops the /goal turn bound", "skills/orchestrate/SKILL.md", sub_once(r"and always carries a turn bound", "and runs until done")),
 ]
 

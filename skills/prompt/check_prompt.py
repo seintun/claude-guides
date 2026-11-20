@@ -1,7 +1,7 @@
 """Check a prompt written by /prompt for the mistakes prose rules miss on long prompts.
 
 Usage: python3 -I skills/prompt/check_prompt.py <prompt.md> [--source <decision-log or request file>]...
-Prints one PASS, FAIL or WARN line per check and exits 1 on any FAIL. WARN lines need a person's eye:
+Prints one PASS, FAIL or WARN line per check and exits 1 on any FAIL, or 2 when a file can't be read. WARN lines need a person's eye:
 fix each one, or mark the figure ASSUMED.
 
 The checks come from the grill-then-prompt dry runs (tests/live/grill-prompt/results.md):
@@ -52,11 +52,22 @@ def plain(line):
 args = sys.argv[1:]
 if not args or args[0].startswith("-"):
     sys.exit(__doc__)
+
+
+def read(name):
+    """The file's text, or a one-line message and exit code 2 when it can't be read."""
+    try:
+        return open(name, encoding="utf-8").read()
+    except OSError as e:
+        print(f"check_prompt: cannot read {name}: {e.strerror}. Pass a real path, not a placeholder such as <file>.", file=sys.stderr)
+        sys.exit(2)
+
+
 path, sources = args[0], []
+text = read(path)
 for i, a in enumerate(args):
     if a == "--source" and i + 1 < len(args):
-        sources.append(open(args[i + 1], encoding="utf-8").read())
-text = open(path, encoding="utf-8").read()
+        sources.append(read(args[i + 1]))
 source_text = "\n".join(sources).lower()
 
 lines, in_fence = [], False  # (line number, text) outside fenced code blocks
