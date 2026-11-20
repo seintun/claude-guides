@@ -90,6 +90,8 @@ Raw Markdown pages, read 2026-11-18. Base URLs: [changelog](https://code.claude.
 | Compaction re-reads "up to five" recent files, most recently modified first; skills are "capped at 5,000 tokens per skill and 25,000 tokens total" | TRUE | context window | Confirmed on the raw page |
 | Best practices, "Let Claude run without you": "it's worth going through these five questions"; item 4 asks what stops the run (`--max-turns`, `--max-budget-usd`, a spend limit); item 5 asks where the result goes and who signs off | TRUE | best practices | `--max-turns` semantics are not documented on the headless page |
 | Best practices, "Deterministic and non-deterministic instructions": hooks for rules with "zero exceptions" | TRUE | best practices | The page does not state a ladder; the ladder in Law 8 is design advice [D] |
+| `--max-budget-usd` (print mode only) checks a client-side cost estimate that "can differ from your bill"; spend can pass it by one response plus running subagents; results end `error_max_budget_usd` or `error_max_turns` (Agent SDK) | TRUE | CLI reference; agent loop; cost tracking | Checked 2026-11-19. No page states an exit code beyond "non-zero" on failure |
+| Subscribers: session and weekly limits, then usage credits with a monthly spend limit (`/usage-credits`); the `/usage` session dollar figure "isn't relevant for billing purposes" for Pro, Max and Ultra | TRUE | costs | Checked 2026-11-19. Whether `--max-budget-usd` binds on a subscription sign-in: NOT FOUND |
 | Changelog v2.1.328 is dated 19 November 2026 on the changelog page | TRUE | changelog | One day after the research date. Six version numbers were not found (2.1.297, 298, 313, 315, 320, 324), so the playbook does not call the list complete |
 
 ### Research papers and METR

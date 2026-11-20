@@ -34,7 +34,10 @@ Sections and templates this route names, in order: 11.1, 11.3, 11.5, 10.2, 18, H
 - Auto-fix replies can trigger comment-driven deploy bots such as Atlantis or Terraform Cloud. [P: Anthropic's warning]
 - `claude -p` without `--bare` runs repo-supplied hooks and MCP servers with no trust prompt. [P]
 - A session shared publicly can expose code and credentials. [P]
-- We found no per-session dollar cap for cloud sessions; the docs are silent either way. [D] `--max-budget-usd` works only in print mode (`claude -p`); `/usage` is a local estimate, and the Console is authoritative. [P]
+- We found no per-session dollar cap for cloud sessions; the docs are silent either way. [D]
+- `--max-budget-usd` works only in print mode (`claude -p`). It checks Claude Code's own client-side cost estimate, not your bill, and spend can pass it by one response plus any subagents still running, so leave headroom. A run that hits it ends with `error_max_budget_usd`; one that hits `--max-turns` ends with `error_max_turns` and no final response (Agent SDK result subtypes). [P: CLI reference, agent loop]
+- On a subscription (Pro, Max, Ultra, Team or Enterprise) the plan is the bill: its session and weekly usage limits, then usage credits up to a monthly spend limit you set in claude.ai Settings > Usage (`/usage-credits`). Team and Enterprise admins set spend limits per organization, group or member. [P: costs] The docs don't say whether `--max-budget-usd` binds on a subscription, so treat it there as a brake on estimated spend, not the ceiling. [D]
+- On an API key, `/usage` is a local estimate and the Console is authoritative. For subscribers its session dollar figure "isn't relevant for billing"; the plan bars and the usage-credits row are what count. [P: costs]
 - Teleport forks history silently. [P]
 - A cloud scheduled task can stop and wait for an answer. Check for paused runs, not only failed ones. [P]
 - An uncapped loop will run all night. [P: bug report, 6,239 iterations]
@@ -56,7 +59,7 @@ Sections and templates this route names, in order: 11.1, 11.3, 11.5, 10.2, 18, H
 These came out of the independent review. Most are design advice [D]; facts carry their own tags.
 
 - **Model and effort per role.** Route by job: a cheap, fast model for scouts and summaries; the strongest model at high effort for planning, critique and security review; the default model for building. Put it in agent frontmatter (`model:`) so it's versioned, and re-run your eval set before changing it when a new model ships. [D]
-- **Cost and rate limits.** Cap fan-outs in the lead's prompt (agents per task, tool calls per agent). Set `--max-budget-usd` on headless runs. Read cost from OpenTelemetry or the Console, not the local `/usage` estimate. No per-session dollar cap for cloud sessions was found. [P for the facts; D for the caps]
+- **Cost and rate limits.** Cap fan-outs in the lead's prompt (agents per task, tool calls per agent). Set `--max-budget-usd` on headless runs, with headroom, because it is a soft cap on an estimate. On an API key, read cost from OpenTelemetry or the Console, not the local `/usage` estimate; on a subscription, set a usage-credits spend limit and read the plan bars in `/usage` (§11.5). No per-session dollar cap for cloud sessions was found. [P for the facts; D for the caps]
 - **Runs that die quietly.** API errors and rate limits fire `StopFailure` instead of `Stop`, so the Stop gate never runs. Add a `StopFailure` hook that writes a marker and notifies you. [P for the event; D for the hook]
 - **Logs and privacy.** Tool-call logs capture secrets and personal data. Redact before storing, keep logs where the agent can't edit them, set a retention period, and limit who can read them. Check your provider's data-retention terms before sending client data. [D]
 - **Kill switch.** Before the first unattended run, write a one-page runbook: disable the scheduled task or workflow, stop or archive the session, revoke the tokens it used, revert its branch. [D]

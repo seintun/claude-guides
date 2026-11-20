@@ -132,7 +132,9 @@ for n, l in lines:
     if MARKED.search(l):
         for f in set(figures(l)):
             assumed.setdefault(f, []).append(n)
-loose = [(n, f) for n, l in lines if not MARKED.search(l) and not re.match(r"^\s*#", l)
+# The "Guide: playbook <version>, <date>" stamp (skill step 5) is read from the guide's index, not chosen.
+STAMP = re.compile(r"^\s*Guide: playbook ")
+loose = [(n, f) for n, l in lines if not MARKED.search(l) and not re.match(r"^\s*#", l) and not STAMP.match(l)
          for f in figures(l) if f not in traced and f not in assumed]
 report("WARN" if loose else "PASS", "c-6 Every figure traces to a source, a marked line or the skill",
        "; ".join(f"line {n}: {t!r}" for n, t in loose[:12]) + (f" (+{len(loose) - 12} more)" if len(loose) > 12 else "") if loose else "")

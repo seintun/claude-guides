@@ -278,6 +278,11 @@ class GrillSkillRules(unittest.TestCase):
         self.assertRegex(self.body, re.compile(pattern, re.I | re.S),
                          f"skills/grill/SKILL.md lost its rule: {what}. Restore it, or update this test and playbook Template K together.")
 
+    def test_asks_how_done_is_checked_and_the_unattended_questions(self):
+        """/grill settles the done check and, for unattended work, the five questions (playbook §9.1, §11.6)."""
+        self.rule(r"how done will be checked", "ask how done will be checked")
+        self.rule(r"run unattended, also settle the five questions", "settle the five unattended-run questions")
+
     def test_one_question_per_message(self):
         """/grill asks one question per message, so the user is never handed a list to answer."""
         self.rule(r"one question per message", "one question per message")

@@ -47,7 +47,7 @@ Runner-ups, the nearest alternative to each route: 1 to 2, 2 to 1, 3 to 4 (to 2 
 | 3. Parallel builders in worktrees | B is yes and each part has its own check. `/batch` splits one change into 5 to 30 worktree subagents that each open a PR [P]; more parts than that means several runs | Grows with the number of parts | Wall-clock drops |
 | 4. One session per task | E is yes, there is more than one item, the items have no order between them, and each ends in its own branch or PR you may want to open and steer | A full context each | Parallel, and survives this session |
 | 5. Hub plus builder sessions | E is yes and the items have an order (blocked-by links). Route 5 beats route 4 whenever an order exists | A small hub plus one session per item | Long-running |
-| 6. Workflow script | A read-only fan-out over dozens of items (20 or more), with no human gate mid-run. Paid plans; up to 16 agents at once and 1,000 per run; no mid-run user input [P] | Many agents | Fast, but no way to steer mid-run |
+| 6. Workflow script | A read-only fan-out over dozens of items (20 or more), with no human gate mid-run. Paid plans; up to 16 agents at once and 1,000 per run, with a warning above 25 agents or 1.5M tokens; no mid-run user input. From `claude -p` a workflow needs an approval route: an allow rule, auto mode, a PreToolUse hook that returns allow, `--permission-prompt-tool`, or an SDK `canUseTool` callback [P] | Many agents | Fast, but no way to steer mid-run |
 
 Rules that hold on every route:
 
@@ -56,6 +56,7 @@ Rules that hold on every route:
 - Agent teams are experimental, give teammates no worktree isolation, and use about 7x the tokens of a standard session when teammates run in plan mode [P]. Prefer routes 3 to 5 for writing code [D].
 - The orchestrator-workers pattern costs about 15x the tokens of a chat [P]. Pay that only for parallel reading, an independent judgment, or context that would overflow.
 - With F yes, add a fresh critic on the plan and an adversarial review of the diff, and keep a human sign-off [D].
+- A `/goal` condition cites output the session prints, because its evaluator runs no commands, and always carries a turn bound [P]. A headless run's cost ceiling is `--max-budget-usd` on an API key, a soft cap on estimated spend, or on a subscription the plan's usage limits and the usage-credits spend limit [P]; `--max-turns` bounds turns, not cost [D].
 
 ## 4. Pick a model and effort for each part
 
@@ -71,7 +72,7 @@ The ladder built on that [D]. Climb one rung at a time, and after a failure move
 | 4 | Opus, high | High-risk work, adversarial review, or an Opus-medium attempt that failed |
 | 5 | A human | The same failure twice on rung 4 |
 
-Set a subagent's effort with `effort` in its frontmatter, and a session's with `--effort` or `/effort` [P].
+Set a subagent's effort with `effort` in its frontmatter or per call with the Agent tool's `effort` parameter (v2.1.292), and a session's with `--effort` or `/effort` [P].
 
 ## 5. Write the routing card and stop
 

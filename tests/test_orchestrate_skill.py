@@ -89,6 +89,13 @@ class ProseMatchesCode(unittest.TestCase):
         self.assertIn(f"one `/batch` run per {route.BATCH_MAX} parts", SKILL, "SKILL.md must say how many /batch runs a task needs.")
         self.assertIn(f"Start {route.MAX_BUILDERS} builders at most", SKILL, "SKILL.md must state the builder cap route.py uses.")
 
+    def test_goal_bound_and_cost_ceiling(self):
+        """/goal carries a turn bound and the cost ceiling is --max-budget-usd, not --max-turns (playbook §3A, §11.6)."""
+        self.assertIn("always carries a turn bound", SKILL, "SKILL.md must say a /goal condition carries a turn bound.")
+        self.assertIn("`--max-turns` bounds turns, not cost", SKILL, "SKILL.md must not treat --max-turns as a cost ceiling.")
+        self.assertIn("on a subscription the plan's usage limits and the usage-credits spend limit", SKILL,
+                      "SKILL.md must name the subscription cost ceiling, since --max-budget-usd checks only an estimate.")
+
     def test_rule_order_matches_the_router(self):
         """The five ordered rules appear in the same order as the branches in route.route()."""
         steps = re.findall(r"^(\d)\. (.+)$", SKILL.split("## 3. Pick the route", 1)[1].split("| Route |", 1)[0], re.M)

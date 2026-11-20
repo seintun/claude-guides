@@ -146,6 +146,19 @@ MUTATIONS = [
     ("A digest is misnamed", "news/week-48.md", lambda t: "# Digest week 48\n"),
     ("llms.txt stops listing /refresh", "llms.txt", sub_once(r"^- \[skills/refresh/SKILL\.md\].*\n", "")),
     ("The news folder loses its README", "news/README.md", None),
+    ("/prompt allows emphasis words again", "skills/prompt/SKILL.md", sub_once(r"Write no IMPORTANT, CRITICAL or ALL-CAPS emphasis in instructions, apart from the fixed section names and tags: current models over-apply it \(playbook Law 8\)\.", "Use IMPORTANT for rules that matter.")),
+    ("/prompt forgets the playbook version stamp", "skills/prompt/SKILL.md", sub_once(r"Line 1 is `Guide: playbook <version>, <date>`", "Line 1 is the title")),
+    ("/prompt treats a turn cap as the cost ceiling", "skills/prompt/SKILL.md", sub_once(r"Put the cost ceiling in the launch: on an API key, `--max-budget-usd`", "Cap cost with `--max-turns`")),
+    ("/prompt forgets the subscription ceiling", "skills/prompt/SKILL.md", sub_once(r"; on a subscription, the plan's usage limits and the usage-credits spend limit \(§11\.5\)", "")),
+    ("/orchestrate forgets the subscription ceiling", "skills/orchestrate/SKILL.md", sub_once(r", or on a subscription the plan's usage limits and the usage-credits spend limit", "")),
+    ("/grill stops asking how done is checked", "skills/grill/SKILL.md", sub_once(r"how done will be checked \(a command or a scenario someone can run, not an adjective\), ", "")),
+    ("/prompt drops the plain-sentence report", "skills/prompt/SKILL.md", sub_once(r" Write it in short plain sentences a reviewer can read at a glance \(§9\.4\)\.", "")),
+    ("/prompt drops the parallel-writer conditions", "skills/prompt/SKILL.md", sub_once(r"Parallel writers fit only when each has an isolated checkout", "Parallel writers fit whenever the work is large")),
+    ("/prompt lets the builder edit the done check", "skills/prompt/SKILL.md", sub_once(r"Put the done check where the builder cannot edit it", "Let the builder keep the done check current")),
+    ("/prompt drops the five unattended questions", "skills/prompt/SKILL.md", sub_once(r"the prompt answers five questions", "the prompt is reviewed")),
+    ("/grill drops the five unattended questions", "skills/grill/SKILL.md", sub_once(r"run unattended, also settle the five questions", "run unattended, plan the schedule")),
+    ("/orchestrate treats --max-turns as the cost ceiling", "skills/orchestrate/SKILL.md", sub_once(r"`--max-turns` bounds turns, not cost", "`--max-turns` is the cost ceiling")),
+    ("/orchestrate drops the /goal turn bound", "skills/orchestrate/SKILL.md", sub_once(r"and always carries a turn bound", "and runs until done")),
 ]
 
 

@@ -19,5 +19,5 @@
 | Keep going until a condition holds | `/goal <condition>`: an evaluator reads the transcript, runs no commands, so name output the session shows and add a turn bound ("or stop after 20 turns") |
 | Split mechanical changes into many PRs | `/batch` (5 to 30 worktree subagents, each opening a PR) |
 | Fan out over dozens of items | Workflows: `/workflows`, `/deep-research`. Up to 16 agents at once, 1,000 per run; no mid-run input, so a run pauses only for permission prompts and usage limits |
-| Cap a headless run | `claude -p --max-budget-usd <n>` is the cost ceiling; `--max-turns <n>` is a turn bound |
+| Cap a headless run | `--max-turns <n>` is a turn bound. On an API key, `claude -p --max-budget-usd <n>` is the cost ceiling (a soft cap on estimated spend). On a subscription, the plan's usage limits and your usage-credits spend limit (`/usage-credits`) are the ceiling |
 | Clean up | `claude purge` (was `claude project purge`, v2.1.288) |
