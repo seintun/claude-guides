@@ -389,6 +389,14 @@ class PromptCheck(unittest.TestCase):
         self.assertEqual(bad, {check: level}, out.stdout)
         self.assertEqual(out.returncode, 1 if level == "FAIL" else 0, out.stdout)
 
+    def test_missing_file_gives_a_message_not_a_traceback(self):
+        script = str(ROOT / "skills" / "prompt" / "check_prompt.py")
+        for args in (["no-such-prompt.md"], [str(ROOT / "tests" / "fixtures" / "prompt-check" / "good.md"), "--source", "no-such-log.md"]):
+            out = subprocess.run([sys.executable, "-I", script, *args], capture_output=True, text=True)
+            self.assertEqual(out.returncode, 2, out.stderr)
+            self.assertNotIn("Traceback", out.stderr)
+            self.assertIn("cannot read no-such-", out.stderr)
+
     def test_good_prompt_passes_every_check(self):
         out, lines = self.check(self.GOOD)
         self.assertEqual(out.returncode, 0, out.stdout + out.stderr)
