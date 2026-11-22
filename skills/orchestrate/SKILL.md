@@ -62,7 +62,7 @@ Rules that hold on every route:
 
 What the docs say [P]: Sonnet handles most coding; Opus is for complex architecture or multi-step reasoning; Haiku suits simple subagent tasks. The 5.5 models default to `medium` effort. `high` is for work where verification matters or edge cases are likely; `max` is prone to overthinking, so test it before adopting it broadly.
 
-The ladder built on that [D]. Climb one rung at a time, and after a failure move up a rung rather than retrying on the same one.
+The ladder built on that [D]. Climb one rung at a time, and after a failure move up a rung rather than retrying on the same one. Count turns, not token price: the cheapest models often take 2 to 3 times the turns on multi-step work and end up costing more, so Haiku stays on reading and exact transcription, and Sonnet is the floor for every reviewer and every builder that writes code [D].
 
 | Rung | Model and effort | Use for |
 |---|---|---|
@@ -105,13 +105,15 @@ Go, or change the route?
 
 The user approves the card; you write every brief and prompt the route needs. Show the briefs in one block as you send them, so the user can stop you there.
 
+Write each brief for a stranger: the agent sees nothing else. An Opus brief can stop at the goal, the constraints and what done looks like; a Sonnet or Haiku brief also names the exact files and the checks it can run, wherever you know them. Pass long inputs as a file and send the path, never pasted history [D].
+
 | Route | How to start it |
 |---|---|
 | 1 | Do the work yourself in this session |
 | 2 | Spawn each helper with the Agent tool, on the model and effort its Parts line names, with a helper brief |
-| 3 | With 5 parts or more, run `/batch` with one instruction: the change, each part's check, and the scope. With fewer, spawn one worktree subagent (`isolation: worktree`) per part, each with a builder brief |
+| 3 | With 5 parts or more, run `/batch` with one instruction: the change, each part's check, the scope, "open draft PRs", and "do not edit the checks or their tests". With fewer, spawn one worktree subagent (`isolation: worktree`) per part, each with a builder brief |
 | 4 | Start one session per task, each with a builder brief |
-| 5 | Start the hub with the hub prompt; the hub starts builders with builder briefs |
+| 5 | Start the hub with the hub prompt, and paste the builder template into it; the hub starts builders with builder briefs |
 | 6 | Write the workflow script. The user's yes to this card is the opt-in it needs |
 
 ```text
@@ -122,14 +124,19 @@ Write long output to <path> and return the path. Budget: <N tool calls>. Stop an
 results when <condition>.
 
 Builder: Item <id>: <outcome>. Check that must pass: <command>. Only touch <files or area>; message
-the hub (or report back) if you need more. Make the check pass test-first, commit, and open a PR whose
-body lists each check as PASS or FAIL with its command. Then report "<id> PR <url> receipt: <PASS|FAIL>
-<command>". After 2 failures with the same cause, stop and report "<id> BLOCKED: <why>". Never merge.
+the hub (or report back) if you need more. Do not edit the check or its tests unless this brief says
+so. Make the check pass test-first, commit, and open a draft PR whose body lists each check as PASS or
+FAIL with its command. Do not mark it ready. Then report "<id> PR <url> receipt: <PASS|FAIL> <command>".
+After 2 failures with the same cause, stop and report "<id> BLOCKED: <why>" with the failing command
+and the last lines of its output. Never merge.
 
-Hub: /goal Every item in <backlog> has a PR with a PASS receipt or is marked Blocked, and your last
-message prints the ledger (id, state, session, branch, PR, attempts, last receipt); or stop after
-<N> turns. Start at most 3 builders at once, only for items whose blockers are done and whose
-files do not overlap a running builder's.
+Hub: /goal Every item in <backlog> has a PR with a PASS receipt and an end-panel receipt or is
+marked Blocked, and your last message prints the ledger; or stop after <N> turns. Keep the ledger
+in <ledger file>: one row per item (id, state, session, branch, PR, attempts, last receipt, panel),
+written when a builder starts and updated on every report. After context compaction, read the ledger
+first; an item marked running stays running until its session reports or is checked, never started
+again. Start at most 3 builders at once, only for items whose blockers are done and whose files do
+not overlap a running builder's.
 ```
 
 While it runs:
@@ -137,6 +144,9 @@ While it runs:
 - A helper's report is a claim. Re-check any claim that drives a decision before you act on it [D].
 - A reviewer gets the work and the criteria, never your conclusion [D].
 - Mark every check PASS, FAIL or NOT RUN, with its command. NOT RUN is not PASS [D].
+- When a BLOCKED item moves up a rung, the new builder's brief carries the failing command and the output the old builder reported, as written, not your summary of it [D].
+- On route 3 with plain worktree subagents and more than 3 parts, keep the same ledger as the hub prompt, in a file you name on the card's Order line, so a compacted context does not start finished or running parts again [D].
+- Review twice per item, never per commit: a plan check by one fresh reviewer before builders start (medium and large items), and an end panel on each draft PR once its builder reports, before it is marked ready. The end panel is a spec reviewer (does the diff do what the item asks, and were tests weakened) plus, for high-risk or large items, an adversarial reviewer; each gets the diff file, the item and the checks, never your view. Use the project's own review rules where it has them. On routes 3 to 5 the driver or hub runs the panel, since builders cannot start subagents [D].
 - On route 5, builders report to the hub with cross-session messages; a message never counts as consent, so it cannot answer a permission prompt [P]. Start 3 builders at most, because a person reviews every PR [D].
 
 ## 7. After the work: record the outcome
