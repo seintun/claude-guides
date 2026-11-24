@@ -52,8 +52,14 @@ Agents: a session in another project starts at ENTRY.md. Without a clone, fetch 
 - [skills/grill/test.sh](skills/grill/test.sh): cold test of `/grill` in a throwaway project; `check_transcript.py` checks 8 rules
 - [prompts/README.md](prompts/README.md): where `/prompt` saves prompts (git-ignored, one folder per project)
 - [private/README.md](private/README.md): git-ignored folder for notes, plans and research that are not part of the guide
+- [skills/repo-map/README.md](skills/repo-map/README.md): `/repo-map`: install, where each convention comes from, what the check proves
+- [skills/repo-map/SKILL.md](skills/repo-map/SKILL.md): `/repo-map` turns a repository into linked notes (components, terms, decisions, flows, questions) for Obsidian and agents; renders an interactive HTML study page, asks, quizzes and checks drift
+- [docs/proposals/repo-ramp-up-workflow.md](docs/proposals/repo-ramp-up-workflow.md): draft workflow and prompt pack for ramping up on a new repository with a markdown vault
 - [skills/orchestrate/README.md](skills/orchestrate/README.md): `/orchestrate`: install, where each rule comes from, example requests
 - [skills/orchestrate/SKILL.md](skills/orchestrate/SKILL.md): `/orchestrate` picks inline, subagents, parallel builders, sessions, a hub or a workflow for a task, with model and effort per part, and recommends before starting anything
+- [skills/repo-map/check_map.py](skills/repo-map/check_map.py): proves a repo-map's paths, names, links, sources and structure exist and match their templates; reports drift since the stamped commit
+- [skills/repo-map/render_map.py](skills/repo-map/render_map.py): renders a repo-map's notes as one self-contained interactive study page, with no network request by default
+- [docs/plans/repo-map.md](docs/plans/repo-map.md): the /repo-map plan, its revisions and every review ruling
 - [skills/orchestrate/route.py](skills/orchestrate/route.py): the /orchestrate routing rules as code; prints the route, runner-up and requirements for a set of task facts
 - [skills/orchestrate/check_card.py](skills/orchestrate/check_card.py): deterministic check of a routing card (fields, route name, one writer, scopes, check count, budget, high-risk review, expected route)
 - [skills/orchestrate/EXAMPLE.md](skills/orchestrate/EXAMPLE.md): worked example, four requests on one codebase and why each gets its route

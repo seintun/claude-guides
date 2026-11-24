@@ -1332,6 +1332,12 @@
    "description": "Keep the claude-guides repository current. `scan` reads the news watchlist since the last cursor, writes a weekly digest and commits it on a local branch. `deep` folds the month's verified items into a new guide version and stops before any push. Use when the user, or a scheduled task, says \"Run /refresh scan\" or \"Run /refresh deep\", or asks to update the guide with recent news.",
    "path": "skills/refresh/SKILL.md",
    "install": "npx skills add seintun/claude-guides --skill refresh"
+  },
+  {
+   "name": "repo-map",
+   "description": "Turn an unfamiliar repository into a small linked knowledge base you can learn from and ask questions of - one note per component, term, decision and flow, with flat YAML properties, [[wikilinks]] and an index, so Obsidian can browse it and an agent can retrieve from it - plus one interactive HTML study page (component graph, flow walkthroughs, guided path, glossary flashcards). Covers the what (components, services, glossary), the why (decisions with sources) and the how (architecture, flows). Modes - \"map\" builds or refreshes it, \"page\" renders the HTML, \"ask\" answers a question from the map and then the code and files new answers back, \"quiz\" teaches one level at a time, \"check\" reports drift and writes nothing. Use when joining a new codebase, onboarding to a repo, building a glossary or index map, or asking how or why a codebase works.",
+   "path": "skills/repo-map/SKILL.md",
+   "install": "npx skills add seintun/claude-guides --skill repo-map"
   }
  ]
 }
