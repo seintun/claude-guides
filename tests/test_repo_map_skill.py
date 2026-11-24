@@ -127,6 +127,65 @@ class CheckerTests(Base):
         code, out = run_check(folder, repo)
         self.assertEqual(failed_checks(out), ["paths exist"], out)
 
+    def test_tilde_and_long_fences_are_examples(self):
+        """CommonMark fences: ~~~ blocks and a ```` block holding ``` are both examples, not claims."""
+        folder, repo = self.copy_good()
+        self.edit(folder / "flows" / "place-an-order.md", "1. ",
+                  "~~~text\n[[not-a-note]] in `no/such/file.py`\n~~~\n\n````markdown\n```\n[[also-not]]\n```\n````\n\n1. ")
+        code, out = run_check(folder, repo)
+        self.assertEqual(code, 0, out)
+
+    def test_dot_and_absolute_file_paths_are_checked(self):
+        cases = {
+            "dot folder": "`.github/missing.yml`",
+            "dot slash": "`./missing.md`",
+            "absolute file": "`/nowhere/at/all.py`",
+        }
+        for label, token in cases.items():
+            with self.subTest(label):
+                folder, repo = self.copy_good()
+                self.edit(folder / "components" / "shared.md", "No I/O.", f"No I/O. See {token}.")
+                code, out = run_check(folder, repo)
+                self.assertEqual(failed_checks(out), ["paths exist"], out)
+        folder, repo = self.copy_good()
+        (repo / ".github").mkdir()
+        (repo / ".github" / "ci.yml").write_text("x", encoding="utf-8")
+        self.edit(folder / "components" / "shared.md", "No I/O.", "No I/O. CI is `.github/ci.yml`; run `/repo-map check`.")
+        code, out = run_check(folder, repo)
+        self.assertEqual(code, 0, out)
+
+    def test_index_links_outside_sections_do_not_count(self):
+        """Every note linked in one paragraph, with no type sections, must not pass as an index."""
+        folder, repo = self.copy_good()
+        names = ["api", "worker", "shared", "Order", "Receipt", "Customer", "queue-between-api-and-worker",
+                 "place-an-order", "which-broker", "who-owns-services"]
+        body = "Start with [[architecture]]. Notes: " + ", ".join(f"[[{n}]]" for n in names) + ".\n"
+        text = (folder / "index.md").read_text(encoding="utf-8")
+        (folder / "index.md").write_text(text[:text.index("# shop: repo map")] + "# shop: repo map\n\n" + body, encoding="utf-8")
+        code, out = run_check(folder, repo)
+        self.assertEqual(failed_checks(out), ["index lists every note"], out)
+
+    def test_failed_history_query_is_not_zero_drift(self):
+        """If git log fails or times out, drift is reported as unknown, not as PASS."""
+        import contextlib
+        import importlib
+        import io
+        folder, repo = self.copy_good()
+        sys.path.insert(0, str(SKILL_DIR))
+        cm = importlib.reload(importlib.import_module("check_map"))
+        real_git = cm.git
+        cm.git = lambda r, *a: None if a and a[0] == "log" else ("abc1234" if a[:1] == ("rev-parse",) and "--verify" in a else real_git(r, *a))
+        cm.in_work_tree = lambda r: True
+        self.edit(folder / "index.md", "commit: no git", "commit: abc1234")
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf):
+                cm.main([str(folder), "--repo", str(repo)])
+        finally:
+            importlib.reload(cm)
+        self.assertIn("WARN drift: could not read the history", buf.getvalue())
+        self.assertNotIn("PASS drift", buf.getvalue())
+
     def test_note_in_wrong_folder_fails(self):
         folder, repo = self.copy_good()
         (folder / "questions" / "which-broker.md").rename(folder / "terms" / "which-broker.md")
@@ -368,6 +427,13 @@ class RenderTests(Base):
             self.assertIn(needle, page)
         self.assertIn("try { state = JSON.parse(localStorage", page, "storage access must be wrapped in try/catch.")
 
+    def test_navigation_survives_filters_and_unicode_hashes(self):
+        """Opening a note the filter hid clears the filter; ids read from the URL are percent-decoded once."""
+        page = self.render(FIXTURES / "good", self.tmp() / "map.html")
+        self.assertRegex(page, r"if \(el\.classList\.contains\('hidden'\)\) \{[^}]*fi\.value = ''")
+        self.assertIn("try { return decodeURIComponent(h); } catch (e) { return h; }", page)
+        self.assertNotIn("openTarget(location.hash.slice(1))", page, "raw (encoded) hash passed to getElementById")
+
     def test_refuses_a_folder_without_an_index(self):
         empty = self.tmp()
         r = subprocess.run([sys.executable, "-I", str(self.RENDER), str(empty)], capture_output=True, text=True, timeout=60)
@@ -417,7 +483,8 @@ class LayoutTests(Base):
         end = js_src.index("  /* opts:")
         data = re.search(r"^const D = (.*);$", js_src, re.M).group(1)
         program = (f"const D = {data};\nconst document = {{ getElementById: () => ({{ clientWidth: {width} }}) }};\n"
-                   "var GX = 40, GY = 56;\n" + js_src[start:end] +
+                   "var GX = 40, GY = 56;\n"
+                   + re.search(r"^  var dict = .*$", js_src, re.M).group(0) + "\n" + js_src[start:end] +
                    "\nconst names = D.graph.nodes.map(n => n.name);\nconsole.log(JSON.stringify(layout(names)));\n")
         script = self.tmp() / "layout.js"
         script.write_text(program, encoding="utf-8")
@@ -425,6 +492,18 @@ class LayoutTests(Base):
         self.assertEqual(r.returncode, 0, r.stderr)
         import json
         return json.loads(r.stdout)
+
+    def test_components_named_like_object_properties(self):
+        """`constructor` or `__proto__` as a component name must not break the layout (no inherited lookups)."""
+        folder, repo, names = deep_chain_map(self.tmp(), n=3)
+        for old, new in (("c00", "constructor"), ("c01", "toString")):
+            for p in folder.rglob("*.md"):
+                p.write_text(p.read_text(encoding="utf-8").replace(old, new), encoding="utf-8")
+            (folder / "components" / f"{old}.md").rename(folder / "components" / f"{new}.md")
+        page = RenderTests.render(self, folder, self.tmp() / "map.html")
+        L = self.run_layout(page, 848)
+        self.assertEqual(sorted(L["pos"]), sorted(["constructor", "toString", "c02"]))
+        self.assertIn("Object.create(null)", page)
 
     def test_deep_chain_wraps_to_the_width_and_reads_in_order(self):
         folder, repo, names = deep_chain_map(self.tmp())
@@ -489,6 +568,33 @@ class GitTests(Base):
         code, out = run_check(folder, repo)
         self.assertEqual(failed_checks(out), ["paths exist"], out)
         self.assertIn("outside the repository", out)
+
+    def test_per_system_map_with_root_relative_paths(self):
+        """A monorepo map run with --repo set to one system's folder: notes keep paths from the repository root."""
+        folder, repo = self.copy_good()
+        mono = repo.parent / "mono"
+        (mono / "services").mkdir(parents=True)
+        shutil.move(str(repo), str(mono / "services" / "shop"))
+        system = mono / "services" / "shop"
+        for p in folder.rglob("*.md"):
+            t = p.read_text(encoding="utf-8")
+            for old in ("api/server.py", "worker/jobs.py", "shared/models.py", "`api/`", "path: api/", "path: worker/", "README.md"):
+                new = old.replace("api/", "services/shop/api/").replace("worker/", "services/shop/worker/") \
+                         .replace("shared/", "services/shop/shared/").replace("README.md", "services/shop/README.md")
+                t = t.replace(old, new)
+            p.write_text(t, encoding="utf-8")
+        self.git(mono, "init", "-q", "--template=", f"--separate-git-dir={mono.parent / 'mono.gitdir'}")
+        self.git(mono, "add", "-A")
+        self.git(mono, "commit", "-qm", "init")
+        sha = self.git(mono, "rev-parse", "--short=12", "HEAD")
+        self.edit(folder / "index.md", "commit: no git", f"commit: {sha}")
+        code, out = run_check(folder, system)
+        self.assertEqual(code, 0, out)
+        self.assertIn("PASS drift", out)
+        (system / "api" / "server.py").write_text("# changed\n" + (system / "api" / "server.py").read_text(), encoding="utf-8")
+        self.git(mono, "commit", "-qam", "change api")
+        code, out = run_check(folder, system)
+        self.assertIn("WARN drift: 1 commit", out)
 
     def test_decision_commit_source_is_checked(self):
         folder, repo = self.committed_repo()

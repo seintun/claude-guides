@@ -130,9 +130,33 @@ def load_notes(folder):
     return notes
 
 
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+
+
 def strip_fences(text, keep_mermaid=False):
-    pattern = r"^```(?!mermaid).*?^```[^\n]*$" if keep_mermaid else r"^```.*?^```[^\n]*$"
-    return re.sub(pattern, "", text, flags=re.S | re.M)
+    """Text with fenced code blocks removed, following CommonMark: a block opens with three or more backticks or
+    tildes and closes only with the same character, at least as many, and nothing after them. An unclosed block
+    runs to the end."""
+    out, fence, keep = [], None, False
+    for line in text.split("\n"):
+        m = FENCE.match(line)
+        if fence is None:
+            if m and not (m.group(1)[0] == "`" and "`" in m.group(2)):
+                fence = m.group(1)
+                keep = keep_mermaid and m.group(2).strip().startswith("mermaid")
+                if keep:
+                    out.append(line)
+                continue
+            out.append(line)
+        else:
+            if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence) and not m.group(2).strip():
+                fence = None
+                if keep:
+                    out.append(line)
+                continue
+            if keep:
+                out.append(line)
+    return "\n".join(out)
 
 
 def backticked(text):
@@ -141,18 +165,28 @@ def backticked(text):
 
 def looks_like_path(token, repo=None):
     """A backticked token is a path claim when its last part has a file extension, or it has a / and its first
-    folder exists in the repository. Slash commands, placeholders, globs, URLs, options, MIME types
+    folder exists in the repository. Dot paths (`./x.md`, `.github/ci.yml`) and absolute file paths are claims too,
+    so a missing or outside file fails. Slash commands (`/repo-map`), placeholders, globs, URLs, options, MIME types
     (`application/json`), protocols (`HTTP/1.1`), git refs (`origin/main`) and package names (`@nestjs/core`) are not."""
-    if " " in token or token.startswith(("http:", "https:", "-", "$", "[", "/", "~", ".", "@")) or LINE_REF.search(token):
+    if " " in token or token.startswith(("http:", "https:", "-", "$", "[", "~", "@")) or LINE_REF.search(token):
         return False
     if any(c in token for c in "<>*{}"):
         return False
+    if token.startswith("./"):
+        token = token[2:]
     last = token.rstrip("/").split("/")[-1]
     if FILE_EXT.match(last):
         return True
+    if token.startswith("/"):  # an absolute path is a claim only when it names a file; otherwise a slash command
+        return False
     if "/" in token:
         return repo is None or (repo / token.split("/")[0]).exists()
     return False
+
+
+def path_key(token):
+    """The path a token claims, without a leading ./ or trailing /."""
+    return (token[2:] if token.startswith("./") else token).rstrip("/")
 
 
 def inside(path, root):
@@ -301,8 +335,10 @@ def check_index(notes):
     if not index:
         report("FAIL", "index lists every note", "no index.md")
         return
-    listed = {t.strip().lower() for t in WIKILINK.findall(index["body"])}
-    problems = [f"not listed: {rel}" for rel, n in notes.items() if rel != "index.md" and n["name"].lower() not in listed]
+    # A note counts as listed only through a valid `- [[name]]: summary` line under its type's section; the
+    # architecture note may be linked from anywhere (the template links it in the opening line).
+    listed = {"architecture"} if re.search(r"\[\[architecture(?:\|[^\]]*)?\]\]", index["body"], re.I) else set()
+    problems = []
     counts = {}
     for n in notes.values():
         counts[n["name"].lower()] = counts.get(n["name"].lower(), 0) + 1
@@ -327,6 +363,10 @@ def check_index(notes):
         got = by_name.get(m.group(1).strip().lower())
         if want and got and got != want:
             problems.append(f"[[{m.group(1).strip()}]] is a {got} but sits under {section}")
+            continue
+        if want:
+            listed.add(m.group(1).strip().lower())
+    problems = [f"not listed: {rel}" for rel, n in notes.items() if rel != "index.md" and n["name"].lower() not in listed] + problems
     if problems:
         report("FAIL", "index lists every note", "; ".join(problems[:8]))
     else:
@@ -334,21 +374,33 @@ def check_index(notes):
 
 
 def component_paths(notes):
-    return sorted({p.rstrip("/") for n in notes.values() if n["props"] and n["props"].get("type") == "component"
+    return sorted({path_key(p) for n in notes.values() if n["props"] and n["props"].get("type") == "component"
                    for p in as_list(n["props"].get("path")) if p})
+
+
+def resolve(p, repo, top):
+    """Where a recorded path points: under --repo, or else under the git top-level. Notes record paths from the
+    repository root, and --repo may be one system's folder in a monorepo, so both bases are tried."""
+    if (repo / p).exists():
+        return repo / p
+    if top is not None and (top / p).exists():
+        return top / p
+    return None
 
 
 def check_paths(notes, repo):
     paths = set(component_paths(notes))
     for n in notes.values():
         props = n["props"] or {}
-        paths.update(p.rstrip("/") for p in as_list(props.get("entry")) if p)
-        paths.update(p.rstrip("/") for p in as_list(props.get("source")) if looks_like_path(p, repo))
-        paths.update(t.rstrip("/") for t in backticked(strip_fences(n["body"])) if looks_like_path(t, repo))
-    top = git(repo, "rev-parse", "--show-toplevel") if in_work_tree(repo) else None
-    root = pathlib.Path(top) if top else repo  # a monorepo sub-folder may point at a sibling system
-    missing = sorted(p for p in paths if not (repo / p).exists())
-    outside = sorted(p for p in paths if p not in missing and (pathlib.PurePath(p).is_absolute() or not inside(repo / p, root)))
+        paths.update(path_key(p) for p in as_list(props.get("entry")) if p)
+        paths.update(path_key(p) for p in as_list(props.get("source")) if looks_like_path(p, repo))
+        paths.update(path_key(t) for t in backticked(strip_fences(n["body"])) if looks_like_path(t, repo))
+    top_s = git(repo, "rev-parse", "--show-toplevel") if in_work_tree(repo) else None
+    top = pathlib.Path(top_s) if top_s else None
+    root = top or repo  # a monorepo sub-folder may point at a sibling system
+    found = {p: resolve(p, repo, top) for p in paths}
+    missing = sorted(p for p, where in found.items() if where is None)
+    outside = sorted(p for p, where in found.items() if where is not None and (pathlib.PurePath(p).is_absolute() or not inside(where, root)))
     problems = (["not found: " + ", ".join(missing[:8])] if missing else []) + \
                (["outside the repository: " + ", ".join(outside[:8])] if outside else [])
     if problems:
@@ -399,7 +451,12 @@ def check_stamp(notes, repo):
         return
     report("PASS", "stamp commit", sha)
     paths = component_paths(notes)
-    changed = git(repo, "log", "--oneline", f"{sha}..HEAD", "--", *paths) if paths else ""
+    # Root-relative paths that are not under --repo are passed as :(top) pathspecs, so a per-system map still works.
+    specs = [p if (repo / p).exists() else f":(top){p}" for p in paths]
+    changed = git(repo, "log", "--oneline", f"{sha}..HEAD", "--", *specs) if specs else ""
+    if changed is None:  # git failed or timed out: drift is unknown, not zero
+        report("WARN", "drift", f"could not read the history since {sha}; drift was not checked")
+        return
     n = len(changed.splitlines()) if changed else 0
     if n:
         report("WARN", "drift", f"{n} commit(s) since {sha} touched component paths; refresh the notes they cover")

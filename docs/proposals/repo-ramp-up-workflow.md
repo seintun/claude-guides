@@ -11,7 +11,7 @@ This is a proposal, not playbook content. Each claim carries a grade, as in the 
 3. **Big picture first, then small real tasks.** In a Microsoft study (32 developers, 15 managers, plus surveys), 67% of onboarding tasks led to learning. Developers who got the big picture before a task struggled less, and the common plan was simple tasks first, then harder ones (R, [Ju et al.](https://arxiv.org/abs/2103.05055)). Newcomers to open source also name reading tests and making small changes as good ways in (R, [first-contribution study](https://arxiv.org/abs/2404.18677)).
 4. **The why and the history are what experts pass on.** In twelve observed onboarding sessions across eight organisations, experts explained design rationale and past, current and planned changes, and newcomers valued it highly (R, [Yates](https://doi.org/10.1007/s10664-019-09741-6)). The code cannot tell an agent this, so it is what your notes must capture from people.
 5. **Generated overviews can be wrong, and look settled.** Generated repo wikis such as DeepWiki link claims to source lines, but can still misread metaprogramming, code generation and unusual designs, and lag the code (S, [DeepWiki docs](https://docs.devin.ai/work-with-devin/deepwiki)). Check every claim you build on.
-6. **Keep your learning notes out of the agent's context file.** Context files, whether written by an LLM or a developer, "do not generally improve task success rates" and raised inference cost by over 20% on average (R, [Gloaguen et al., arXiv 2602.11988](https://arxiv.org/abs/2602.11988); [playbook §8](../../playbook/agent-harness-playbook.md#8-context-engineering)). Claude Code's own advice is to write down only what the agent can't find by reading the repo (P, [best practices](https://code.claude.com/docs/en/best-practices)). Your mind map is for you. The repo's `CLAUDE.md` gets only commands, gotchas and decisions the code doesn't show.
+6. **Keep your learning notes out of the agent's context file.** Neither LLM-written nor developer-written context files significantly changed agents' task success. LLM-written ones raised inference cost by 20% and 23% on two benchmarks, and developer-written ones by up to 19% (R, [Gloaguen et al., arXiv 2602.11988](https://arxiv.org/abs/2602.11988); [playbook §8](../../playbook/agent-harness-playbook.md#8-context-engineering)). Claude Code's own advice is to write down only what the agent can't find by reading the repo (P, [best practices](https://code.claude.com/docs/en/best-practices)). Your mind map is for you. The repo's `CLAUDE.md` gets only commands, gotchas and decisions the code doesn't show.
 
 ## What practitioners do
 
@@ -87,8 +87,8 @@ Run `git init` in the vault and commit at the end of each day; the log of diffs 
 
 1. Create the vault from the layout above, open it in Obsidian ("Open folder as vault"), and `git init` it.
 2. Clone the work repository somewhere else. Do not put it inside the vault.
-3. Start Claude Code in the repository and add the vault, so one session sees both: `claude --add-dir /path/to/work-vault`.
-4. Put any team wiki pages, onboarding docs and your first meeting notes in `raw/`.
+3. Start Claude Code in the repository and add the vault, so one session sees both, with the vault's rules loaded: `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1 claude --add-dir /path/to/work-vault`. Without the variable, `--add-dir` gives access to the vault but does not load its `CLAUDE.md` (P, [Claude Code memory docs](https://code.claude.com/docs/en/memory)).
+4. Put team wiki pages, onboarding docs and your first meeting notes in `raw/` only if the vault is in a place the employer allows, and only after screening each one: leave out or redact source code, secrets, credentials and customer data. A copied page stays in the vault's git history even after you delete it.
 
 ### Days 1 to 3: make the build run
 
@@ -114,7 +114,7 @@ The first milestone is the build and tests passing on your machine. Nothing else
 
 ### Weekly: lint the vault
 
-Ask the agent to health-check the vault (prompt 8): broken links, orphan pages, claims whose cited lines have changed, questions left open more than a week.
+Ask the agent to health-check the vault (prompt 12): broken links, orphan pages, claims whose cited lines have changed, questions left open more than a week.
 
 ## Prompts for understanding a new repository
 
@@ -262,7 +262,7 @@ pages missing from index.md. Report first; change nothing until I say which to f
 
 ### `repos/<repo>/flows/<flow>.md`
 
-```markdown
+````markdown
 ---
 type: flow
 repo: <repo>
@@ -283,7 +283,7 @@ sequenceDiagram
 
 Open questions: [[questions/...]]
 Related: [[overview]], [[glossary]]
-```
+````
 
 ### `questions/<slug>.md`
 
@@ -336,7 +336,7 @@ Answer: ... (source: `path:line` or <person>, <date>)
 | [Mermaid in Obsidian (Holloran)](https://danholloran.me/posts/mermaid-diagrams-in-obsidian-architecture-docs-that-live-next-to-your-notes) | S | `internal-link` class, node limits |
 | [Obsidian and Claude Code setups (koru)](https://www.koru.do/en/blog/obsidian-claude-code) | S | `--add-dir`, MCP options, plugin risk |
 | [DeepWiki docs (Cognition)](https://docs.devin.ai/work-with-devin/deepwiki) | S | Generated wikis and their limits |
-| [Gloaguen et al., arXiv 2602.11988](https://arxiv.org/abs/2602.11988); playbook §8 | R | Context files don't improve success and cost over 20% more |
+| [Gloaguen et al., arXiv 2602.11988](https://arxiv.org/abs/2602.11988); playbook §8 | R | Context files don't significantly change success; they cost 20 to 23% more (LLM-written) or up to 19% more (developer-written) |
 | [Advanced context engineering (HumanLayer)](https://www.humanlayer.com/blog/advanced-context-engineering) | D | Research, plan, implement; review research first |
 | [Brownfield agentic engineering (Osmani)](https://addyosmani.com/blog/brownfield-agentic-engineering/) | D | Comprehension memo; write down what the code can't say |
 | [Agentic engineering patterns (Willison)](https://simonwillison.net/guides/agentic-engineering-patterns/linear-walkthroughs/) | D | Linear walkthroughs, interactive explanations |

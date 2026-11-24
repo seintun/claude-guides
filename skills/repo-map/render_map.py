@@ -258,7 +258,8 @@ const D = __DATA__;
   var KEY = '__KEY__', PREFS = KEY + '-prefs';
   var CHEV = '<svg class="chev" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
-  var byName = {};
+  var dict = function () { return Object.create(null); };  /* no inherited keys: a note may be named constructor */
+  var byName = dict();
   D.notes.forEach(function (n) { byName[n.name.toLowerCase()] = n; });
   D.notes.forEach(function (n) { n.aliases.forEach(function (a) { var k = String(a).toLowerCase(); if (!byName[k]) byName[k] = n; }); });  /* a note name always wins over an alias */
   var of = function (t) { return D.notes.filter(function (n) { return n.type === t; }); };
@@ -318,10 +319,10 @@ const D = __DATA__;
      depends on it, so arrows point down to dependencies. Each level wraps to the column width, so a deep or
      wide graph grows downward and its boxes and 14px labels are never shrunk. Cycles are cut. */
   function layout(names) {
-    var g = D.graph, set = new Set(names), deps = {}, users = {};
+    var g = D.graph, set = new Set(names), deps = dict(), users = dict();
     names.forEach(function (n) { deps[n] = []; users[n] = []; });
     g.edges.forEach(function (e) { if (set.has(e[0]) && set.has(e[1]) && e[0] !== e[1]) { deps[e[0]].push(e[1]); users[e[1]].push(e[0]); } });
-    var level = {};
+    var level = dict();
     function lv(n, seen) {
       if (level[n] !== undefined) return level[n];
       if (seen.has(n)) return 0;
@@ -332,22 +333,22 @@ const D = __DATA__;
     names.forEach(function (n) { lv(n, new Set()); });
     var main = document.getElementById('main'), width = main ? main.clientWidth - 40 : 860;
     var per = Math.max(1, Math.min(4, Math.floor((width + GX) / (g.w + GX))));
-    var sys = {}; g.nodes.forEach(function (n) { sys[n.name] = n.system || ''; });
-    var byLevel = {}; names.forEach(function (n) { (byLevel[level[n]] = byLevel[level[n]] || []).push(n); });
+    var sys = dict(); g.nodes.forEach(function (n) { sys[n.name] = n.system || ''; });
+    var byLevel = dict(); names.forEach(function (n) { (byLevel[level[n]] = byLevel[level[n]] || []).push(n); });
     /* Reading order: levels in turn, each sorted by system then name, filling the grid left to right, then down.
        A dependant always comes before what it depends on, so every arrow points forward. */
     var order = [];
     Object.keys(byLevel).map(Number).sort(function (a, b) { return a - b; }).forEach(function (l) {
       order = order.concat(byLevel[l].sort(function (a, b) { return (sys[a] + a).localeCompare(sys[b] + b); }));
     });
-    var pos = {};
+    var pos = dict();
     order.forEach(function (n, i) { pos[n] = { x: (i % per) * (g.w + GX), y: Math.floor(i / per) * (g.h + GY), level: level[n] }; });
     var rows = Math.ceil(order.length / per), cols = Math.min(per, order.length);
     return { pos: pos, W: cols * (g.w + GX) - GX + 24, H: rows * (g.h + GY) - GY + 24 + 30 };
   }
   /* opts: only (Set of names to draw; all when absent), lit (Set: others dimmed), cur (Set: outlined), caption, label */
   function graph(opts) {
-    var g = D.graph, at = {};
+    var g = D.graph, at = dict();
     g.nodes.forEach(function (n) { at[n.name] = n; });
     var names = g.nodes.map(function (n) { return n.name; }).filter(function (n) { return !opts.only || opts.only.has(n); });
     if (!names.length) return '';
@@ -531,6 +532,9 @@ const D = __DATA__;
   function openTarget(id, focus) {
     var el = id && document.getElementById(id);
     if (!el) return;
+    if (el.classList.contains('hidden')) {  /* the filter hid it: clear the filter so the target shows */
+      var fi = document.getElementById('filter'); fi.value = ''; fi.dispatchEvent(new Event('input'));
+    }
     if (el.tagName === 'DETAILS') el.open = true;
     requestAnimationFrame(function () { el.scrollIntoView({ block: 'start' }); });
     if (focus && el.tagName === 'DETAILS') el.querySelector('summary').focus({ preventScroll: true });
@@ -552,8 +556,12 @@ const D = __DATA__;
     var f = e.target.closest && e.target.closest('.flow');
     if (f && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) stepTo(f, +(f.getAttribute('data-i') || 0) + (e.key === 'ArrowRight' ? 1 : -1));
   });
-  window.addEventListener('hashchange', function () { openTarget(location.hash.slice(1)); });
-  if (location.hash) openTarget(location.hash.slice(1));
+  function hashId() {  /* location.hash keeps percent-encoding (n-%E6%B3%A8%E6%96%87 for n-注文): decode it, once */
+    var h = location.hash.slice(1);
+    try { return decodeURIComponent(h); } catch (e) { return h; }
+  }
+  window.addEventListener('hashchange', function () { openTarget(hashId()); });
+  if (location.hash) openTarget(hashId());
   syncToggle();
 
   /* ---------- filter ---------- */
