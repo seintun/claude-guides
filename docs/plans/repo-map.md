@@ -190,11 +190,23 @@ The owner found arrows "pointing everywhere" and asked for a UX pass on the grap
 
 - **Layered levels with a chosen direction:** top-down when the graph is deeper than it is wide (the page already scrolls that way), left to right when it is shallow and wide. In top-down mode boxes narrow to fit the reading column, never below 150px; below that the frame scrolls sideways.
 - **Fewer crossings:** rows inside each level are reordered by the median position of their neighbours, six sweeps.
-- **Fewer arrows:** the overview hides edges implied by a longer path (claude-guides: 14 shown instead of 29), with a "Show all dependencies" toggle. Focus and flow graphs show every edge.
+- **Fewer arrows:** the overview hides edges implied by a longer path between groups of components (edges inside a cycle always stay) (claude-guides: 20 shown of 29), with a "Show all dependencies" toggle. Focus and flow graphs show every edge.
 - **Hover tracing:** hovering or focusing a box lights its arrows and neighbours and fades the rest.
 - **Colour by kind:** four hues plus a neutral, validated with the dataviz skill's validator in light, paper and dark, each with a glyph and the kind in text; a legend; a stacked bar of components by kind; kind chips; inline code styled.
 
 Tests: the page's own JS runs in node to check direction choice, level order, the 150px floor, a four-wide level fitting the column, implied-edge pruning, crossing removal on a crafted case, and object-property names; a render test pins the palette and checks the colour tokens in every theme, the glyphs, legend, kind bar, toggle and hover.
+
+**End panel (2026-11-24): spec-reviewer (Opus) 4 findings, adversarial-reviewer (Opus) 4 findings, all fixed:**
+
+| Finding | Ruling |
+|---|---|
+| Pruning with cycles hid every arrow into a shared dependency (adversarial, high) | Fixed: pruning works on strongly connected groups; edges inside a cycle stay, and an edge out of a group is hidden only when the groups connect another way. Tests use the reviewer's cases |
+| Long names overflow narrowed boxes (both seats) | Fixed: names and kind lines are fitted to the box with an ellipsis; the full name stays in the tooltip |
+| The show-all toggle loses keyboard focus on redraw (adversarial) | Fixed: focus returns to the new checkbox |
+| Kinds outside the five pass the checker and draw as a resource (adversarial) | Fixed: the checker fails an unknown kind |
+| Layout tests never ran below 880px; the 150px floor never bound (spec) | Fixed: the harness stubs the page width; tests at 343, 600 and 880px check the floor and overlap on a four-wide level |
+| The dark palette was not pinned (spec) | Fixed: a test pins it. Validator runs (`validate_palette.js --pairs all`): light `#2a78d6,#e0632a,#13996a,#b0408e` on `#f9faf6` and paper on `#f7efdf` ALL CHECKS PASS; dark `#4189e4,#d4602a,#199e70,#d860a8` on `#1a1f22` ALL CHECKS PASS with CVD WARN 7.1 (deutan), legal with secondary encoding |
+| Stale "full size" comments (spec) | Fixed |
 
 ## Risks
 

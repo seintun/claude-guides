@@ -22,7 +22,7 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import check_map  # noqa: E402  (same folder: one parser for notes)
 
-CARD_W, CARD_H = 200, 64  # every box; labels are 14px and 12px, never scaled down
+CARD_W, CARD_H = 200, 64  # full box size; top-down levels may narrow boxes to 150px; labels stay 14px and 12px
 
 
 def components(notes):
@@ -347,6 +347,10 @@ const D = __DATA__;
     job: '<path d="M6 0.8 11.4 11 0.6 11z"/>', library: '<rect x="1" y="1" width="10" height="10" rx="1.5"/>',
     resource: '<path d="M6 0.5 10.8 3.25 10.8 8.75 6 11.5 1.2 8.75 1.2 3.25z"/>'
   };
+  function fitName(name, room) {  /* ~8px per character of 14px bold text; the full name stays in the tooltip */
+    var max = Math.max(4, Math.floor(room / 8));
+    return name.length <= max ? name : name.slice(0, max - 1) + '\u2026';
+  }
   function glyph(kind, x, y) { return '<g class="s-glyph kind-' + esc(kind) + '" transform="translate(' + x + ',' + y + ')">' + (GLYPH[kind] || GLYPH.resource) + '</g>'; }
 
   /* Edges within a set of names, and the same edges with every edge implied by a longer path removed
@@ -354,30 +358,46 @@ const D = __DATA__;
   function edgesOf(set, reduce) {
     var out = dict();
     set.forEach(function (n) { out[n] = []; });
-    D.graph.edges.forEach(function (e) { if (set.has(e[0]) && set.has(e[1]) && e[0] !== e[1]) out[e[0]].push(e[1]); });
+    D.graph.edges.forEach(function (e) { if (set.has(e[0]) && set.has(e[1]) && e[0] !== e[1] && out[e[0]].indexOf(e[1]) < 0) out[e[0]].push(e[1]); });
     var list = [];
-    set.forEach(function (a) {
-      out[a].forEach(function (b) {
-        if (reduce) {  /* is b reachable from a without the direct edge? */
-          var seen = new Set([a]), stack = out[a].filter(function (x) { return x !== b; });
-          var implied = false;
-          while (stack.length && !implied) {
-            var x = stack.pop();
-            if (x === b) { implied = true; break; }
-            if (seen.has(x)) continue;
-            seen.add(x);
-            (out[x] || []).forEach(function (y) { stack.push(y); });
-          }
-          if (implied) return;
-        }
-        list.push([a, b]);
+    set.forEach(function (a) { out[a].forEach(function (b) { list.push([a, b]); }); });
+    if (!reduce) return list;
+    /* Strongly connected groups (Tarjan): components that reach each other through a cycle share a group. */
+    var idx = dict(), low = dict(), onStack = dict(), comp = dict(), stack = [], counter = 0, groups = 0;
+    function strong(v) {
+      idx[v] = low[v] = counter++; stack.push(v); onStack[v] = true;
+      out[v].forEach(function (w) {
+        if (idx[w] === undefined) { strong(w); low[v] = Math.min(low[v], low[w]); }
+        else if (onStack[w]) low[v] = Math.min(low[v], idx[w]);
       });
+      if (low[v] === idx[v]) { var w; do { w = stack.pop(); onStack[w] = false; comp[w] = groups; } while (w !== v); groups++; }
+    }
+    set.forEach(function (v) { if (idx[v] === undefined) strong(v); });
+    var cout = dict();  /* edges between groups */
+    list.forEach(function (e) {
+      var ca = comp[e[0]], cb = comp[e[1]];
+      if (ca === cb) return;
+      cout[ca] = cout[ca] || new Set(); cout[ca].add(cb);
     });
-    return list;
+    function reachesAnotherWay(ca, cb) {  /* is group cb reachable from ca without the direct ca->cb link? */
+      var seen = new Set([ca]), todo = Array.from(cout[ca] || []).filter(function (x) { return x !== cb; });
+      while (todo.length) {
+        var x = todo.pop();
+        if (x === cb) return true;
+        if (seen.has(x)) continue;
+        seen.add(x);
+        (cout[x] || new Set()).forEach(function (y) { todo.push(y); });
+      }
+      return false;
+    }
+    return list.filter(function (e) {
+      var ca = comp[e[0]], cb = comp[e[1]];
+      return ca === cb || !reachesAnotherWay(ca, cb);
+    });
   }
 
-  /* Layered layout, left to right: a component sits one column right of everything in the set that uses it, so
-     every arrow points right, to a dependency. Rows inside each column are reordered to cut crossings (median of
+  /* Layered layout: a component sits one level after everything in the set that uses it, so every arrow points
+     forward, to a dependency. Rows inside each column are reordered to cut crossings (median of
      neighbours, a few sweeps each way). Boxes keep their full size; a wide graph scrolls sideways. Cycles are cut. */
   function layout(names, edges, dir) {
     var g = D.graph, set = new Set(names), users = dict(), deps = dict();
@@ -415,7 +435,7 @@ const D = __DATA__;
     }
     var widest = Math.max.apply(null, cols.map(function (c) { return c.length; }));
     /* Direction: a graph deeper than it is wide reads top-down (the page already scrolls that way); a shallow, wide
-       one reads left to right. Either way each level is one band and boxes keep their full size. */
+       one reads left to right. Either way each level is one band; top-down boxes may narrow to fit, never under 150px. */
     var tb = dir ? dir === 'TB' : cols.length > widest;
     var bw = g.w;
     if (tb) {  /* fit the widest level to the column: narrower boxes, never under 150px (then the frame scrolls) */
@@ -488,7 +508,7 @@ const D = __DATA__;
         + '<rect class="' + (on ? 's-hi' : 's-box') + '" width="' + BW + '" height="' + g.h + '" rx="10"/>'
         + '<rect class="s-stripe" x="0" y="0" width="5" height="' + g.h + '" rx="2.5"/>'
         + glyph(n.kind, BW - 24, 12)
-        + '<text class="s-t" x="16" y="27">' + esc(name) + '</text><text class="s-sub" x="16" y="47">' + esc(sub) + '</text></g>';
+        + '<text class="s-t" x="16" y="27">' + esc(fitName(name, BW - 16 - 30)) + '</text><text class="s-sub" x="16" y="47">' + esc(fitName(sub, (BW - 16 - 30) * 1.15)) + '</text></g>';
     }).join('');
     var hidden = full.length - shown.length;
     var bar = opts.legend ? legend(names, hidden) : '';
@@ -608,7 +628,10 @@ const D = __DATA__;
     var box = document.getElementById('maingraph');
     box.innerHTML = graph({ lit: lit, cur: lit, caption: MAINCAP, legend: true, heads: true, all: showAll });
     var t = document.getElementById('showAll');
-    if (t) t.addEventListener('change', function () { showAll = t.checked; drawMain(mainLit); });
+    if (t) t.addEventListener('change', function () {
+      showAll = t.checked; drawMain(mainLit);
+      var again = document.getElementById('showAll'); if (again) again.focus();  /* the redraw replaced the box */
+    });
     wireHover(box);
   }
   drawMain(null);

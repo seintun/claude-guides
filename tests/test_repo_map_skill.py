@@ -186,6 +186,14 @@ class CheckerTests(Base):
         self.assertIn("WARN drift: could not read the history", buf.getvalue())
         self.assertNotIn("PASS drift", buf.getvalue())
 
+    def test_unknown_component_kind_fails(self):
+        """The page colours and the skill lists five kinds; anything else would be drawn as a resource."""
+        folder, repo = self.copy_good()
+        self.edit(folder / "components" / "worker.md", "kind: job", "kind: database")
+        code, out = run_check(folder, repo)
+        self.assertEqual(failed_checks(out), ["notes and properties"], out)
+        self.assertIn("kind 'database'", out)
+
     def test_note_in_wrong_folder_fails(self):
         folder, repo = self.copy_good()
         (folder / "questions" / "which-broker.md").rename(folder / "terms" / "which-broker.md")
@@ -443,6 +451,14 @@ class RenderTests(Base):
         self.assertEqual(light.groups(), ("#2a78d6", "#e0632a", "#13996a", "#b0408e"),
                          "the light palette changed: re-run the dataviz validator (--pairs all) and update this test and the README")
 
+    def test_dark_palette_is_pinned_and_toggle_keeps_focus(self):
+        page = self.render(FIXTURES / "good", self.tmp() / "map.html")
+        css = page[page.index("<style>"):page.index("</style>")]
+        dark = re.findall(r"--k-service: (#[0-9a-f]{6}); --k-job: (#[0-9a-f]{6}); --k-library: (#[0-9a-f]{6}); --k-website: (#[0-9a-f]{6})", css)
+        self.assertEqual(dark[1:], [("#4189e4", "#d4602a", "#199e70", "#d860a8")] * 2,
+                         "the dark palette changed: re-run the dataviz validator (--pairs all) and update this test and the README")
+        self.assertIn("again.focus()", page, "the show-all toggle must keep keyboard focus across its redraw")
+
     def test_navigation_survives_filters_and_unicode_hashes(self):
         """Opening a note the filter hid clears the filter; ids read from the URL are percent-decoded once."""
         page = self.render(FIXTURES / "good", self.tmp() / "map.html")
@@ -493,12 +509,13 @@ class LayoutTests(Base):
     """Runs the page's own JS graph code (edge pruning and layered layout) in node, on maps built to stress it."""
     RENDER = SKILL_DIR / "render_map.py"
 
-    def run_js(self, page, expr):
+    def run_js(self, page, expr, width=880):
         js_src = page[page.index("<script>") + len("<script>"):page.rindex("</script>")]
         start = js_src.index("  var gid = 0, GX")
         end = js_src.index("  /* opts:")
         data = re.search(r"^const D = (.*);$", js_src, re.M).group(1)
         program = (f"const D = {data};\nconst esc = s => String(s);\n"
+                   f"const document = {{ getElementById: () => ({{ clientWidth: {width} }}) }};\n"
                    + re.search(r"^  var dict = .*$", js_src, re.M).group(0) + "\n" + js_src[start:end]
                    + f"\nconst names = D.graph.nodes.map(n => n.name);\nconsole.log(JSON.stringify({expr}));\n")
         script = self.tmp() / "graph.js"
@@ -508,8 +525,8 @@ class LayoutTests(Base):
         import json
         return json.loads(r.stdout)
 
-    def run_layout(self, page):
-        return self.run_js(page, "layout(names)")
+    def run_layout(self, page, width=880):
+        return self.run_js(page, "layout(names)", width)
 
     def map_with_edges(self, comps, edges):
         """A minimal map: components and depends_on edges, enough for render_map.py (not for the checker)."""
@@ -564,6 +581,53 @@ class LayoutTests(Base):
         full = self.run_js(page, "edgesOf(new Set(names), false)")
         self.assertEqual(sorted(map(tuple, shown)), [("a", "b"), ("b", "c")])
         self.assertEqual(len(full), 3)
+
+    def test_pruning_keeps_every_real_dependency_in_cycles(self):
+        """A transitive reduction is unique only without cycles: edges inside a cycle stay, and an edge out of a cycle
+        is hidden only when the cycle reaches the target another way (the cases an adversarial review found)."""
+        cases = {
+            "two-cycle sharing a dependency": (["a", "b", "c"], [("a", "b"), ("b", "a"), ("a", "c"), ("b", "c")],
+                                               {("a", "b"), ("b", "a"), ("a", "c"), ("b", "c")}),
+            "api and auth sharing db": (["api", "auth", "db", "worker"],
+                                        [("api", "auth"), ("auth", "api"), ("api", "db"), ("auth", "db"), ("worker", "db")],
+                                        {("api", "auth"), ("auth", "api"), ("api", "db"), ("auth", "db"), ("worker", "db")}),
+            "three-cycle with a shared dependency": (["a", "b", "c", "d"],
+                                                     [("a", "b"), ("b", "c"), ("c", "a"), ("a", "d"), ("b", "d"), ("c", "d")],
+                                                     None),
+        }
+        for label, (comps, edges, want) in cases.items():
+            with self.subTest(label):
+                shown = {tuple(e) for e in self.run_js(self.map_with_edges(comps, edges), "edgesOf(new Set(names), true)")}
+                if want is not None:
+                    self.assertEqual(shown, want)
+                targets = {b for _, b in edges}
+                self.assertEqual({b for _, b in shown} & targets, targets, f"a dependency lost every arrow: {shown}")
+        full = [(a, b) for a in "abcde" for b in "abcde" if a != b]
+        shown = self.run_js(self.map_with_edges(list("abcde"), full), "edgesOf(new Set(names), true)")
+        self.assertEqual(len(shown), len(full), "in one big cycle no edge is implied")
+
+    def test_narrow_screens_hit_the_150px_floor_without_overlap(self):
+        """At phone width a four-wide level stops narrowing at 150px and scrolls; boxes never overlap."""
+        comps = ["top", "a", "b", "c", "d", "mid", "low", "base"]
+        edges = [("top", x) for x in "abcd"] + [(x, "mid") for x in "abcd"] + [("mid", "low"), ("low", "base")]
+        page = self.map_with_edges(comps, edges)
+        for width in (343, 600, 880):
+            with self.subTest(width=width):
+                L = self.run_layout(page, width)
+                self.assertTrue(L["tb"])
+                self.assertGreaterEqual(L["bw"], 150)
+                level = sorted((L["pos"][x]["x"] for x in "abcd"))
+                gaps = [b - a for a, b in zip(level, level[1:])]
+                self.assertTrue(all(g >= L["bw"] for g in gaps), f"boxes overlap at {width}px: {level}, box {L['bw']}")
+        self.assertEqual(self.run_layout(page, 343)["bw"], 150, "the floor must bind on a phone")
+        self.assertGreater(self.run_layout(page, 880)["bw"], 150)
+
+    def test_long_names_fit_their_box(self):
+        names = self.run_js(self.map_with_edges(["x"], []),
+                            "[fitName('notification-service-gateway', 150 - 46), fitName('api', 104), fitName('a'.repeat(30), 200 - 46)]")
+        self.assertTrue(names[0].endswith("\u2026") and len(names[0]) <= 13, names[0])
+        self.assertEqual(names[1], "api")
+        self.assertLessEqual(len(names[2]), 19)
 
     def test_rows_are_reordered_to_remove_crossings(self):
         """Names sorted alphabetically would cross (a1->z, b1->y in column order y, z); the median sweep uncrosses them."""
