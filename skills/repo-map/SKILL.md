@@ -75,7 +75,8 @@ The page is one self-contained file that opens from disk in any browser: inline 
 
 - a sticky header with a "notes read" meter, display settings (System, Light, Paper or Dark theme; three text sizes) and Expand all;
 - a fact strip (counts of components, flows, decisions, terms and open questions) and a guided path: architecture, components, one flow, decisions, glossary, questions;
-- the component graph, drawn from `depends_on` in reading order (left to right, then down; an arrow points forward to a dependency), wrapped to the screen width so boxes and labels are never shrunk; each box opens its note, and the filter box lights matching components;
+- a stacked bar of components by kind, under the fact strip;
+- the component graph, drawn from `depends_on` as layered levels: top-down when the graph is deeper than it is wide, left to right when it is shallow and wide, with rows reordered to cut crossings. Each box carries its kind's colour stripe and glyph. The overview hides arrows already implied by a longer path (a "Show all dependencies" toggle brings them back); hovering a box traces its own arrows and fades the rest; each box opens its note, and the filter box lights matching components;
 - in each component's section, a focus graph of just that component and its direct neighbours;
 - an optional `system` property on components shows under each box's kind and groups boxes in the graph;
 - one collapsible section per architecture, component, flow and decision note, with its properties, body and a Read checkbox;
