@@ -22,6 +22,7 @@ SECTIONS = {  # type -> the ## sections its body must have (the templates in ass
     "component": ("What", "Why", "Boundaries and invariants"),
     "decision": ("Context", "Decision", "Why", "Consequences"),
 }
+KINDS = ("service", "website", "job", "library", "resource")  # what render_map.py colours and SKILL.md lists
 INDEX_SECTIONS = {"Components": "component", "Terms": "term", "Decisions": "decision", "Flows": "flow", "Questions": "question"}
 INDEX_LINE = re.compile(r"^- \[\[([^\]|#]+)\]\]: \S")
 REQUIRED = {  # type -> (folder, required properties)
@@ -274,6 +275,8 @@ def check_structure(notes):
         missing = [p for p in needed if p not in props or props[p] in ("", [])]
         if missing:
             problems.append(f"{rel}: missing {', '.join(missing)}")
+        if kind == "component" and props.get("kind") and props.get("kind") not in KINDS:
+            problems.append(f"{rel}: kind '{props.get('kind')}' is not one of {', '.join(KINDS)}")
     seen = {}
     for rel, n in notes.items():  # Obsidian links by note name or alias, so no two may share one (in any case)
         names = [n["name"]]

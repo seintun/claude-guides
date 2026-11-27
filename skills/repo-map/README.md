@@ -15,7 +15,9 @@ A check script proves that every path and name in the notes exists in the code, 
 
 A render script turns the notes into `map.html`, one interactive study page you open in any browser. It has:
 
-- a guided reading path and a clickable component graph that wraps to the screen, from one box per row on a phone to three or four on a desktop, with labels never shrunk;
+- a guided reading path, a stacked bar of components by kind, and a clickable component graph in layered levels: top-down for deep graphs, left to right for shallow, wide ones, with rows reordered to cut crossings;
+- arrows already implied by a longer path hidden in the overview (a toggle shows them all), and hovering a box traces its own arrows;
+- each kind in its own colour, with a glyph and the kind's name too, so colour is never the only cue;
 - a focus graph per component: the component and its direct neighbours;
 - a filter that lights the matching components in the graph;
 - collapsible What / Why / How sections;
@@ -159,6 +161,20 @@ Limits:
 - A name that occurs only in a comment still passes. The check catches invented names, not wrong descriptions.
 - A "why" is only as good as its `source`. Decisions marked `status: inferred` are the agent's reading of the code.
 - "Ask before writing" is an instruction to the model. No code enforces it.
+
+## The graph's colours
+
+Component kinds use four hues and a neutral, checked with the data-visualization skill's palette validator (`validate_palette.js --pairs all`, every pair compared) against each theme's surface:
+
+| Kind | Light and Paper | Dark | Glyph |
+|---|---|---|---|
+| service | `#2a78d6` | `#4189e4` | circle |
+| job | `#e0632a` | `#d4602a` | triangle |
+| library | `#13996a` | `#199e70` | square |
+| website | `#b0408e` | `#d860a8` | diamond |
+| resource | neutral `#6b7a74` | neutral `#93a09a` | hexagon |
+
+Light and Paper pass every check. Dark passes with one colour-vision pair at a distance of 7.1, which the validator allows only with a second cue: here, each box's glyph and its kind written out. `resource` is neutral because infrastructure is not a running part, and because a fifth hue could not pass every pair. A test pins the light palette, so a change re-runs the validator.
 
 ## Files
 

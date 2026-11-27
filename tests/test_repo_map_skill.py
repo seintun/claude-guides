@@ -186,6 +186,14 @@ class CheckerTests(Base):
         self.assertIn("WARN drift: could not read the history", buf.getvalue())
         self.assertNotIn("PASS drift", buf.getvalue())
 
+    def test_unknown_component_kind_fails(self):
+        """The page colours and the skill lists five kinds; anything else would be drawn as a resource."""
+        folder, repo = self.copy_good()
+        self.edit(folder / "components" / "worker.md", "kind: job", "kind: database")
+        code, out = run_check(folder, repo)
+        self.assertEqual(failed_checks(out), ["notes and properties"], out)
+        self.assertIn("kind 'database'", out)
+
     def test_note_in_wrong_folder_fails(self):
         folder, repo = self.copy_good()
         (folder / "questions" / "which-broker.md").rename(folder / "terms" / "which-broker.md")
@@ -427,6 +435,30 @@ class RenderTests(Base):
             self.assertIn(needle, page)
         self.assertIn("try { state = JSON.parse(localStorage", page, "storage access must be wrapped in try/catch.")
 
+    def test_kind_colours_glyphs_and_legend(self):
+        """Every kind has a colour token in light and dark, a glyph (a second cue beside colour), a legend entry and a
+        segment in the kind bar; the overview has the show-all toggle and hover tracing."""
+        page = self.render(FIXTURES / "good", self.tmp() / "map.html")
+        css = page[page.index("<style>"):page.index("</style>")]
+        for kind in ("service", "website", "job", "library", "resource"):
+            self.assertEqual(css.count(f"--k-{kind}:"), 3, f"--k-{kind} must be set for light, dark (system) and dark (chosen)")
+        script = page[page.index("<script>"):]
+        for kind in ("service", "website", "job", "library", "resource"):
+            self.assertRegex(script, rf"\b{kind}: '<(circle|path|rect)", f"no glyph for {kind}")
+        for needle in ("function legend(", 'class="kindbar"', 'id="showAll"', "function wireHover(", "edgesOf(set, true)"):
+            self.assertIn(needle, page)
+        light = re.search(r"--k-service: (#[0-9a-f]{6}); --k-job: (#[0-9a-f]{6}); --k-library: (#[0-9a-f]{6}); --k-website: (#[0-9a-f]{6})", css)
+        self.assertEqual(light.groups(), ("#2a78d6", "#e0632a", "#13996a", "#b0408e"),
+                         "the light palette changed: re-run the dataviz validator (--pairs all) and update this test and the README")
+
+    def test_dark_palette_is_pinned_and_toggle_keeps_focus(self):
+        page = self.render(FIXTURES / "good", self.tmp() / "map.html")
+        css = page[page.index("<style>"):page.index("</style>")]
+        dark = re.findall(r"--k-service: (#[0-9a-f]{6}); --k-job: (#[0-9a-f]{6}); --k-library: (#[0-9a-f]{6}); --k-website: (#[0-9a-f]{6})", css)
+        self.assertEqual(dark[1:], [("#4189e4", "#d4602a", "#199e70", "#d860a8")] * 2,
+                         "the dark palette changed: re-run the dataviz validator (--pairs all) and update this test and the README")
+        self.assertIn("again.focus()", page, "the show-all toggle must keep keyboard focus across its redraw")
+
     def test_navigation_survives_filters_and_unicode_hashes(self):
         """Opening a note the filter hid clears the filter; ids read from the URL are percent-decoded once."""
         page = self.render(FIXTURES / "good", self.tmp() / "map.html")
@@ -474,51 +506,136 @@ def deep_chain_map(base, n=15):
 
 @unittest.skipUnless(shutil.which("node"), "NOT RUN: node is not installed, so the page's layout function cannot be run")
 class LayoutTests(Base):
-    """Runs the page's own JS layout() in node at phone and desktop widths, on the deep chain that used to be unreadable."""
+    """Runs the page's own JS graph code (edge pruning and layered layout) in node, on maps built to stress it."""
     RENDER = SKILL_DIR / "render_map.py"
 
-    def run_layout(self, page, width):
+    def run_js(self, page, expr, width=880):
         js_src = page[page.index("<script>") + len("<script>"):page.rindex("</script>")]
-        start = js_src.index("  function layout(names) {")
+        start = js_src.index("  var gid = 0, GX")
         end = js_src.index("  /* opts:")
         data = re.search(r"^const D = (.*);$", js_src, re.M).group(1)
-        program = (f"const D = {data};\nconst document = {{ getElementById: () => ({{ clientWidth: {width} }}) }};\n"
-                   "var GX = 40, GY = 56;\n"
-                   + re.search(r"^  var dict = .*$", js_src, re.M).group(0) + "\n" + js_src[start:end] +
-                   "\nconst names = D.graph.nodes.map(n => n.name);\nconsole.log(JSON.stringify(layout(names)));\n")
-        script = self.tmp() / "layout.js"
+        program = (f"const D = {data};\nconst esc = s => String(s);\n"
+                   f"const document = {{ getElementById: () => ({{ clientWidth: {width} }}) }};\n"
+                   + re.search(r"^  var dict = .*$", js_src, re.M).group(0) + "\n" + js_src[start:end]
+                   + f"\nconst names = D.graph.nodes.map(n => n.name);\nconsole.log(JSON.stringify({expr}));\n")
+        script = self.tmp() / "graph.js"
         script.write_text(program, encoding="utf-8")
         r = subprocess.run(["node", str(script)], capture_output=True, text=True, timeout=60)
         self.assertEqual(r.returncode, 0, r.stderr)
         import json
         return json.loads(r.stdout)
 
+    def run_layout(self, page, width=880):
+        return self.run_js(page, "layout(names)", width)
+
+    def map_with_edges(self, comps, edges):
+        """A minimal map: components and depends_on edges, enough for render_map.py (not for the checker)."""
+        folder = self.tmp() / "map"
+        (folder / "components").mkdir(parents=True)
+        (folder / "index.md").write_text("---\ntype: index\nrepo: t\ncommit: no git\ndate: 2026-11-24\n---\n# t\n", encoding="utf-8")
+        for c in comps:
+            deps = [b for a, b in edges if a == c]
+            dep = ("depends_on: [" + ", ".join(f'"[[{d}]]"' for d in deps) + "]\n") if deps else ""
+            (folder / "components" / f"{c}.md").write_text(f"---\ntype: component\nkind: library\n{dep}---\n# {c}\n", encoding="utf-8")
+        return RenderTests.render(self, folder, self.tmp() / "map.html")
+
     def test_components_named_like_object_properties(self):
-        """`constructor` or `__proto__` as a component name must not break the layout (no inherited lookups)."""
-        folder, repo, names = deep_chain_map(self.tmp(), n=3)
-        for old, new in (("c00", "constructor"), ("c01", "toString")):
-            for p in folder.rglob("*.md"):
-                p.write_text(p.read_text(encoding="utf-8").replace(old, new), encoding="utf-8")
-            (folder / "components" / f"{old}.md").rename(folder / "components" / f"{new}.md")
-        page = RenderTests.render(self, folder, self.tmp() / "map.html")
-        L = self.run_layout(page, 848)
+        """`constructor` or `toString` as a component name must not break the layout (no inherited lookups)."""
+        page = self.map_with_edges(["constructor", "toString", "c02"], [("constructor", "toString"), ("toString", "c02")])
+        L = self.run_layout(page)
         self.assertEqual(sorted(L["pos"]), sorted(["constructor", "toString", "c02"]))
         self.assertIn("Object.create(null)", page)
 
-    def test_deep_chain_wraps_to_the_width_and_reads_in_order(self):
+    def test_deep_graphs_run_top_down_and_wide_ones_left_to_right(self):
+        """A 15-deep chain reads top-down (one level per band, each step below the one that uses it, boxes never under
+        150px); a shallow, wide graph reads left to right."""
         folder, repo, names = deep_chain_map(self.tmp())
         code, out = run_check(folder, repo)
         self.assertNotIn("FAIL", out, "the generated 15-component map must itself pass the checker")
         page = RenderTests.render(self, folder, self.tmp() / "map.html")
-        for width, per in ((343, 1), (848, 3)):
+        L = self.run_layout(page)
+        self.assertTrue(L["tb"], "a deep chain should lay out top-down")
+        self.assertEqual(L["cols"], 15)
+        ys = [L["pos"][n]["y"] for n in names]
+        self.assertEqual(ys, sorted(ys), "each step must sit below the one that uses it")
+        self.assertEqual(len(set(ys)), 15)
+        self.assertGreaterEqual(L["bw"], 150, "boxes never shrink below 150px")
+        self.assertEqual(len({(p["x"], p["y"]) for p in L["pos"].values()}), len(names), "boxes overlap")
+        wide = self.map_with_edges(["hub", "d1", "d2", "d3", "d4", "d5"], [("hub", f"d{i}") for i in range(1, 6)])
+        W = self.run_layout(wide)
+        self.assertFalse(W["tb"], "a shallow, wide graph should lay out left to right")
+        self.assertTrue(all(W["pos"][f"d{i}"]["x"] > W["pos"]["hub"]["x"] for i in range(1, 6)))
+
+    def test_top_down_fits_a_four_wide_level_in_the_reading_column(self):
+        """Four boxes side by side fit the 880px column without sideways scrolling."""
+        comps = ["top", "a", "b", "c", "d", "mid", "low", "base"]
+        edges = [("top", x) for x in "abcd"] + [(x, "mid") for x in "abcd"] + [("mid", "low"), ("low", "base")]
+        L = self.run_layout(self.map_with_edges(comps, edges))
+        self.assertTrue(L["tb"])
+        self.assertLessEqual(L["W"] + 30, 880 - 32 - 26, f"the four-wide level is {L['W']}px, wider than the frame")
+
+    def test_implied_edges_are_hidden_in_the_overview(self):
+        """With a->b->c and a->c, the overview drops a->c; the full set keeps it."""
+        page = self.map_with_edges(["a", "b", "c"], [("a", "b"), ("b", "c"), ("a", "c")])
+        shown = self.run_js(page, "edgesOf(new Set(names), true)")
+        full = self.run_js(page, "edgesOf(new Set(names), false)")
+        self.assertEqual(sorted(map(tuple, shown)), [("a", "b"), ("b", "c")])
+        self.assertEqual(len(full), 3)
+
+    def test_pruning_keeps_every_real_dependency_in_cycles(self):
+        """A transitive reduction is unique only without cycles: edges inside a cycle stay, and an edge out of a cycle
+        is hidden only when the cycle reaches the target another way (the cases an adversarial review found)."""
+        cases = {
+            "two-cycle sharing a dependency": (["a", "b", "c"], [("a", "b"), ("b", "a"), ("a", "c"), ("b", "c")],
+                                               {("a", "b"), ("b", "a"), ("a", "c"), ("b", "c")}),
+            "api and auth sharing db": (["api", "auth", "db", "worker"],
+                                        [("api", "auth"), ("auth", "api"), ("api", "db"), ("auth", "db"), ("worker", "db")],
+                                        {("api", "auth"), ("auth", "api"), ("api", "db"), ("auth", "db"), ("worker", "db")}),
+            "three-cycle with a shared dependency": (["a", "b", "c", "d"],
+                                                     [("a", "b"), ("b", "c"), ("c", "a"), ("a", "d"), ("b", "d"), ("c", "d")],
+                                                     None),
+        }
+        for label, (comps, edges, want) in cases.items():
+            with self.subTest(label):
+                shown = {tuple(e) for e in self.run_js(self.map_with_edges(comps, edges), "edgesOf(new Set(names), true)")}
+                if want is not None:
+                    self.assertEqual(shown, want)
+                targets = {b for _, b in edges}
+                self.assertEqual({b for _, b in shown} & targets, targets, f"a dependency lost every arrow: {shown}")
+        full = [(a, b) for a in "abcde" for b in "abcde" if a != b]
+        shown = self.run_js(self.map_with_edges(list("abcde"), full), "edgesOf(new Set(names), true)")
+        self.assertEqual(len(shown), len(full), "in one big cycle no edge is implied")
+
+    def test_narrow_screens_hit_the_150px_floor_without_overlap(self):
+        """At phone width a four-wide level stops narrowing at 150px and scrolls; boxes never overlap."""
+        comps = ["top", "a", "b", "c", "d", "mid", "low", "base"]
+        edges = [("top", x) for x in "abcd"] + [(x, "mid") for x in "abcd"] + [("mid", "low"), ("low", "base")]
+        page = self.map_with_edges(comps, edges)
+        for width in (343, 600, 880):
             with self.subTest(width=width):
                 L = self.run_layout(page, width)
-                xs = sorted({p["x"] for p in L["pos"].values()})
-                self.assertEqual(len(xs), per, f"at {width}px expected {per} boxes per row")
-                self.assertLessEqual(L["W"], max(width, 224) + 24, "the graph is wider than the column")
-                order = sorted(names, key=lambda n: (L["pos"][n]["y"], L["pos"][n]["x"]))
-                self.assertEqual(order, names, "a dependant must come before what it depends on, in reading order")
-                self.assertEqual(len({(p["x"], p["y"]) for p in L["pos"].values()}), len(names), "boxes overlap")
+                self.assertTrue(L["tb"])
+                self.assertGreaterEqual(L["bw"], 150)
+                level = sorted((L["pos"][x]["x"] for x in "abcd"))
+                gaps = [b - a for a, b in zip(level, level[1:])]
+                self.assertTrue(all(g >= L["bw"] for g in gaps), f"boxes overlap at {width}px: {level}, box {L['bw']}")
+        self.assertEqual(self.run_layout(page, 343)["bw"], 150, "the floor must bind on a phone")
+        self.assertGreater(self.run_layout(page, 880)["bw"], 150)
+
+    def test_long_names_fit_their_box(self):
+        names = self.run_js(self.map_with_edges(["x"], []),
+                            "[fitName('notification-service-gateway', 150 - 46), fitName('api', 104), fitName('a'.repeat(30), 200 - 46)]")
+        self.assertTrue(names[0].endswith("\u2026") and len(names[0]) <= 13, names[0])
+        self.assertEqual(names[1], "api")
+        self.assertLessEqual(len(names[2]), 19)
+
+    def test_rows_are_reordered_to_remove_crossings(self):
+        """Names sorted alphabetically would cross (a1->z, b1->y in column order y, z); the median sweep uncrosses them."""
+        page = self.map_with_edges(["a1", "b1", "y", "z"], [("a1", "z"), ("b1", "y")])
+        L = self.run_layout(page)
+        P = L["pos"]
+        same_order = (P["a1"]["y"] < P["b1"]["y"]) == (P["z"]["y"] < P["y"]["y"])
+        self.assertTrue(same_order, f"edges cross: {P}")
 
     def test_sixteen_components_fail_the_checker(self):
         folder, repo, names = deep_chain_map(self.tmp(), n=16)
